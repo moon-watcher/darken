@@ -1,10 +1,26 @@
 #include "darken.h"
 
-void darken(const Entitydef *ed)
-{
-    manager_init(ed->manager, &(Managerdef){.maxEntities = 1});
-    Entity *const e = entity_new(ed);
+static int exitCode = 0;
 
-    while (1)
+int darken(const State *initialState)
+{
+    Manager manager;
+    manager_init(&manager, &(Managerdef){.maxEntities = 1});
+    Entity *const e = entity_new(&(Entitydef){
+        .manager = &manager,
+        .initialState = initialState,
+    });
+
+    exitCode = 0;
+    int *x = &exitCode;
+
+    while (!*x)
         e->state->update(e);
+
+    return exitCode;
+}
+
+void darken_end(int code)
+{
+    exitCode = code;
 }

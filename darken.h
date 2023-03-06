@@ -16,9 +16,9 @@ typedef struct _systemdef  Systemdef;
 #include "system.h"
 #include "systemdef.h"
 
-void darken(const Entitydef*);
+int  darken     ( const State * );
+void darken_end ( int );
 
-// void    entity_list_update (list_t *const);
 
 // long data2;
 // void *ptr2;
