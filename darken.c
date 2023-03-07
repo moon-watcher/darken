@@ -8,8 +8,11 @@ int darken(const State *initialState)
     int *x = &exitCode;
 
     Manager manager;
-    manager_init(&manager, &(Managerdef){.maxEntities = 1});
-    Entity *const e = entity_new(&(Entitydef){.manager = &manager, .initialState = initialState});
+    const Entitydef ed = {.manager = &manager, .initialState = initialState};
+    const Managerdef md = {.maxEntities = 1};
+
+    manager_init(&manager, &md);    
+    Entity *const e = entity_new(&ed);
 
     while (!*x)
         e->state->update(e);
