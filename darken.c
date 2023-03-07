@@ -8,10 +8,10 @@ int darken(const State *initialState)
     int *x = &exitCode;
 
     Manager manager;
-    const Entitydef ed = {.manager = &manager, .initialState = initialState};
-    const Managerdef md = {.maxEntities = 1};
+    const Entitydef ed = {.name = "Darken main entity", .manager = &manager, .initialState = initialState};
+    const Managerdef md = {.name = "Darken main manager", .maxEntities = 1};
 
-    manager_init(&manager, &md);    
+    manager_init(&manager, &md);
     Entity *const e = entity_new(&ed);
 
     while (!*x)
