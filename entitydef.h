@@ -3,8 +3,8 @@
 typedef struct _entitydef
 {
     char *name;
-    void (*constructor)();
-    void (*destructor)();
+    void (*constructor)(Entity *const);
+    void (*destructor)(Entity *const);
     Manager *manager;
     const State *initialState;
 } Entitydef;
