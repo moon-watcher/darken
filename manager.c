@@ -11,14 +11,14 @@ void manager_init(Manager *const m, const Managerdef *def)
 
 void manager_destroy(Manager *const m)
 {
-    unsigned max = m->definition->maxEntities;
-    unsigned pos = m->free_pos;
+    unsigned allocated_entities = m->allocated_entities;
+    unsigned free_pos = m->free_pos;
 
-    for (unsigned i = 0; i < max; i++)
+    for (unsigned i = 0; i < allocated_entities; i++)
     {
-        Entity *const e = m->entityList[i];
+        Entity *e = m->entityList[i];
 
-        if (i < pos)
+        if (i < free_pos)
         {
             e->state->leave(e);
 
