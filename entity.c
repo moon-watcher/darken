@@ -48,10 +48,16 @@ void entity_delete(Entity *const e)
 
     (*free_pos)--;
     Entity *const lastEntity = m->entityList[*free_pos];
+
+    unsigned lastIndex = lastEntity->index;
+
     lastEntity->index = e->index;
     m->entityList[e->index] = lastEntity;
 
     e->state->leave(e);
+
+    e->index = lastIndex;
+    m->entityList[lastIndex] = e;
 
     if (ed->destructor != NULL)
         ed->destructor(e);

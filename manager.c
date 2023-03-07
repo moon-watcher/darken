@@ -13,21 +13,25 @@ void manager_destroy(Manager *const m)
 {
     unsigned allocated_entities = m->allocated_entities;
     unsigned free_pos = m->free_pos;
+    unsigned i = 0;
 
-    for (unsigned i = 0; i < allocated_entities; i++)
+    for (; i < free_pos; i++)
     {
-        Entity *e = m->entityList[i];
+        Entity *const e = m->entityList[i];
 
-        if (i < free_pos)
-        {
-            e->state->leave(e);
+        e->state->leave(e);
 
-            Entitydef *const ed = e->definition;
+        Entitydef *const ed = e->definition;
+        
+        if (ed->destructor != NULL)
+            ed->destructor(e);
 
-            if (ed->destructor != NULL)
-                ed->destructor(e);
-        }
+        free(e);
+    }
 
+    for (; i < allocated_entities; i++)
+    {
+        Entity *const e = m->entityList[i];
         free(e);
     }
 
@@ -36,9 +40,9 @@ void manager_destroy(Manager *const m)
 
 void manager_update(Manager *const m)
 {
-    unsigned pos = m->free_pos;
+    unsigned *const free_pos = &m->free_pos;
 
-    for (unsigned i = 0; i < pos; i++)
+    for (unsigned i = 0; i < *free_pos; i++)
     {
         Entity *const e = m->entityList[i];
         e->state->update(e);
