@@ -12,9 +12,6 @@ typedef struct _manager
 
     // Manager definition
     const Managerdef *definition;
-
-    // unsigned maxEntities;
-    // unsigned entities_max_bytes;
 } Manager;
 
 void manager_init    ( Manager *const, const Managerdef * );

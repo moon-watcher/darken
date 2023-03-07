@@ -24,7 +24,7 @@ void manager_destroy(Manager *const m)
 
             Entitydef *const ed = e->definition;
 
-            if (ed->destructor)
+            if (ed->destructor != NULL)
                 ed->destructor(e);
         }
 
