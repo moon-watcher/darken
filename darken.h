@@ -1,24 +1,19 @@
 #pragma once
 
-typedef struct _entity     Entity;
-typedef struct _entitydef  Entitydef;
-typedef struct _manager    Manager;
-typedef struct _managerdef Managerdef;
-typedef struct _state      State;
-typedef struct _system     System;
-typedef struct _systemdef  Systemdef;
+typedef struct deEntity_t     deEntity_t;
+typedef struct deManager_t    deManager_t;
+typedef struct deState_t      deState_t;
+typedef struct deSystem_t     deSystem_t;
+typedef struct deDefinition_t deDefinition_t;
 
+#include "definition.h"
 #include "entity.h"
-#include "entitydef.h"
 #include "manager.h"
-#include "managerdef.h"
 #include "state.h"
 #include "system.h"
-#include "systemdef.h"
 
-int  darken     ( const State * );
-void darken_end ( int );
-
+int darken(const deState_t *);
+void darken_end(int);
 
 // long data2;
 // void *ptr2;

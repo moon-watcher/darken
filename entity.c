@@ -1,12 +1,12 @@
 #include <genesis.h>
 #include "darken.h"
 
-Entity *entity_new(const Entitydef *ed)
+deEntity_t *de_entity_new(const deDefinition_t *ed)
 {
-    Manager *const m = ed->manager;
-    Managerdef *const md = (Managerdef *const)m->definition;
+    deManager_t *const m = ed->manager;
+    deDefinition_t *const md = (deDefinition_t *const)m->definition;
     unsigned *free_pos = (unsigned *)&m->free_pos;
-    const unsigned total_bytes = sizeof(Entity) + md->entities_max_bytes;
+    const unsigned total_bytes = sizeof(deEntity_t) + md->maxBytesEntities;
 
     if (*free_pos >= md->maxEntities)
     {
@@ -21,7 +21,7 @@ Entity *entity_new(const Entitydef *ed)
         ++m->allocated_entities;
     }
 
-    Entity *e = m->entityList[*free_pos];
+    deEntity_t *e = m->entityList[*free_pos];
 
     memset(e, 0, total_bytes);
     e->index = *free_pos;
@@ -30,29 +30,29 @@ Entity *entity_new(const Entitydef *ed)
     if (ed->constructor != NULL)
         ed->constructor(e);
 
-    e->state = ed->initialState;
-    e->definition = (Entitydef *)ed;
+    e->state = ed->initialdeState_t;
+    e->definition = (deDefinition_t *)ed;
     e->state->enter(e);
 
     return e;
 }
 
-void entity_delete(Entity *const e)
+void de_entity_delete(deEntity_t *const e)
 {
-    Entitydef *const ed = e->definition;
-    Manager *const m = ed->manager;
+    deDefinition_t *const ed = e->definition;
+    deManager_t *const m = ed->manager;
     unsigned *free_pos = (unsigned *)&m->free_pos;
 
     if (e->index >= *free_pos)
         return;
 
     (*free_pos)--;
-    Entity *const lastEntity = m->entityList[*free_pos];
+    deEntity_t *const lastdeEntity_t = m->entityList[*free_pos];
 
-    unsigned lastIndex = lastEntity->index;
+    unsigned lastIndex = lastdeEntity_t->index;
 
-    lastEntity->index = e->index;
-    m->entityList[e->index] = lastEntity;
+    lastdeEntity_t->index = e->index;
+    m->entityList[e->index] = lastdeEntity_t;
 
     e->state->leave(e);
 
@@ -63,7 +63,7 @@ void entity_delete(Entity *const e)
         ed->destructor(e);
 }
 
-void entity_state(Entity *const e, const State *const s)
+void de_entity_set_state(deEntity_t *const e, const deState_t *const s)
 {
     e->state->leave(e);
     e->state = s;

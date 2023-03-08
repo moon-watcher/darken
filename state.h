@@ -1,9 +1,9 @@
 #pragma once
 
-typedef struct _state
+typedef struct deState_t
 {
     char *name;
-    void (*enter)(Entity *const);
-    void (*update)(Entity *const);
-    void (*leave)(Entity *const);
-} State;
+    void (*enter) (deEntity_t *const);
+    void (*update)(deEntity_t *const);
+    void (*leave) (deEntity_t *const);
+} deState_t;

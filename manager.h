@@ -1,8 +1,8 @@
 #pragma once
 
-typedef struct _manager
+typedef struct deManager_t
 {
-    Entity **entityList;
+    deEntity_t **entityList;
 
     // Next free position in entities array
     unsigned free_pos;
@@ -10,10 +10,10 @@ typedef struct _manager
     // Number of allocated entities
     unsigned allocated_entities;
 
-    // Manager definition
-    const Managerdef *definition;
-} Manager;
+    // deManager_t definition
+    const deDefinition_t *definition;
+} deManager_t;
 
-void manager_init    ( Manager *const, const Managerdef * );
-void manager_destroy ( Manager *const );
-void manager_update  ( Manager *const );
+void de_manager_init    ( deManager_t *const, const deDefinition_t * );
+void de_manager_end ( deManager_t *const );
+void de_manager_update  ( deManager_t *const );

@@ -1,20 +1,20 @@
 #pragma once
 
-typedef struct _entity
+typedef struct deEntity_t
 {
-    const State *state;
-    Entitydef *definition;
+    const deState_t *state;
+    deDefinition_t *definition;
     
-    // Index of this entity in the Manager's entities array
+    // Index of this entity in the deManager_t's entities array
     unsigned index;
 
     // Bytes for casting data & components
     unsigned char data[];
-} Entity;
+} deEntity_t;
 
-Entity *entity_new    ( const Entitydef * );
-void    entity_delete ( Entity *const );
-void    entity_state  ( Entity *const, const State *const );
+deEntity_t *de_entity_new    ( const deDefinition_t * );
+void        de_entity_delete ( deEntity_t *const );
+void        de_entity_set_state  ( deEntity_t *const, const deState_t *const );
 
 
 

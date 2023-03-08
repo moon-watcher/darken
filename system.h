@@ -1,21 +1,21 @@
 #pragma once
 
-#include "systemdef.h"
+#include "darken.h"
 
-typedef struct _system
+typedef struct deSystem_t
 {
-    const Systemdef *def;
+    const deDefinition_t *definition;
     const void **list;
     unsigned length;
-} System;
+} deSystem_t;
 
-void system_init    ( System *const, const Systemdef * );
-void system_update  ( System *const );
-void system_destroy ( System *const );
-void system_info    ( System *const );
+void de_system_init    ( deSystem_t *const, const deDefinition_t * );
+void de_system_update  ( deSystem_t *const );
+void de_system_end ( deSystem_t *const );
+void de_system_info    ( deSystem_t *const );
 
 #define system_function(FUNC, CODE) \
-    void FUNC(System *const s)      \
+    void FUNC(deSystem_t *const s)      \
     {                               \
         int i = 0;                  \
         int len = s->length;        \

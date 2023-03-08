@@ -2,22 +2,22 @@
 
 static int exitCode = 0;
 
-int darken(const State *initialState)
+int darken(const deState_t *initialdeState_t)
 {
     exitCode = 0;
     int *x = &exitCode;
 
-    Manager manager;
-    const Entitydef ed = {.name = "Darken main entity", .manager = &manager, .initialState = initialState};
-    const Managerdef md = {.name = "Darken main manager", .maxEntities = 1};
+    deManager_t manager;
+    const deDefinition_t ed = {.name = "Darken main entity", .manager = &manager, .initialdeState_t = initialdeState_t};
+    const deDefinition_t md = {.name = "Darken main manager", .maxEntities = 1};
 
-    manager_init(&manager, &md);
-    Entity *const e = entity_new(&ed);
+    de_manager_init(&manager, &md);
+    deEntity_t *const e = de_entity_new(&ed);
 
     while (!*x)
         e->state->update(e);
 
-    manager_destroy(&manager);
+    de_manager_end(&manager);
 
     return exitCode;
 }

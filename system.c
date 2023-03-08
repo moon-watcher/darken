@@ -1,51 +1,51 @@
 #include <genesis.h>
 #include "system.h"
 
-void system_init(System *const s, const Systemdef *template)
+void de_system_init(deSystem_t *const s, const deDefinition_t *def)
 {
-    s->def = template;
-    s->list = malloc(sizeof(void *) * template->max);
+    s->definition = def;
+    s->list = malloc(sizeof(void *) * def->maxVarsdeSystem_t);
     s->length = 0;
 }
 
-void system_update(System *const s)
+void de_system_update(deSystem_t *const s)
 {
     if (!s || !s->length)
         return;
 
-    if (s->length >= s->def->max)
-        system_info(s);
+    if (s->length >= s->definition->maxVarsdeSystem_t)
+        de_system_info(s);
 
-    s->def->update(s);
+    s->definition->updatedeSystem_t(s);
     s->length = 0;
 }
 
-void system_destroy(System *const s)
+void de_system_end(deSystem_t *const s)
 {
     free(s->list);
 }
 
-void system_info(System *const s)
+void de_system_info(deSystem_t *const s)
 {
     VDP_resetScreen();
 
     drawText("=SYSTEM=", 0, 0);
     drawText("NAME:   ", 0, 1);
-    drawText(s->def->name, 9, 1);
+    drawText(s->definition->name, 9, 1);
     drawText("MAX:    ", 0, 2);
-    drawUInt(s->def->max, 9, 2, 4);
+    drawUInt(s->definition->maxVarsdeSystem_t, 9, 2, 4);
     drawText("LENGTH: ", 0, 3);
     drawUInt(s->length, 9, 3, 4);
 
     waitMs(20000);
 }
 
-// inline void system_add(System *const s, void *const v)
+// inline void system_add(deSystem_t *const s, void *const v)
 // {
 //     s->list[s->length++] = v;
 // }
 
-// void system_add ( System *const system, void *const array[] ) {
+// void system_add ( deSystem_t *const system, void *const array[] ) {
 //     // int t = sizeof (array) / sizeof ( void*const );
 // 	while ( *array ) {
 //         system->list [ system->length++ ] = *array;
