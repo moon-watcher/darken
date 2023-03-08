@@ -7,7 +7,7 @@ typedef struct deDefinition_t
 
     // entity
     void (*constructor)(deEntity_t *const);
-    void (*destructor )(deEntity_t *const);
+    void (*destructor) (deEntity_t *const);
     deManager_t *manager;
     const deState_t *initialState;
 
