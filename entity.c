@@ -1,7 +1,7 @@
 #include <genesis.h>
 #include "darken.h"
 
-deEntity_t *de_entity_new(const deDefinition_t *ed)
+deEntity_t *deEntity_new(const deDefinition_t *ed)
 {
     deManager_t *const m = ed->manager;
     deDefinition_t *const md = (deDefinition_t *const)m->definition;
@@ -37,7 +37,7 @@ deEntity_t *de_entity_new(const deDefinition_t *ed)
     return e;
 }
 
-void de_entity_delete(deEntity_t *const e)
+void deEntity_delete(deEntity_t *const e)
 {
     deDefinition_t *const ed = e->definition;
     deManager_t *const m = ed->manager;
@@ -63,7 +63,7 @@ void de_entity_delete(deEntity_t *const e)
         ed->destructor(e);
 }
 
-void de_entity_set_state(deEntity_t *const e, const deState_t *const s)
+void deEntity_set_state(deEntity_t *const e, const deState_t *const s)
 {
     e->state->leave(e);
     e->state = s;

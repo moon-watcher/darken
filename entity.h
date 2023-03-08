@@ -12,9 +12,9 @@ typedef struct deEntity_t
     unsigned char data[];
 } deEntity_t;
 
-deEntity_t *de_entity_new    ( const deDefinition_t * );
-void        de_entity_delete ( deEntity_t *const );
-void        de_entity_set_state  ( deEntity_t *const, const deState_t *const );
+deEntity_t *deEntity_new    ( const deDefinition_t * );
+void        deEntity_delete ( deEntity_t *const );
+void        deEntity_set_state  ( deEntity_t *const, const deState_t *const );
 
 
 

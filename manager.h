@@ -14,6 +14,6 @@ typedef struct deManager_t
     const deDefinition_t *definition;
 } deManager_t;
 
-void de_manager_init(deManager_t *const, const deDefinition_t *);
-void de_manager_end(deManager_t *const);
-void de_manager_update(deManager_t *const);
+void deManager_init(deManager_t *const, const deDefinition_t *);
+void deManager_end(deManager_t *const);
+void deManager_update(deManager_t *const);

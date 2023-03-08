@@ -11,13 +11,13 @@ int darken(const deState_t *initialState)
     const deDefinition_t ed = {.name = "Darken main entity", .manager = &manager, .initialState = initialState};
     const deDefinition_t md = {.name = "Darken main manager", .maxEntities = 1};
 
-    de_manager_init(&manager, &md);
-    deEntity_t *const e = de_entity_new(&ed);
+    deManager_init(&manager, &md);
+    deEntity_t *const e = deEntity_new(&ed);
 
     while (!*x)
         e->state->update(e);
 
-    de_manager_end(&manager);
+    deManager_end(&manager);
 
     return exitCode;
 }

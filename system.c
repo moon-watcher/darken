@@ -1,31 +1,31 @@
 #include <genesis.h>
 #include "system.h"
 
-void de_system_init(deSystem_t *const s, const deDefinition_t *def)
+void deSystem_init(deSystem_t *const s, const deDefinition_t *def)
 {
     s->definition = def;
     s->list = malloc(sizeof(void *) * def->maxVarsSystem);
     s->length = 0;
 }
 
-void de_system_update(deSystem_t *const s)
+void deSystem_update(deSystem_t *const s)
 {
     if (!s || !s->length)
         return;
 
     if (s->length >= s->definition->maxVarsSystem)
-        de_system_info(s);
+        deSystem_info(s);
 
     s->definition->updateSystem(s);
     s->length = 0;
 }
 
-void de_system_end(deSystem_t *const s)
+void deSystem_end(deSystem_t *const s)
 {
     free(s->list);
 }
 
-void de_system_info(deSystem_t *const s)
+void deSystem_info(deSystem_t *const s)
 {
     VDP_resetScreen();
 
@@ -40,12 +40,12 @@ void de_system_info(deSystem_t *const s)
     waitMs(20000);
 }
 
-// inline void system_add(deSystem_t *const s, void *const v)
+// inline void deSystem_add_var(deSystem_t *const s, void *const v)
 // {
 //     s->list[s->length++] = v;
 // }
 
-// void system_add ( deSystem_t *const system, void *const array[] ) {
+// void deSystem_add_var ( deSystem_t *const system, void *const array[] ) {
 //     // int t = sizeof (array) / sizeof ( void*const );
 // 	while ( *array ) {
 //         system->list [ system->length++ ] = *array;

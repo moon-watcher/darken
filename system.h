@@ -9,12 +9,12 @@ typedef struct deSystem_t
     const deDefinition_t *definition;
 } deSystem_t;
 
-void de_system_init   (deSystem_t *const, const deDefinition_t *);
-void de_system_update (deSystem_t *const);
-void de_system_end    (deSystem_t *const);
-void de_system_info   (deSystem_t *const);
+void deSystem_init   (deSystem_t *const, const deDefinition_t *);
+void deSystem_update (deSystem_t *const);
+void deSystem_end    (deSystem_t *const);
+void deSystem_info   (deSystem_t *const);
 
-#define system_function(FUNC, CODE) \
+#define deSystem_define_function(FUNC, CODE) \
     void FUNC(deSystem_t *const s)  \
     {                               \
         int i = 0;                  \
@@ -23,8 +23,8 @@ void de_system_info   (deSystem_t *const);
             CODE                    \
     }
 
-#define system_get(T, V) \
+#define deSystem_get_var(T, V) \
     T *const V = (T *const)s->list[i++]
 
-#define system_add(S, A) \
+#define deSystem_add_var(S, A) \
     S.list[S.length++] = A

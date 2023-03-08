@@ -1,7 +1,7 @@
 #include <genesis.h>
 #include "darken.h"
 
-void de_manager_init(deManager_t *const m, const deDefinition_t *def)
+void deManager_init(deManager_t *const m, const deDefinition_t *def)
 {
     m->entityList = malloc(sizeof(deEntity_t *) * def->maxEntities);
     m->definition = def;
@@ -9,7 +9,7 @@ void de_manager_init(deManager_t *const m, const deDefinition_t *def)
     m->allocated_entities = 0;
 }
 
-void de_manager_end(deManager_t *const m)
+void deManager_end(deManager_t *const m)
 {
     unsigned allocated_entities = m->allocated_entities;
     unsigned free_pos = m->free_pos;
@@ -38,7 +38,7 @@ void de_manager_end(deManager_t *const m)
     free(m->entityList);
 }
 
-void de_manager_update(deManager_t *const m)
+void deManager_update(deManager_t *const m)
 {
     unsigned *const free_pos = &m->free_pos;
 
