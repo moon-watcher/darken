@@ -5,17 +5,17 @@ typedef struct deDefinition_t
     // Common
     char *name;
 
-    // deEntity_t
+    // entity
     void (*constructor)(deEntity_t *const);
     void (*destructor )(deEntity_t *const);
     deManager_t *manager;
-    const deState_t *initialdeState_t;
+    const deState_t *initialState;
 
-    // deManager_t
+    // manager
     unsigned maxEntities;
     unsigned maxBytesEntities;
 
     // system
-    void (*updatedeSystem_t)();
-    unsigned maxVarsdeSystem_t;
+    void (*updateSystem)();
+    unsigned maxVarsSystem;
 } deDefinition_t;

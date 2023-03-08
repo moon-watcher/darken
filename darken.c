@@ -2,13 +2,13 @@
 
 static int exitCode = 0;
 
-int darken(const deState_t *initialdeState_t)
+int darken(const deState_t *initialState)
 {
     exitCode = 0;
     int *x = &exitCode;
 
     deManager_t manager;
-    const deDefinition_t ed = {.name = "Darken main entity", .manager = &manager, .initialdeState_t = initialdeState_t};
+    const deDefinition_t ed = {.name = "Darken main entity", .manager = &manager, .initialState = initialState};
     const deDefinition_t md = {.name = "Darken main manager", .maxEntities = 1};
 
     de_manager_init(&manager, &md);

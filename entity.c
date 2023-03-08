@@ -30,7 +30,7 @@ deEntity_t *de_entity_new(const deDefinition_t *ed)
     if (ed->constructor != NULL)
         ed->constructor(e);
 
-    e->state = ed->initialdeState_t;
+    e->state = ed->initialState;
     e->definition = (deDefinition_t *)ed;
     e->state->enter(e);
 
