@@ -12,7 +12,7 @@ typedef struct deDefinition_t deDefinition_t;
 #include "state.h"
 #include "system.h"
 
-int darken(const deState_t *);
+int darken(const deState_t *, void (*)(deEntity_t *const));
 void darken_end(int);
 
 // long data2;
