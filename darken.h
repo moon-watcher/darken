@@ -11,38 +11,11 @@ typedef struct deDefinition_t deDefinition_t;
 #include "manager.h"
 #include "state.h"
 #include "system.h"
+#include "api.h"
 
-int darken_init(const deState_t *, void (*)(deEntity_t *const));
+int darken(const deDefinition_t *);
 void darken_end(int);
 
-
-typedef struct {
-    void ( *init   ) ( deSystem_t *const, const deDefinition_t * );
-    void ( *update ) ( deSystem_t *const );
-    void ( *end    ) ( deSystem_t *const );
-} deSystemAPI;
-
-typedef struct {
-    void ( *init   ) ( deManager_t *const, const deDefinition_t * );
-    void ( *update ) ( deManager_t *const );
-    void ( *end    ) ( deManager_t *const );
-} deManagerAPI;
-
-typedef struct {
-    deEntity_t   *( *new    ) ( const deDefinition_t * );
-    void  ( *state  ) ( deEntity_t *const, const deState_t *const );
-    void  ( *delete ) ( deEntity_t *const );
-} deEntityAPI;
-
-typedef struct {
-    int  ( *init ) ( const deState_t * );
-    void ( *end  ) ( int );
-} DarkenAPI;
-
-const DarkenAPI    *const darken;
-const deSystemAPI  *const deSystem;
-const deManagerAPI *const deManager;
-const deEntityAPI  *const deEntity;
 
 // long data2;
 // void *ptr2;

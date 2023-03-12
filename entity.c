@@ -8,7 +8,7 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     unsigned *free_pos = (unsigned *)&m->free_pos;
     const unsigned total_bytes = sizeof(deEntity_t) + md->maxBytesEntities;
 
-    if (*free_pos >= md->maxEntities)
+    if (*free_pos >= max(md->maxEntities, 1))
     {
         // hacer un realloc para
         // que acepte más entidades

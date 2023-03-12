@@ -3,7 +3,7 @@
 
 void deManager_init(deManager_t *const m, const deDefinition_t *def)
 {
-    m->entityList = malloc(sizeof(deEntity_t *) * def->maxEntities);
+    m->entityList = malloc(sizeof(deEntity_t *) * max(def->maxEntities, 1) );
     m->definition = def;
     m->free_pos = 0;
     m->allocated_entities = 0;
