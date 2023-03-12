@@ -2,12 +2,17 @@
 
 static int _exit = 0;
 
+static const deDefinition_t _manager_def = {
+    .maxEntities      = 1,
+    .maxBytesEntities = 0,
+};
+
 int darken(const deDefinition_t *ed)
 {
     _exit = 0;
     int *exit = &_exit;
 
-    deManager_init(ed->manager, 0);
+    deManager_init(ed->manager, &_manager_def);
     deEntity_t *const e = deEntity_new(ed);
 
     while (!*exit)
