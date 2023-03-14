@@ -48,3 +48,9 @@ void deManager_update(deManager_t *const m)
         e->state->update(e);
     }
 }
+
+void deManager_iterate(deManager_t *const m, deIterator_t iterator)
+{
+    deManager_foreach(m, e)
+        iterator(e);
+}

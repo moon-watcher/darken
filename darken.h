@@ -6,6 +6,8 @@ typedef struct deState_t      deState_t;
 typedef struct deSystem_t     deSystem_t;
 typedef struct deDefinition_t deDefinition_t;
 
+typedef void (*deIterator_t)(void *const);
+
 #include "definition.h"
 #include "entity.h"
 #include "manager.h"
