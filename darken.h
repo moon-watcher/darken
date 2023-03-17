@@ -15,7 +15,7 @@ typedef void (*deIterator_t)(void *const);
 #include "system.h"
 #include "api.h"
 
-int darken(const deDefinition_t *);
+int darken(deDefinition_t *);
 void darken_end(int);
 
 

@@ -2,23 +2,23 @@
 
 static int _exit = 0;
 
-static const deDefinition_t _manager_def = {
-    .maxEntities      = 1,
-    .maxBytesEntities = 0,
-};
-
-int darken(const deDefinition_t *ed)
+int darken(deDefinition_t *ed)
 {
+    const deDefinition_t manager_def = { .maxEntities = 1 };
+    
     _exit = 0;
-    int *exit = &_exit;
+    int *exitCode = &_exit;
+    
+    deManager_t manager;
+    ed->manager = &manager;
 
-    deManager_init(ed->manager, &_manager_def);
+    deManager_init(ed->manager, &manager_def);
     deEntity_t *const e = deEntity_new(ed);
 
-    while (!*exit)
+    while (!*exitCode)
         e->state->update(e);
 
-    return *exit;
+    return *exitCode;
 }
 
 void darken_end(int exitCode)
