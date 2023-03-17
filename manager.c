@@ -45,7 +45,7 @@ void deManager_update(deManager_t *const m)
     for (unsigned i = 0; i < *free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
-        e->state->update(e);
+        e->update(e);
     }
 }
 

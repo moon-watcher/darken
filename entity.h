@@ -2,6 +2,8 @@
 
 typedef struct deEntity_t
 {
+    void (*update)(struct deEntity_t *const);
+    
     const deState_t *state;
     deDefinition_t *definition;
     
