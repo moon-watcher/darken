@@ -9,7 +9,7 @@ typedef struct deDefinition_t
     void (*constructor)(deEntity_t *const);
     void (*destructor) (deEntity_t *const);
     deManager_t *manager;
-    const deState_t *initialState;
+    const deState_t *state;
 
     // manager
     unsigned maxEntities;
