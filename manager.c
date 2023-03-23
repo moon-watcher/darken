@@ -31,10 +31,7 @@ void deManager_end(deManager_t *const m)
     }
 
     for (; i < allocated_entities; i++)
-    {
-        deEntity_t *const e = m->entityList[i];
-        free(e);
-    }
+        free(m->entityList[i]);
 
     free(m->entityList);
 }
