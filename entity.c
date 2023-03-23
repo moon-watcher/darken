@@ -45,7 +45,8 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     e->update = e->state->update;
     e->definition = (deDefinition_t *)ed;
 
-    e->state->enter(e);
+    if (e->state->enter)
+        e->state->enter(e);
 
     return e;
 }
@@ -74,7 +75,8 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    e->state->leave(e);
+    if (e->state->leave)
+        e->state->leave(e);
 
     if (ed->destructor != NULL)
         ed->destructor(e);
@@ -87,8 +89,12 @@ void deEntity_delete(deEntity_t *e)
 
 void deEntity_set_state(deEntity_t *const e, const deState_t *const s)
 {
-    e->state->leave(e);
+    if (e->state->leave)
+        e->state->leave(e);
+    
     e->state = s;
     e->update = e->state->update;
-    e->state->enter(e);
+    
+    if (e->state->enter)
+        e->state->enter(e);
 }

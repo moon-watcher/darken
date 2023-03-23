@@ -19,7 +19,8 @@ void deManager_end(deManager_t *const m)
     {
         deEntity_t *const e = m->entityList[i];
 
-        e->state->leave(e);
+        if (e->state->leave)
+            e->state->leave(e);
 
         deDefinition_t *const ed = e->definition;
         
