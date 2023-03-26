@@ -17,7 +17,7 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     {
         deDefinition_t *const md = (deDefinition_t *const)m->definition;
         free_pos = (unsigned *)&m->free_pos;
-        bytes += md->maxBytesEntities;
+        bytes += md->maxBytes;
 
         if (*free_pos >= max(md->maxEntities, 1))
         {
