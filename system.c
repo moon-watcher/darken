@@ -43,10 +43,11 @@ void deSystem_info(deSystem_t *const s)
     waitMs(20000);
 }
 
-void deSystem_add(deSystem_t *const system, void *const array[])
+void deSystem_add(deSystem_t *const s, void *const array[])
 {
-    unsigned max = system->params;
-
+    unsigned max = s->params;
+    void **const list = s->list;
+    
     for (unsigned i = 0; i < max; i++)
-        system->list[system->length++] = array[i];
+        list[s->length++] = array[i];
 }
