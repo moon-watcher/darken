@@ -4,6 +4,7 @@ typedef struct {
     void ( *init   ) ( deSystem_t *const, const deDefinition_t * );
     void ( *update ) ( deSystem_t *const );
     void ( *end    ) ( deSystem_t *const );
+    void ( *add    ) ( deSystem_t *const, void *const[]);
 } deSystemAPI;
 
 typedef struct {
