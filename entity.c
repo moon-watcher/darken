@@ -37,8 +37,10 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     e->update = e->state->update;
     e->definition = (deDefinition_t *)ed;
 
-    if (e->state->enter != NULL)
-        e->state->enter(e);
+    deState_t *const es = e->state;
+
+    if (es->enter != NULL)
+        es->enter(e);
 
     return e;
 }
@@ -67,14 +69,14 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    deState_t *const se = e->state;
-    deState_t *const sed = ed->state;
+    deState_t *const es = e->state;
+    deState_t *const eds = ed->state;
 
-    if (se->leave != NULL)
-        se->leave(e);
+    if (es->leave != NULL)
+        es->leave(e);
 
-    if (sed->leave != NULL)
-        sed->leave(e);
+    if (eds->leave != NULL)
+        eds->leave(e);
 
     if (m == NULL)
         free(e);
@@ -82,8 +84,10 @@ void deEntity_delete(deEntity_t *e)
 
 void deEntity_set_state(deEntity_t *const e, const deState_t *const s)
 {
-    if (e->state->leave != NULL)
-        e->state->leave(e);
+    deState_t *const es = e->state;
+
+    if (es->leave != NULL)
+        es->leave(e);
 
     deEntity_force(e, s);
 }
@@ -93,6 +97,8 @@ void deEntity_force(deEntity_t *const e, const deState_t *const s)
     e->state = s;
     e->update = e->state->update;
 
-    if (e->state->enter != NULL)
-        e->state->enter(e);
+    deState_t *const es = e->state;
+    
+    if (es->enter != NULL)
+        es->enter(e);
 }
