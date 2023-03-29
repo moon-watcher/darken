@@ -17,3 +17,4 @@ typedef struct deEntity_t
 deEntity_t *deEntity_new       (const deDefinition_t *);
 void        deEntity_delete    (deEntity_t *);
 void        deEntity_set_state (deEntity_t *const, const deState_t *const);
+void        deEntity_force     (deEntity_t *const, const deState_t *const);
