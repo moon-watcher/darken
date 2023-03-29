@@ -18,14 +18,15 @@ void deManager_end(deManager_t *const m)
     for (; i < free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
-
-        if (e->state->leave)
-            e->state->leave(e);
-
         deDefinition_t *const ed = e->definition;
+        deState_t *const se = e->state;
+        deState_t *const sed = ed->state;
+
+        if (se->leave != NULL)
+            se->leave(e);
         
-        if (ed->destructor != NULL)
-            ed->destructor(e);
+        if (sed->leave != NULL)
+            sed->leave(e);
 
         free(e);
     }
@@ -47,8 +48,8 @@ void deManager_update(deManager_t *const m)
     }
 }
 
-void deManager_iterate(deManager_t *const m, deIterator_t iterator)
-{
-    deManager_foreach(m, e)
-        iterator(e);
-}
+// void deManager_iterate(deManager_t *const m, deIterator_t iterator)
+// {
+//     deManager_foreach(m, e)
+//         iterator(e);
+// }

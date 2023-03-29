@@ -6,13 +6,11 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     deEntity_t *e = NULL;
     deManager_t *const m = ed->manager;
     unsigned bytes = sizeof(deEntity_t);
-    unsigned int0 = 0;
-    unsigned *free_pos = &int0;
+    unsigned zero = 0;
+    unsigned *free_pos = &zero;
 
     if (m == NULL)
-    {
         e = malloc(bytes);
-    }
     else
     {
         deDefinition_t *const md = (deDefinition_t *const)m->definition;
@@ -20,10 +18,7 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
         bytes += md->maxBytes;
 
         if (*free_pos >= max(md->maxEntities, 1))
-        {
-            // hacer un realloc para que acepte más entidades
-            return e;
-        }
+            return e; // hacer un realloc para que acepte más entidades
         
         if (*free_pos >= m->allocated_entities)
         {
@@ -38,14 +33,11 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
     e->index = *free_pos;
     (*free_pos)++;
 
-    if (ed->constructor != NULL)
-        ed->constructor(e);
-
     e->state = ed->state;
     e->update = e->state->update;
     e->definition = (deDefinition_t *)ed;
 
-    if (e->state->enter)
+    if (e->state->enter != NULL)
         e->state->enter(e);
 
     return e;
@@ -75,26 +67,32 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    if (e->state->leave)
-        e->state->leave(e);
+    deState_t *const se = e->state;
+    deState_t *const sed = ed->state;
 
-    if (ed->destructor != NULL)
-        ed->destructor(e);
+    if (se->leave != NULL)
+        se->leave(e);
+
+    if (sed->leave != NULL)
+        sed->leave(e);
 
     if (m == NULL)
-    {
         free(e);
-    }
 }
 
 void deEntity_set_state(deEntity_t *const e, const deState_t *const s)
 {
-    if (e->state->leave)
+    if (e->state->leave != NULL)
         e->state->leave(e);
-    
+
+    deEntity_force(e, s);
+}
+
+void deEntity_force(deEntity_t *const e, const deState_t *const s)
+{
     e->state = s;
     e->update = e->state->update;
-    
-    if (e->state->enter)
+
+    if (e->state->enter != NULL)
         e->state->enter(e);
 }

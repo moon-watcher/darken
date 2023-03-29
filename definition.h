@@ -6,10 +6,8 @@ typedef struct deDefinition_t
     char *name;
 
     // Entity
-    void (*constructor)(deEntity_t *const);
-    void (*destructor)(deEntity_t *const);
     deManager_t *manager;
-    const deState_t *state;
+    deState_t *state; // constructor | destructor 
 
     // Manager
     unsigned maxEntities;
