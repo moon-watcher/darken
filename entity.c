@@ -36,6 +36,7 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
     (*free_pos)++;
 
     e->xtor = s;
+    e->state = s;
     exec(e, xtor->enter);
 
     return e;
@@ -43,7 +44,9 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 
 void deEntity_update(deEntity_t *const e)
 {
-    exec(e, xtor->update);
+    if (e->xtor->update != e->state->update)
+        exec(e, xtor->update);
+
     exec(e, state->update);
 }
 
@@ -85,6 +88,6 @@ void deEntity_change(deEntity_t *const e, const deState_t *const s)
 
 void deEntity_force(deEntity_t *const e, const deState_t *const s)
 {
-    e->state = s;
+    e->state = (deState_t *)s;
     exec(e, state->enter);
 }
