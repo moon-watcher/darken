@@ -1,9 +1,9 @@
 #pragma once
 
-typedef struct deEntity_t     deEntity_t;
-typedef struct deManager_t    deManager_t;
-typedef struct deState_t      deState_t;
-typedef struct deSystem_t     deSystem_t;
+typedef struct deEntity_t  deEntity_t;
+typedef struct deManager_t deManager_t;
+typedef struct deState_t   deState_t;
+typedef struct deSystem_t  deSystem_t;
 
 // typedef void (*deIterator_t)(void *const);
 
@@ -11,7 +11,6 @@ typedef struct deSystem_t     deSystem_t;
 #include "manager.h"
 #include "state.h"
 #include "system.h"
-#include "api.h"
 
 int darken( /*deDefinition_t * */);
 void darken_end(int);
