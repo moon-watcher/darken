@@ -1,5 +1,8 @@
+#include "manager.h"
+#include "entity.h"
 #include <genesis.h>
-#include "darken.h"
+
+#define exec(A, B) if (A->B != NULL) A->B(A)
 
 void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {
@@ -20,12 +23,9 @@ void deManager_end(deManager_t *const m)
     {
         deEntity_t *const e = m->entityList[i];
 
-        if (e->state->leave != NULL)
-            e->state->leave(e);
+        exec(e, state->leave);
+        exec(e, xtor->leave);
         
-        if (e->xtor->leave != NULL)
-            e->xtor->leave(e);
-
         free(e);
     }
 
@@ -40,8 +40,5 @@ void deManager_update(deManager_t *const m)
     unsigned *const free_pos = &m->free_pos;
 
     for (unsigned i = 0; i < *free_pos; i++)
-    {
-        deEntity_t *const e = m->entityList[i];
-        e->update(e);
-    }
+        deEntity_update(m->entityList[i]);
 }

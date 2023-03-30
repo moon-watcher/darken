@@ -10,7 +10,7 @@ int darken(deState_t *const s)
     deEntity_t *const e = deEntity_new(s, 0);
 
     while (!*exitCode)
-        e->update(e);
+        deEntity_update(e);
 
     deEntity_delete(e);
 

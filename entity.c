@@ -1,5 +1,8 @@
+#include "entity.h"
+#include "manager.h"
 #include <genesis.h>
-#include "darken.h"
+
+#define exec(A, B) if (A->B != NULL) A->B(A)
 
 deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 {
@@ -33,12 +36,15 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
     (*free_pos)++;
 
     e->xtor = s;
-    e->update = e->xtor->update;
-
-    if (s->enter != NULL)
-        s->enter(e);
+    exec(e, xtor->enter);
 
     return e;
+}
+
+void deEntity_update(deEntity_t *const e)
+{
+    exec(e, xtor->update);
+    exec(e, state->update);
 }
 
 void deEntity_delete(deEntity_t *e)
@@ -64,11 +70,8 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    if (e->state->leave != NULL)
-        e->state->leave(e);
-
-    if (e->xtor->leave != NULL)
-        e->xtor->leave(e);
+    exec(e, state->leave );
+    exec(e, xtor->leave );
 
     if (m == NULL)
         free(e);
@@ -76,17 +79,12 @@ void deEntity_delete(deEntity_t *e)
 
 void deEntity_change(deEntity_t *const e, const deState_t *const s)
 {
-    if (e->state->leave != NULL)
-        e->state->leave(e);
-
+    exec(e, state->leave);
     deEntity_force(e, s);
 }
 
 void deEntity_force(deEntity_t *const e, const deState_t *const s)
 {
     e->state = s;
-    e->update = e->state->update;
-
-    if (e->state->enter != NULL)
-        e->state->enter(e);
+    exec(e, state->enter);
 }
