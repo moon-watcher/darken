@@ -10,11 +10,11 @@ typedef struct deManager_t
     // Number of allocated entities
     unsigned allocated_entities;
 
-    // Definition
-    const deDefinition_t *definition;
+    unsigned maxEntities;
+    unsigned maxBytes;
 } deManager_t;
 
-void deManager_init    (deManager_t *const, const deDefinition_t *);
+void deManager_init    (deManager_t *const, unsigned, unsigned);
 void deManager_end     (deManager_t *const);
 void deManager_update  (deManager_t *const);
 /*

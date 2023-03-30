@@ -6,11 +6,12 @@ typedef struct deSystem_t
 {
     const void **list;
     unsigned length;
+    void (*updateFn)();
+    unsigned maxItems;
     unsigned params;
-    const deDefinition_t *definition;
 } deSystem_t;
 
-void deSystem_init   ( deSystem_t *const, const deDefinition_t * );
+void deSystem_init   ( deSystem_t *const, void (*)(), unsigned, unsigned);
 void deSystem_update ( deSystem_t *const );
 void deSystem_end    ( deSystem_t *const );
 void deSystem_info   ( deSystem_t *const );

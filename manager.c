@@ -1,10 +1,11 @@
 #include <genesis.h>
 #include "darken.h"
 
-void deManager_init(deManager_t *const m, const deDefinition_t *def)
+void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {
-    m->entityList = malloc(sizeof(deEntity_t *) * max(def->maxEntities, 1) );
-    m->definition = def;
+    m->maxBytes = maxBytes;
+    m->maxEntities = maxEntities;
+    m->entityList = malloc(sizeof(deEntity_t *) * max(maxEntities, 1) );
     m->free_pos = 0;
     m->allocated_entities = 0;
 }
@@ -18,9 +19,9 @@ void deManager_end(deManager_t *const m)
     for (; i < free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
-        deDefinition_t *const ed = e->definition;
+        // deDefinition_t *const ed = e->definition;
         deState_t *const se = e->state;
-        deState_t *const sed = ed->state;
+        deState_t *const sed = e->xtor;
 
         if (se->leave != NULL)
             se->leave(e);

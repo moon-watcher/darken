@@ -1,23 +1,19 @@
 #include <genesis.h>
 #include "darken.h"
 
-deEntity_t *deEntity_new(const deDefinition_t *ed)
+deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 {
     deEntity_t *e = NULL;
-    deManager_t *const m = ed->manager;
     unsigned bytes = sizeof(deEntity_t);
     unsigned zero = 0;
     unsigned *free_pos = &zero;
 
-    if (m == NULL)
-        e = malloc(bytes);
-    else
+    if (m != NULL)
     {
-        deDefinition_t *const md = (deDefinition_t *const)m->definition;
         free_pos = (unsigned *)&m->free_pos;
-        bytes += md->maxBytes;
+        bytes += m->maxBytes;
 
-        if (*free_pos >= max(md->maxEntities, 1))
+        if (*free_pos >= max(m->maxEntities, 1))
             return e; // hacer un realloc para que acepte más entidades
         
         if (*free_pos >= m->allocated_entities)
@@ -28,27 +24,26 @@ deEntity_t *deEntity_new(const deDefinition_t *ed)
 
         e = m->entityList[*free_pos];
     }
+    else
+        e = malloc(bytes);
 
     memset(e, 0, bytes);
+
     e->index = *free_pos;
     (*free_pos)++;
 
-    e->state = ed->state;
-    e->update = e->state->update;
-    e->definition = (deDefinition_t *)ed;
+    e->xtor = s;
+    e->update = e->xtor->update;
 
-    deState_t *const es = e->state;
-
-    if (es->enter != NULL)
-        es->enter(e);
+    if (s->enter != NULL)
+        s->enter(e);
 
     return e;
 }
 
 void deEntity_delete(deEntity_t *e)
 {
-    deDefinition_t *const ed = e->definition;
-    deManager_t *const m = ed->manager;
+    deManager_t *const m = e->manager;
 
     if (m != NULL)
     {
@@ -70,7 +65,7 @@ void deEntity_delete(deEntity_t *e)
     }
 
     deState_t *const es = e->state;
-    deState_t *const eds = ed->state;
+    deState_t *const eds = e->xtor;
 
     if (es->leave != NULL)
         es->leave(e);
@@ -98,7 +93,7 @@ void deEntity_force(deEntity_t *const e, const deState_t *const s)
     e->update = e->state->update;
 
     deState_t *const es = e->state;
-    
+
     if (es->enter != NULL)
         es->enter(e);
 }
