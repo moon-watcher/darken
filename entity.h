@@ -5,7 +5,7 @@ typedef struct deEntity_t
     void (*update)(struct deEntity_t *const);
     
     deState_t *state;
-    deState_t *xtor; // conxtor | dextor
+    deState_t *xtor; // constructor | destructor
     deManager_t *manager;
     
     // Index of this entity in the deManager_t's entities array
