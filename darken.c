@@ -1,21 +1,23 @@
 #include "darken.h"
 
-static int _exit = 0;
+static int exit = 0;
 
-int darken( /*deDefinition_t *ed*/ )
+int darken(deState_t *const s)
 {
-    _exit = 0;
-    int *exitCode = &_exit;
-    
-    // deEntity_t *const e = deEntity_new(ed);
+    exit = 0;
+    int *exitCode = &exit;
 
-    // while (!*exitCode)
-    //     e->update(e);
+    deEntity_t *const e = deEntity_new(s, 0);
+
+    while (!*exitCode)
+        e->update(e);
+
+    deEntity_delete(e);
 
     return *exitCode;
 }
 
 void darken_end(int exitCode)
 {
-    _exit = exitCode;
+    exit = exitCode;
 }

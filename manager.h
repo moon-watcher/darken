@@ -1,5 +1,7 @@
 #pragma once
 
+typedef struct deEntity_t deEntity_t;
+
 typedef struct deManager_t
 {
     deEntity_t **entityList;
@@ -14,13 +16,6 @@ typedef struct deManager_t
     unsigned maxBytes;
 } deManager_t;
 
-void deManager_init    (deManager_t *const, unsigned, unsigned);
-void deManager_end     (deManager_t *const);
-void deManager_update  (deManager_t *const);
-/*
-void deManager_iterate (deManager_t *const, deIterator_t);
-
-#define deManager_foreach(M, E) \
-    deEntity_t *E = NULL; \
-    for (unsigned i = 0, E = M->entityList[0]; E = M->entityList[i], i < M->free_pos; i++)
-*/
+void deManager_init   ( deManager_t *const, unsigned, unsigned );
+void deManager_end    ( deManager_t *const );
+void deManager_update ( deManager_t *const );

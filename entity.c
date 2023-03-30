@@ -14,7 +14,7 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
         bytes += m->maxBytes;
 
         if (*free_pos >= max(m->maxEntities, 1))
-            return e; // hacer un realloc para que acepte más entidades
+            return NULL;
         
         if (*free_pos >= m->allocated_entities)
         {
@@ -64,25 +64,20 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    deState_t *const es = e->state;
-    deState_t *const eds = e->xtor;
+    if (e->state->leave != NULL)
+        e->state->leave(e);
 
-    if (es->leave != NULL)
-        es->leave(e);
-
-    if (eds->leave != NULL)
-        eds->leave(e);
+    if (e->xtor->leave != NULL)
+        e->xtor->leave(e);
 
     if (m == NULL)
         free(e);
 }
 
-void deEntity_set_state(deEntity_t *const e, const deState_t *const s)
+void deEntity_change(deEntity_t *const e, const deState_t *const s)
 {
-    deState_t *const es = e->state;
-
-    if (es->leave != NULL)
-        es->leave(e);
+    if (e->state->leave != NULL)
+        e->state->leave(e);
 
     deEntity_force(e, s);
 }
@@ -92,8 +87,6 @@ void deEntity_force(deEntity_t *const e, const deState_t *const s)
     e->state = s;
     e->update = e->state->update;
 
-    deState_t *const es = e->state;
-
-    if (es->enter != NULL)
-        es->enter(e);
+    if (e->state->enter != NULL)
+        e->state->enter(e);
 }
