@@ -44,7 +44,7 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 
 void deEntity_update(deEntity_t *const e)
 {
-    if (e->xtor->update != e->state->update)
+    if (e->xtor != e->state)
         exec(e, xtor->update);
 
     exec(e, state->update);
@@ -73,8 +73,10 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    exec(e, state->leave );
-    exec(e, xtor->leave );
+    exec(e, state->leave);
+
+    if (e->xtor != e->state)
+        exec(e, xtor->leave);
 
     if (m == NULL)
         free(e);
