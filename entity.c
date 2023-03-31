@@ -37,28 +37,26 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
     e->xtor = s;
     e->state = s;
     
-    deState_f exe = e->xtor->enter;
-    if (exe) exe(e);
-
+    deState_enter(e);
+    
     return e;
 }
 
 void deEntity_update(deEntity_t *const e)
 {
     deState_f exu = e->xtor->update;
-    deState_f f = &deState_update;
+    deState_f func = (exu && e->xtor != e->state) ?
+        exu:
+        &deState_update;
 
-    if (exu && e->xtor != e->state)
-        f = exu;
-    
-    f(e);
+    func(e);
 }
 
 void deEntity_delete(deEntity_t *e)
 {
     deManager_t *const m = e->manager;
 
-    if (m != NULL)
+    if (m)
     {
         unsigned *free_pos = (unsigned *)&m->free_pos;
 
@@ -68,39 +66,33 @@ void deEntity_delete(deEntity_t *e)
         (*free_pos)--;
         deEntity_t *const lastdeEntity = m->entityList[*free_pos];
 
-        unsigned lastIndex = lastdeEntity->index;
+        unsigned last = lastdeEntity->index;
 
         lastdeEntity->index = e->index;
         m->entityList[e->index] = lastdeEntity;
 
-        e->index = lastIndex;
-        m->entityList[lastIndex] = e;
+        e->index = last;
+        m->entityList[last] = e;
     }
 
-    deState_f esl = e->state->leave;
-    deState_f exl = e->xtor->leave;
+    deState_leave(e);
     
-    if (esl) esl(e);
-    if (exl && e->xtor != e->state) exl(e);
+    deState_f exlf = e->xtor->leave;    
+    if (exlf && e->xtor != e->state)
+        exlf(e);
 
-    if (m == NULL)
+    if (!m)
         free(e);
 }
 
 void deEntity_change(deEntity_t *const e, const deState_t *const s)
 {
-    deState_f esl = e->state->leave;
-
-    if (esl) esl(e);
-
-    deEntity_force(e, s);
+    deState_leave(e);
+    deEntity_jump(e, s);
 }
 
-void deEntity_force(deEntity_t *const e, const deState_t *const s)
+void deEntity_jump(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
-    
-    deState_f ese = e->state->enter;
-    
-    if (ese) ese(e);
+    deState_enter(e);
 }

@@ -21,11 +21,12 @@ void deManager_end(deManager_t *const m)
     for (; i < free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
-        deState_f esl = e->state->leave;
-        deState_f exl = e->xtor->leave;
 
-        if (esl) esl(e);
-        if (exl) exl(e);
+        deState_leave(e);
+        
+        deState_f leave = e->xtor->leave;
+        
+        if (leave) leave(e);
         
         free(e);
     }
