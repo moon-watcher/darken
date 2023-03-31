@@ -1,5 +1,6 @@
 #pragma once
 
+#include "state.h"
 #include "entity.h"
 #include "manager.h"
 #include "system.h"

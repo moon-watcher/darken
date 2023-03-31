@@ -1,8 +1,7 @@
 #include "manager.h"
 #include "entity.h"
+#include "state.h"
 #include <genesis.h>
-
-#define exec(A, B) if (A->B != NULL) A->B(A)
 
 void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {
@@ -22,9 +21,11 @@ void deManager_end(deManager_t *const m)
     for (; i < free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
+        deState_f esl = e->state->leave;
+        deState_f exl = e->xtor->leave;
 
-        exec(e, state->leave);
-        exec(e, xtor->leave);
+        if (esl) esl(e);
+        if (exl) exl(e);
         
         free(e);
     }

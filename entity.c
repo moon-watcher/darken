@@ -1,8 +1,7 @@
 #include "entity.h"
 #include "manager.h"
+#include "state.h"
 #include <genesis.h>
-
-#define exec(A, B) if (A->B != NULL) A->B(A)
 
 deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 {
@@ -37,17 +36,22 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 
     e->xtor = s;
     e->state = s;
-    exec(e, xtor->enter);
+    
+    deState_f exe = e->xtor->enter;
+    if (exe) exe(e);
 
     return e;
 }
 
 void deEntity_update(deEntity_t *const e)
 {
-    if (e->xtor != e->state)
-        exec(e, xtor->update);
+    deState_f exu = e->xtor->update;
+    deState_f f = &deState_update;
 
-    exec(e, state->update);
+    if (exu && e->xtor != e->state)
+        f = exu;
+    
+    f(e);
 }
 
 void deEntity_delete(deEntity_t *e)
@@ -73,10 +77,11 @@ void deEntity_delete(deEntity_t *e)
         m->entityList[lastIndex] = e;
     }
 
-    exec(e, state->leave);
-
-    if (e->xtor != e->state)
-        exec(e, xtor->leave);
+    deState_f esl = e->state->leave;
+    deState_f exl = e->xtor->leave;
+    
+    if (esl) esl(e);
+    if (exl && e->xtor != e->state) exl(e);
 
     if (m == NULL)
         free(e);
@@ -84,12 +89,18 @@ void deEntity_delete(deEntity_t *e)
 
 void deEntity_change(deEntity_t *const e, const deState_t *const s)
 {
-    exec(e, state->leave);
+    deState_f esl = e->state->leave;
+
+    if (esl) esl(e);
+
     deEntity_force(e, s);
 }
 
 void deEntity_force(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
-    exec(e, state->enter);
+    
+    deState_f ese = e->state->enter;
+    
+    if (ese) ese(e);
 }

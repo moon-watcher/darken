@@ -1,19 +1,12 @@
 #pragma once
 
 typedef struct deManager_t deManager_t;
-typedef struct deEntity_t  deEntity_t;
-
-typedef struct deState_t
-{
-    void (*enter)  ( deEntity_t *const );
-    void (*update) ( deEntity_t *const );
-    void (*leave)  ( deEntity_t *const );
-} deState_t;
+typedef struct deState_t deState_t;
 
 typedef struct deEntity_t
 {
     deState_t *state;
-    deState_t *xtor; // constructor | destructor
+    deState_t *xtor; // construct | execute | destruct
     deManager_t *manager;
     
     // Index of entities in deManager_t's entities array
