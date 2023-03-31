@@ -1,5 +1,4 @@
-#include <genesis.h>
-#include "system.h"
+#include "darken.h"
 
 void deSystem_init(deSystem_t *const s, void (*updateFn)(), unsigned maxItems, unsigned params)
 {

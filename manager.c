@@ -1,7 +1,4 @@
-#include "manager.h"
-#include "entity.h"
-#include "state.h"
-#include <genesis.h>
+#include "darken.h"
 
 void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {

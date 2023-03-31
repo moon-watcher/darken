@@ -1,5 +1,4 @@
-#include "state.h"
-#include "entity.h"
+#include "darken.h"
 
 #define exec(A, B)             \
     deState_f f = A->state->B; \

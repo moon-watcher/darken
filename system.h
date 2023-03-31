@@ -1,7 +1,5 @@
 #pragma once
 
-#include "darken.h"
-
 typedef struct deSystem_t
 {
     const void **list;

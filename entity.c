@@ -1,7 +1,4 @@
-#include "entity.h"
-#include "manager.h"
-#include "state.h"
-#include <genesis.h>
+#include "darken.h"
 
 deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 {
