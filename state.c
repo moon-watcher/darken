@@ -1,7 +1,7 @@
 #include "darken.h"
 
-#define exec(A, B)             \
-    deState_f f = A->state->B; \
+#define exec(A, B)                   \
+    deState_f const f = A->state->B; \
     if (f) f(A);
 
 void deState_enter  ( deEntity_t *const e ) { exec ( e, enter  ); }

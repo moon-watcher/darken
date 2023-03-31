@@ -4,7 +4,7 @@ void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxByte
 {
     m->maxBytes = maxBytes;
     m->maxEntities = maxEntities;
-    m->entityList = malloc(sizeof(deEntity_t *) * max(maxEntities, 1) );
+    m->entityList = malloc(sizeof(deEntity_t *) * max(maxEntities, 1));
     m->free_pos = 0;
     m->allocated_entities = 0;
 }
@@ -20,11 +20,12 @@ void deManager_end(deManager_t *const m)
         deEntity_t *const e = m->entityList[i];
 
         deState_leave(e);
-        
+
         deState_f leave = e->xtor->leave;
-        
-        if (leave) leave(e);
-        
+
+        if (leave)
+            leave(e);
+
         free(e);
     }
 
@@ -38,6 +39,24 @@ void deManager_update(deManager_t *const m)
 {
     unsigned *const free_pos = &m->free_pos;
 
+    // for (unsigned i = 0; i < *free_pos; i++)
+    //     deEntity_update(m->entityList[i]);
+
+    //// speed up? ////
     for (unsigned i = 0; i < *free_pos; i++)
-        deEntity_update(m->entityList[i]);
+    {
+        deEntity_t *const e = m->entityList[i];
+        deState_f const exuf = e->xtor->update;
+
+        if (exuf && e->xtor != e->state)
+            exuf(e);
+        else
+        {
+            deState_f const state = e->state->update;
+
+            if (state)
+                state(e);
+        }
+    }
+    ///////////////////
 }
