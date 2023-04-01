@@ -1,6 +1,6 @@
 #include "darken.h"
 
-deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
+deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
 {
     deEntity_t *e = NULL;
     unsigned bytes = sizeof(deEntity_t);

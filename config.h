@@ -1,3 +1,3 @@
 #pragma once
 
-#define DARKEN_XTOR_UPDATE FALSE
+#define DARKEN_XTOR_UPDATE TRUE
