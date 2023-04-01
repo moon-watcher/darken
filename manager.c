@@ -39,24 +39,27 @@ void deManager_update(deManager_t *const m)
 {
     unsigned *const free_pos = &m->free_pos;
 
-    // for (unsigned i = 0; i < *free_pos; i++)
-    //     deEntity_update(m->entityList[i]);
-
-    //// speed up? ////
     for (unsigned i = 0; i < *free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
-        deState_f const exuf = e->xtor->update;
+        
+#if DARKEN_XTOR_UPDATE
 
-        if (exuf && e->xtor != e->state)
-            exuf(e);
-        else
+        if (e->xtor != e->state)
         {
-            deState_f const state = e->state->update;
+            deState_f const exuf = e->xtor->update;
 
-            if (state)
-                state(e);
+            if (exuf)
+            {
+                exuf(e);
+                continue;
+            }        
         }
+#endif
+
+        deState_f const func = e->state->update;
+
+        if (func)
+            func(e);
     }
-    ///////////////////
 }

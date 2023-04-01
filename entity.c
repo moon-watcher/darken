@@ -41,10 +41,24 @@ deEntity_t *deEntity_new(deState_t *const s, deManager_t *const m)
 
 void deEntity_update(deEntity_t *const e)
 {
-    deState_f const exuf = e->xtor->update;
-    (exuf && e->xtor != e->state) ?
-        exuf(e):
-        deState_update(e);
+#if DARKEN_XTOR_UPDATE
+
+    if (e->xtor != e->state)
+    {
+        deState_f const exuf = e->xtor->update;
+
+        if (exuf)
+        {
+            exuf(e);
+            return;
+        }
+    }
+#endif
+
+    deState_f const func = e->state->update;
+    
+    if (func)
+        func(e);
 }
 
 void deEntity_delete(deEntity_t *e)
