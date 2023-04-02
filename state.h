@@ -11,7 +11,7 @@ typedef struct deState_t
     deState_f leave;
 } deState_t;
 
-void deState_exec(deEntity_t *const, deState_f const);
-void deState_enter(deEntity_t *const);
-void deState_update(deEntity_t *const);
-void deState_leave(deEntity_t *const);
+void deState_exec   ( deEntity_t *const, deState_f const );
+void deState_enter  ( deEntity_t *const );
+void deState_update ( deEntity_t *const );
+void deState_leave  ( deEntity_t *const );
