@@ -1,9 +1,22 @@
 #include "darken.h"
 
-#define exec(A, B)                   \
-    deState_f const f = A->state->B; \
-    if (f) f(A);
+inline void deState_exec(deEntity_t *const e, deState_f const func)
+{
+    if (func != NULL)
+        func(e);
+}
 
-void deState_enter  ( deEntity_t *const e ) { exec ( e, enter  ); }
-void deState_update ( deEntity_t *const e ) { exec ( e, update ); }
-void deState_leave  ( deEntity_t *const e ) { exec ( e, leave  ); }
+inline void deState_enter(deEntity_t *const e)
+{
+    deState_exec(e, e->state->enter);
+}
+
+inline void deState_update(deEntity_t *const e)
+{
+    deState_exec(e, e->state->update);
+}
+
+inline void deState_leave(deEntity_t *const e)
+{
+    deState_exec(e, e->state->leave);
+}

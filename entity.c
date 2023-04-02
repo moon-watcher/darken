@@ -7,7 +7,9 @@ deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
     unsigned zero = 0;
     unsigned *free_pos = &zero;
 
-    if (m != NULL)
+    if (m == NULL)
+        e = malloc(bytes);
+    else
     {
         free_pos = (unsigned *)&m->free_pos;
         bytes += m->maxBytes;
@@ -23,75 +25,22 @@ deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
 
         e = m->entityList[*free_pos];
     }
-    else
-        e = malloc(bytes);
 
     memset(e, 0, bytes);
 
     e->index = *free_pos;
     (*free_pos)++;
+    e->xtor = e->state = s;
+    e->updateFn = s->update;
 
-    e->xtor = s;
-    e->state = s;
-    
     deState_enter(e);
-    
+
     return e;
 }
 
 void deEntity_update(deEntity_t *const e)
 {
-#if DARKEN_XTOR_UPDATE
-
-    if (e->xtor != e->state)
-    {
-        deState_f const exuf = e->xtor->update;
-
-        if (exuf)
-        {
-            exuf(e);
-            return;
-        }
-    }
-#endif
-
-    deState_f const func = e->state->update;
-    
-    if (func)
-        func(e);
-}
-
-void deEntity_delete(deEntity_t *e)
-{
-    deManager_t *const m = e->manager;
-
-    if (m)
-    {
-        unsigned *free_pos = (unsigned *)&m->free_pos;
-
-        if (e->index >= *free_pos)
-            return;
-
-        (*free_pos)--;
-        deEntity_t *const lastdeEntity = m->entityList[*free_pos];
-
-        unsigned last = lastdeEntity->index;
-
-        lastdeEntity->index = e->index;
-        m->entityList[e->index] = lastdeEntity;
-
-        e->index = last;
-        m->entityList[last] = e;
-    }
-
-    deState_leave(e);
-    
-    deState_f exlf = e->xtor->leave;    
-    if (exlf && e->xtor != e->state)
-        exlf(e);
-
-    if (!m)
-        free(e);
+    deState_exec(e, e->updateFn);
 }
 
 void deEntity_change(deEntity_t *const e, const deState_t *const s)
@@ -103,5 +52,41 @@ void deEntity_change(deEntity_t *const e, const deState_t *const s)
 void deEntity_jump(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
+
+    if (e->xtor->update == NULL)
+        e->updateFn = (deState_f *)s->update;
+
     deState_enter(e);
+}
+
+void deEntity_delete(deEntity_t *e)
+{
+    deManager_t *const m = e->manager;
+
+    if (m != NULL)
+    {
+        unsigned *free_pos = (unsigned *)&m->free_pos;
+
+        if (e->index >= *free_pos)
+            return;
+
+        (*free_pos)--;
+
+        deEntity_t *const lastEntity = m->entityList[*free_pos];
+        unsigned const lastIndex = lastEntity->index;
+
+        lastEntity->index = e->index;
+        m->entityList[e->index] = lastEntity;
+
+        e->index = lastIndex;
+        m->entityList[lastIndex] = e;
+    }
+
+    deState_leave(e);
+
+    if (e->xtor != e->state)
+        deState_exec(e, e->xtor->leave);
+
+    if (m == NULL)
+        free(e);
 }

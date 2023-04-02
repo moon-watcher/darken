@@ -1,7 +1,6 @@
 #pragma once
 
 #include <genesis.h>
-#include "config.h"
 #include "state.h"
 #include "entity.h"
 #include "manager.h"
