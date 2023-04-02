@@ -1,6 +1,6 @@
 #include "darken.h"
 
-void deSystem_init(deSystem_t *const s, void (*updateFn)(), unsigned maxItems, unsigned params)
+void deSystem_init(deSystem_t *const s, deSystem_f updateFn, unsigned maxItems, unsigned params)
 {
     s->updateFn = updateFn;
     s->maxItems = maxItems;
@@ -11,7 +11,7 @@ void deSystem_init(deSystem_t *const s, void (*updateFn)(), unsigned maxItems, u
 
 void deSystem_update(deSystem_t *const s)
 {
-    if (!s || !s->length)
+    if (s == NULL || s->length == 0)
         return;
 
     if (s->length >= s->maxItems * s->params)
@@ -28,7 +28,7 @@ void deSystem_end(deSystem_t *const s)
 
 void deSystem_add(deSystem_t *const s, void *const array[])
 {
-    unsigned max = s->params;
+    unsigned const max = s->params;
     void **const list = s->list;
     
     for (unsigned i = 0; i < max; i++)
