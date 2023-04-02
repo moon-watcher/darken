@@ -59,7 +59,7 @@ void deEntity_jump(deEntity_t *const e, const deState_t *const s)
     deState_enter(e);
 }
 
-void deEntity_delete(deEntity_t *e)
+void deEntity_delete(deEntity_t *const e)
 {
     deManager_t *const m = e->manager;
 

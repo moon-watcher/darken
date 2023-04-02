@@ -19,4 +19,4 @@ deEntity_t *deEntity_new    ( const deState_t *, deManager_t *const );
 void        deEntity_update ( deEntity_t *const );
 void        deEntity_change ( deEntity_t *const, const deState_t *const );
 void        deEntity_jump   ( deEntity_t *const, const deState_t *const );
-void        deEntity_delete ( deEntity_t * );
+void        deEntity_delete ( deEntity_t *const );
