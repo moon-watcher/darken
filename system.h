@@ -12,7 +12,7 @@ typedef struct deSystem_t
     unsigned params;
 } deSystem_t;
 
-void deSystem_init   ( deSystem_t *const, deSystem_f, unsigned, unsigned);
+void deSystem_init   ( deSystem_t *const, deSystem_f const, unsigned, unsigned);
 void deSystem_update ( deSystem_t *const );
 void deSystem_end    ( deSystem_t *const );
 void deSystem_info   ( deSystem_t *const );

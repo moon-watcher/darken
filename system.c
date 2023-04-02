@@ -1,6 +1,6 @@
 #include "darken.h"
 
-void deSystem_init(deSystem_t *const s, deSystem_f updateFn, unsigned maxItems, unsigned params)
+void deSystem_init(deSystem_t *const s, deSystem_f const updateFn, unsigned maxItems, unsigned params)
 {
     s->updateFn = updateFn;
     s->maxItems = maxItems;
