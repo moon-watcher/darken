@@ -53,7 +53,12 @@ void deManager_pauseTimer(deManager_t *const m, unsigned time)
     m->pause = time;
 }
 
-void deManager_pause(deManager_t *const m, int p)
+void deManager_pause(deManager_t *const m)
 {
-    m->pause = p ? -1 : 0;
+    m->pause = -1;
+}
+
+void deManager_resume(deManager_t *const m)
+{
+    m->pause = 0;
 }
