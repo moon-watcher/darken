@@ -31,6 +31,14 @@ void deManager_end(deManager_t *const m)
 
 void deManager_update(deManager_t *const m)
 {
+    if (m->pause)
+    {
+        if (m->pause > 0)
+            --m->pause;
+
+        return;
+    }
+
     unsigned *const free_pos = &m->free_pos;
 
     for (unsigned i = 0; i < *free_pos; i++)
@@ -38,4 +46,14 @@ void deManager_update(deManager_t *const m)
         deEntity_t *const e = m->entityList[i];
         deState_exec(e, e->updateFn);
     }
+}
+
+void deManager_pauseTimer(deManager_t *const m, unsigned time)
+{
+    m->pause = time;
+}
+
+void deManager_pause(deManager_t *const m, int p)
+{
+    m->pause = p ? -1 : 0;
 }
