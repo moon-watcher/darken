@@ -46,10 +46,10 @@ void deEntity_update(deEntity_t *const e)
 void deEntity_change(deEntity_t *const e, const deState_t *const s)
 {
     deState_leave(e);
-    deEntity_jump(e, s);
+    deEntity_set(e, s);
 }
 
-void deEntity_jump(deEntity_t *const e, const deState_t *const s)
+void deEntity_set(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
 
