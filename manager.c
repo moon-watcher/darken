@@ -62,3 +62,19 @@ void deManager_resume(deManager_t *const m)
 {
     m->pause = 0;
 }
+
+void deManager_deleteAll(deManager_t *const m)
+{
+    unsigned i = 0;
+    unsigned entities = m->allocated_entities;
+    unsigned *free_pos = &m->free_pos;
+
+    for (; i < free_pos; i++)
+    {
+        deEntity_t *const e = m->entityList[i];
+        deState_leave(e);
+        deState_exec(e, e->xtor->leave);
+    }
+
+    *free_pos = 0;
+}
