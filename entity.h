@@ -18,5 +18,5 @@ typedef struct deEntity_t
 deEntity_t *deEntity_new    ( const deState_t *, deManager_t *const );
 void        deEntity_update ( deEntity_t *const );
 void        deEntity_change ( deEntity_t *const, const deState_t *const );
-void        deEntity_set   ( deEntity_t *const, const deState_t *const );
+void        deEntity_set    ( deEntity_t *const, const deState_t *const );
 void        deEntity_delete ( deEntity_t *const );
