@@ -1,30 +1,36 @@
 #include "darken.h"
 
+deEntity_t *deEntity_newLess(const deState_t *s)
+{
+    unsigned bytes = sizeof(deEntity_t);
+
+    deEntity_t *e = malloc(bytes);
+
+    memset(e, 0, bytes);
+
+    e->xtor = e->state = s;
+    e->updateFn = s->update;
+
+    deState_enter(e);
+
+    return e;
+}
+
 deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
 {
-    deEntity_t *e = NULL;
-    unsigned bytes = sizeof(deEntity_t);
-    unsigned zero = 0;
-    unsigned *free_pos = &zero;
+    unsigned bytes = sizeof(deEntity_t) + m->maxBytes;
+    unsigned *free_pos = (unsigned *)&m->free_pos;
 
-    if (m == NULL)
-        e = malloc(bytes);
-    else
+    if (*free_pos >= max(m->maxEntities, 1))
+        return NULL;
+    
+    if (*free_pos >= m->allocated_entities)
     {
-        free_pos = (unsigned *)&m->free_pos;
-        bytes += m->maxBytes;
-
-        if (*free_pos >= max(m->maxEntities, 1))
-            return NULL;
-        
-        if (*free_pos >= m->allocated_entities)
-        {
-            m->entityList[*free_pos] = malloc(bytes);
-            ++m->allocated_entities;
-        }
-
-        e = m->entityList[*free_pos];
+        m->entityList[*free_pos] = malloc(bytes);
+        ++m->allocated_entities;
     }
+
+    deEntity_t *e = m->entityList[*free_pos];
 
     memset(e, 0, bytes);
 
@@ -33,7 +39,7 @@ deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
     e->xtor = e->state = s;
     e->updateFn = s->update;
     e->manager = m;
-    
+
     deState_enter(e);
 
     return e;
