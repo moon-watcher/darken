@@ -2,7 +2,7 @@
 
 static int exit = 0;
 
-int darken(deState_t *const s)
+int darken(const deState_t *const s)
 {
     exit = 0;
     int *exitCode = &exit;
