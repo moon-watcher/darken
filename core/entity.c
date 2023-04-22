@@ -1,4 +1,4 @@
-#include "darken.h"
+#include "../darken.h"
 
 deEntity_t *deEntity_newLess(const deState_t *const s)
 {

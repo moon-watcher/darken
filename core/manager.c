@@ -1,4 +1,4 @@
-#include "darken.h"
+#include "../darken.h"
 
 void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {

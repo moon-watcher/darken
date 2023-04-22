@@ -1,4 +1,4 @@
-#include "darken.h"
+#include "../darken.h"
 
 inline void deState_exec(deEntity_t *const e, deState_f func)
 {

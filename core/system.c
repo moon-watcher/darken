@@ -1,4 +1,4 @@
-#include "darken.h"
+#include "../darken.h"
 
 void deSystem_init(deSystem_t *const s, deSystem_f const updateFn, unsigned maxItems, unsigned params)
 {
