@@ -2,8 +2,7 @@
 
 typedef struct deEntity_t deEntity_t;
 
-// typedef void (*const deState_f)(deEntity_t *const);
-typedef void (*deState_f) (deEntity_t *const);
+typedef void (*deState_f) (deEntity_t *);
 
 typedef struct deState_t
 {
@@ -12,7 +11,7 @@ typedef struct deState_t
     deState_f leave;
 } deState_t;
 
-void deState_exec   ( deEntity_t *const, deState_f const );
+void deState_exec   ( deEntity_t *const, deState_f );
 void deState_enter  ( deEntity_t *const );
 void deState_update ( deEntity_t *const );
 void deState_leave  ( deEntity_t *const );

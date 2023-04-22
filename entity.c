@@ -1,6 +1,6 @@
 #include "darken.h"
 
-deEntity_t *deEntity_newLess(const deState_t *s)
+deEntity_t *deEntity_newLess(const deState_t *const s)
 {
     unsigned bytes = sizeof(deEntity_t);
 
@@ -8,7 +8,7 @@ deEntity_t *deEntity_newLess(const deState_t *s)
 
     memset(e, 0, bytes);
 
-    e->xtor = e->state = s;
+    e->xtor = e->state = (deState_t *) s;
     e->updateFn = s->update;
 
     deState_enter(e);
@@ -16,7 +16,7 @@ deEntity_t *deEntity_newLess(const deState_t *s)
     return e;
 }
 
-deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
+deEntity_t *deEntity_new(const deState_t *const s, deManager_t *const m)
 {
     unsigned bytes = sizeof(deEntity_t) + m->maxBytes;
     unsigned *free_pos = (unsigned *)&m->free_pos;
@@ -36,7 +36,7 @@ deEntity_t *deEntity_new(const deState_t *s, deManager_t *const m)
 
     e->index = *free_pos;
     (*free_pos)++;
-    e->xtor = e->state = s;
+    e->xtor = e->state = (deState_t *) s;
     e->updateFn = s->update;
     e->manager = m;
 
@@ -61,7 +61,7 @@ void deEntity_set(deEntity_t *const e, const deState_t *const s)
     e->state = (deState_t *)s;
 
     if (e->xtor->update == NULL)
-        e->updateFn = (deState_f *)s->update;
+        e->updateFn = s->update;
 
     deState_enter(e);
 }

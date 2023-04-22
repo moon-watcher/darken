@@ -5,7 +5,7 @@ typedef void (*deSystem_f) (deSystem_t *const);
 
 typedef struct deSystem_t
 {
-    const void **list;
+    void **list;
     unsigned length;
     deSystem_f updateFn;
     unsigned maxItems;

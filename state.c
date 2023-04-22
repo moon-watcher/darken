@@ -1,6 +1,6 @@
 #include "darken.h"
 
-inline void deState_exec(deEntity_t *const e, deState_f const func)
+inline void deState_exec(deEntity_t *const e, deState_f func)
 {
     if (func != NULL)
         func(e);
