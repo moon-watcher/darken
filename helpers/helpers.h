@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../darken/darken.h"
-
 #define DATA(T) \
     T *const data = (T *const) &e->data
 
