@@ -2,18 +2,13 @@
 
 typedef deState_t Scene;
 
-#define DEFINE_SCENE(SCENE, ENTER, UPDATE, LEAVE)              \
-    static void _##SCENE##_enter (deEntity_t *const e) ENTER;  \
-    static void _##SCENE##_update(deEntity_t *const e) UPDATE; \
-    static void _##SCENE##_leave (deEntity_t *const e) LEAVE;  \
+#define dehScene_define(NAME, ENTER, UPDATE, LEAVE)            \
+    static void NAME##_e (deEntity_t *const this) ENTER        \
+    static void NAME##_u (deEntity_t *const this) UPDATE       \
+    static void NAME##_l (deEntity_t *const this) LEAVE        \
                                                                \
-    const Scene SCENE = {                                      \
-        &_##SCENE##_enter,                                     \
-        &_##SCENE##_update,                                    \
-        &_##SCENE##_leave,                                     \
-    };
+    const Scene NAME = { & NAME##_e, & NAME##_u, & NAME##_l };
 
-
-
-#define scene_change(S)   deEntity_change(e, S);
-#define scene_set(S)      deEntity_set(e, S);
+#define dehScene_change(S)   deEntity_change(this, S)
+#define dehScene_set(S)      deEntity_set(this, S)
+#define dehScene_update()    deState_update(this)
