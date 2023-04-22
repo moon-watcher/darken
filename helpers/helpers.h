@@ -1,7 +1,7 @@
 #pragma once
 
 #define DATA(T) \
-    T *const data = (T *const) &e->data
+    T *const data = (T *const) &this->data
 
 #define REF(T, N, V) \
     T *const V = (T *const) &data->N

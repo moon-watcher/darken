@@ -1,4 +1,4 @@
 #pragma once
 
-#define entity_change(S)  deEntity_change(e, S);
-#define entity_set(S)     deEntity_set(e, S);
+#define dehEntity_change(S)  deEntity_change(this, S);
+#define dehEntity_set(S)     deEntity_set(this, S);
