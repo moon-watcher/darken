@@ -6,3 +6,4 @@
     static void NAME##_l (deEntity_t *const this) LEAVE            \
                                                                    \
     const deState_t NAME = { & NAME##_e, & NAME##_u, & NAME##_l };
+    
