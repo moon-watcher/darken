@@ -14,6 +14,10 @@
 #include "api/manager.h"
 
 #include "helpers/helpers.h"
+#include "helpers/scene.h"
+#include "helpers/state.h"
+#include "helpers/entity.h"
+#include "helpers/system.h"
 
 int  darken(const deState_t *const);
 void darken_end(int);
