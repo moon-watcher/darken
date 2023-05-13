@@ -19,5 +19,11 @@
 #include "helpers/entity.h"
 #include "helpers/system.h"
 
-int  darken(const deState_t *const);
+typedef struct deEntityState_t
+{
+    deEntity_t *entity;
+    deState_t *state;
+} deEntityState_t;
+
+int darken(const deState_t *const);
 void darken_end(int);
