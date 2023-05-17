@@ -1,6 +1,6 @@
 #include "../darken.h"
 
-void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
+void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int maxBytes)
 {
     m->maxBytes = maxBytes;
     m->maxEntities = maxEntities;
@@ -54,7 +54,7 @@ void deManager_update(deManager_t *const m)
     }
 }
 
-void deManager_timeout(deManager_t *const m, unsigned time)
+void deManager_timeout(deManager_t *const m, unsigned int time)
 {
     m->pause = time;
 }
