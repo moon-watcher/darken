@@ -3,7 +3,7 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
-#define dehDataRef(T, N, V) \
+#define dehDataCompAs(T, V, N) \
     T *const V = (T *const) &data->N
     
 #define dehDataComp(T, V) \
