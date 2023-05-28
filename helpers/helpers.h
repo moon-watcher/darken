@@ -3,6 +3,9 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
+#define dehDataAs(T, ENTITY) \
+    T *const data = (T *const) &ENTITY->data
+
 #define dehDataCompAs(T, V, N) \
     T *const V = (T *const) &data->N
     
