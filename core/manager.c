@@ -69,6 +69,11 @@ void deManager_resume(deManager_t *const m)
     m->pause = 0;
 }
 
+deEntity_t *deManager_newEntity(deManager_t *const m, const deState_t *const s)
+{
+    return deEntity_new(s, m);
+}
+
 deEntity_t *deManager_getEntity(deManager_t *const m, unsigned int index)
 {
     return m->entityList[index];
