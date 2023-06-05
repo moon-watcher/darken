@@ -1,14 +1,16 @@
 #include <genesis.h>
-#include "UFL.h"
+#include "upl.h"
 
-void UFL_init(UFL_t *const this, unsigned maxElements)
+// Unordered Pointers List
+
+void upl_init(upl_t *const this, unsigned maxElements)
 {
     this->list = malloc(maxElements * sizeof(void *));
     this->freePos = 0;
     this->maxElements = maxElements;
 }
 
-int UFL_add(UFL_t *const this, void *const add)
+int upl_add(upl_t *const this, void *const add)
 {
     if (this->freePos >= this->maxElements)
         return -1;
@@ -19,7 +21,7 @@ int UFL_add(UFL_t *const this, void *const add)
     return this->freePos - 1;
 }
 
-int UFL_removeByIndex(UFL_t *const this, unsigned index)
+int upl_removeByIndex(upl_t *const this, unsigned index)
 {
     if (this->freePos == 0)
         return 0;
@@ -30,16 +32,16 @@ int UFL_removeByIndex(UFL_t *const this, unsigned index)
     return 1;
 }
 
-int UFL_removeByData(UFL_t *const this, void *const data)
+int upl_removeByData(upl_t *const this, void *const data)
 {
     for (unsigned i = 0; i < this->freePos; i++)
         if (this->list[i] == data)
-            return UFL_removeByIndex(this, i);
+            return upl_removeByIndex(this, i);
 
     return 0;
 }
 
-int UFL_bulk_removeByData(UFL_t *const this, void *const data, unsigned nbItems)
+int upl_bulk_removeByData(upl_t *const this, void *const data, unsigned nbItems)
 {
     for (unsigned i = 0; i < this->freePos; i++)
         if (this->list[i] == data)
@@ -55,12 +57,12 @@ int UFL_bulk_removeByData(UFL_t *const this, void *const data, unsigned nbItems)
     return 0;
 }
 
-void UFL_foreach(UFL_t *const this, void (*iterator)())
+void upl_foreach(upl_t *const this, void (*iterator)())
 {
-    UFL_bulk_foreach(this, iterator, 1);
+    upl_bulk_foreach(this, iterator, 1);
 }
 
-void UFL_bulk_foreach(UFL_t *const this, void (*iterator)(), unsigned nbItems)
+void upl_bulk_foreach(upl_t *const this, void (*iterator)(), unsigned nbItems)
 {
     for (unsigned i = 0; i < this->freePos; i += nbItems)
         iterator(
@@ -73,7 +75,7 @@ void UFL_bulk_foreach(UFL_t *const this, void (*iterator)(), unsigned nbItems)
             this->list[i + 6]);
 }
 
-void UFL_end(UFL_t *const this)
+void upl_end(upl_t *const this)
 {
     free(this->list);
 }
