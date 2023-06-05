@@ -12,30 +12,39 @@ void upl_init(upl_t *const this, unsigned maxElements)
 
 int upl_add(upl_t *const this, void *const add)
 {
-    if (this->freePos >= this->maxElements)
+    void **const list = this->list;
+    unsigned *const freePos = &this->freePos;
+
+    if (*freePos >= this->maxElements)
         return -1;
 
-    this->list[this->freePos] = add;
-    this->freePos++;
+    list[*freePos] = add;
+    ++*freePos;
 
-    return this->freePos - 1;
+    return *freePos - 1;
 }
 
 int upl_removeByIndex(upl_t *const this, unsigned index)
 {
-    if (this->freePos == 0)
+    void **const list = this->list;
+    unsigned *const freePos = &this->freePos;
+    
+    if (*freePos == 0)
         return 0;
 
-    --this->freePos;
-    this->list[index] = this->list[this->freePos];
+    --*freePos;
+    list[index] = list[*freePos];
 
     return 1;
 }
 
 int upl_removeByData(upl_t *const this, void *const data)
 {
-    for (unsigned i = 0; i < this->freePos; i++)
-        if (this->list[i] == data)
+    void **const list = this->list;
+    unsigned *const freePos = &this->freePos;
+    
+    for (unsigned i = 0; i < *freePos; i++)
+        if (list[i] == data)
             return upl_removeByIndex(this, i);
 
     return 0;
@@ -43,13 +52,16 @@ int upl_removeByData(upl_t *const this, void *const data)
 
 int upl_bulk_removeByData(upl_t *const this, void *const data, unsigned nbItems)
 {
-    for (unsigned i = 0; i < this->freePos; i++)
-        if (this->list[i] == data)
+    void **const list = this->list;
+    unsigned *const freePos = &this->freePos;
+
+    for (unsigned i = 0; i < *freePos; i++)
+        if (list[i] == data)
         {
             for (unsigned j = 0; j < nbItems; j++)
-                this->list[i + j] = this->list[this->freePos - (nbItems - j)];
+                list[i + j] = list[*freePos - (nbItems - j)];
 
-            this->freePos -= nbItems;
+            *freePos -= nbItems;
 
             return 1;
         }
@@ -64,15 +76,18 @@ void upl_foreach(upl_t *const this, void (*iterator)())
 
 void upl_bulk_foreach(upl_t *const this, void (*iterator)(), unsigned nbItems)
 {
-    for (unsigned i = 0; i < this->freePos; i += nbItems)
+    void **const list = this->list;
+    unsigned *const freePos = &this->freePos;
+
+    for (unsigned i = 0; i < *freePos; i += nbItems)
         iterator(
-            this->list[i + 0],
-            this->list[i + 1],
-            this->list[i + 2],
-            this->list[i + 3],
-            this->list[i + 4],
-            this->list[i + 5],
-            this->list[i + 6]);
+            list[i + 0],
+            list[i + 1],
+            list[i + 2],
+            list[i + 3],
+            list[i + 4],
+            list[i + 5],
+            list[i + 6]);
 }
 
 void upl_end(upl_t *const this)
