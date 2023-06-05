@@ -39,7 +39,7 @@ int UFL_removeByData(UFL_t *const this, void *const data)
     return 0;
 }
 
-int UFL_removeByDataBulk(UFL_t *const this, void *const data, unsigned nbItems)
+int UFL_bulk_removeByData(UFL_t *const this, void *const data, unsigned nbItems)
 {
     for (unsigned i = 0; i < this->freePos; i++)
         if (this->list[i] == data)
@@ -57,10 +57,10 @@ int UFL_removeByDataBulk(UFL_t *const this, void *const data, unsigned nbItems)
 
 void UFL_foreach(UFL_t *const this, void (*iterator)())
 {
-    UFL_foreachBulk(this, iterator, 1);
+    UFL_bulk_foreach(this, iterator, 1);
 }
 
-void UFL_foreachBulk(UFL_t *const this, void (*iterator)(), unsigned nbItems)
+void UFL_bulk_foreach(UFL_t *const this, void (*iterator)(), unsigned nbItems)
 {
     for (unsigned i = 0; i < this->freePos; i += nbItems)
         iterator(
