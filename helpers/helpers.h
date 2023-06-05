@@ -3,15 +3,20 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
-#define dehDataAs(T, ENTITY) \
-    T *const data = (T *const) &ENTITY->data
+#define dehDataAs(T, E) \
+    T *const data = (T *const) &E->data
+
+#define dehDataComp(T, V) \
+    T *const V = (T *const) &data->V
 
 #define dehDataCompAs(T, V, N) \
     T *const V = (T *const) &data->N
-    
-#define dehDataComp(T, V) \
-    T *const V = (T *const) &data->V
-    
+
+#define dehCast(S, T, V) \
+    T *const V = ((T *const) &((S *const) &this->data)->V)
+
+#define dehCastAs(S, T, V, N) \
+    T *const V = ((T *const) &((S *const) &this->data)->N)
 
 
 // for lazzyes like me

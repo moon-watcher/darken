@@ -33,7 +33,7 @@
 #include "../libs/upl.h"
 
 typedef struct deSystem_t deSystem_t;
-typedef void (*deSystem_f) (deSystem_t *const);
+typedef void (*deSystem_f) ();
 
 typedef struct deSystem_t
 {
