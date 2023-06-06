@@ -9,6 +9,7 @@ typedef struct deSystemAPI {
     deSystemAPI *( *const update ) ( deSystem_t *const );
     deSystemAPI *( *const end    ) ( deSystem_t *const );
     deSystemAPI *( *const add    ) ( deSystem_t *const, void *const[]);
+    // deSystemAPI *( *const add    ) ( deSystem_t *const, ...);
 } deSystemAPI;
 
-const deSystemAPI  *const deSystem;
+const deSystemAPI *const deSystem;

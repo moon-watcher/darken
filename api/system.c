@@ -24,4 +24,12 @@ static deSystemAPI *add(deSystem_t *const a, void *const b[])
     return (deSystemAPI *)deSystem;
 }
 
+// #define ADD(S, ...) deSystem_add(S, ##__VA_ARGS__)
+
+// static deSystemAPI *add(deSystem_t *const a, ...)
+// {
+//     ADD(a);
+//     return (deSystemAPI *)deSystem;
+// }
+
 const deSystemAPI *const deSystem = &(deSystemAPI){init, update, end, add};
