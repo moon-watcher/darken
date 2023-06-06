@@ -2,7 +2,7 @@
 
 #include "../darken.h"
 
-typedef struct deStateAPI   deStateAPI;
+typedef struct deStateAPI deStateAPI;
 
 typedef struct deStateAPI {
     deStateAPI *( *exec   ) ( deEntity_t *const, deState_f const );
@@ -11,4 +11,4 @@ typedef struct deStateAPI {
     deStateAPI *( *leave  ) ( deEntity_t *const );
 } deStateAPI;
 
-const deStateAPI   *const deState;
+const deStateAPI *const deState;
