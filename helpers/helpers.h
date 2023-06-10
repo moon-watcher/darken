@@ -18,6 +18,8 @@
 #define dehCastAs(S, T, V, N) \
     T *const V = ((T *const) &((S *const) &this->data)->N)
 
+#define deh_define_state_function(NAME, TYPE, CODE ) \
+    static void NAME (deEntity_t *const this) { dehData(TYPE); CODE  }
 
 // for lazzyes like me
 
