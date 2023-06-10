@@ -18,18 +18,23 @@ static deSystemAPI *end(deSystem_t *const a)
     return (deSystemAPI *)deSystem;
 }
 
+static deSystemAPI *delete(deSystem_t *const a, void *const b)
+{
+    deSystem_delete(a, b);
+    return (deSystemAPI *)deSystem;
+}
+
 static deSystemAPI *add(deSystem_t *const a, void *const b[])
 {
     deSystem_add(a, b);
     return (deSystemAPI *)deSystem;
 }
 
-// #define ADD(S, ...) deSystem_add(S, ##__VA_ARGS__)
-
 // static deSystemAPI *add(deSystem_t *const a, ...)
 // {
+//     #define ADD(S, ...) deSystem_add(S, ## __VA_ARGS__)
 //     ADD(a);
 //     return (deSystemAPI *)deSystem;
 // }
 
-const deSystemAPI *const deSystem = &(deSystemAPI){init, update, end, add};
+const deSystemAPI *const deSystem = &(deSystemAPI){init, update, end, delete, add};
