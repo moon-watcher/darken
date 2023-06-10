@@ -10,7 +10,7 @@
     deh_define_state_function ( NAME##_e, TYPE, ENTER );  \
     const Scene NAME = { .enter = & NAME##_e };
     
-#define dehState_define_update(NAME, TYPE, UPDATE)        \
+#define dehScene_define_update(NAME, TYPE, UPDATE)        \
     deh_define_state_function ( NAME##_u, TYPE, UPDATE ); \
     const Scene NAME = { .update = & NAME##_u };
     

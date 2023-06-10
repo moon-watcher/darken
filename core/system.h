@@ -43,7 +43,7 @@ typedef struct deSystem_t
     upl_t upl;
 } deSystem_t;
 
-void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned params, unsigned maxItems);
+void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned maxItems, unsigned params);
 void deSystem_add(deSystem_t *const this, ...);
 void deSystem_delete(deSystem_t *const this, void *const data);
 void deSystem_update(deSystem_t *const this);
