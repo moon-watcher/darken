@@ -3,23 +3,18 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
-#define dehDataAs(T, E) \
-    T *const data = (T *const) &E->data
+#define dehDataEntityAs(T, E, V) \
+    T *const V = (T *const) &E->data
 
-#define dehDataComp(T, V) \
-    T *const V = (T *const) &data->V
+#define dehCast(T, V1) \
+    T *const V1 = (T *const) &data->V1
 
-#define dehDataCompAs(T, V, N) \
-    T *const V = (T *const) &data->N
+#define dehCastAs(T, V1, V2) \
+    T *const V2 = (T *const) &data->V1
 
-#define dehCast(S, T, V) \
-    T *const V = ((T *const) &((S *const) &this->data)->V)
 
-#define dehCastAs(S, T, V, N) \
-    T *const V = ((T *const) &((S *const) &this->data)->N)
-
-#define deh_define_state_function(NAME, TYPE, CODE ) \
-    static void NAME (deEntity_t *const this) { dehData(TYPE); CODE  }
+#define deh_define_state_function(NAME, TYPE, CODE) \
+    static void NAME (deEntity_t *const this) { dehData(TYPE); CODE }
 
 // for lazzyes like me
 
