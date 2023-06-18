@@ -15,7 +15,19 @@ void deSystem_add(deSystem_t *const this, ...)
     va_start(ap, this);
 
     for (unsigned i = 0; i < this->params; i++)
-        upl_add(&this->upl, va_arg(ap, void *const));
+    {
+        int err = upl_add(&this->upl, va_arg(ap, void *const));
+
+        if ( err < 0)
+        {
+            VDP_init();
+            VDP_drawText("System: Too much params", 0, 0);
+            VDP_drawText(this->name, 0, 1);
+            waitMs(10000);
+
+            return;
+        }
+    }
 
     va_end(ap);
 }

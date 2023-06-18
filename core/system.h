@@ -41,6 +41,7 @@ typedef struct deSystem_t
     unsigned maxItems;
     unsigned params;
     upl_t upl;
+    char *name;
 } deSystem_t;
 
 void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned maxItems, unsigned params);
