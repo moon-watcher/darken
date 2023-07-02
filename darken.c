@@ -8,9 +8,10 @@ int darken(const deState_t *const s)
     int *exitCode = &exit;
 
     deEntity_t *const e = deEntity_newLess(s); 
+    deState_f update = e->updateFn;
 
     while (!*exitCode)
-        deEntity_update(e);
+        update(e);
 
     deEntity_delete(e);
 
