@@ -3,28 +3,25 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
-#define dehDataEntityAs(T, E, V) \
-    T *const V = (T *const) &E->data
-
 #define dehCast(T, V1) \
     T *const V1 = (T *const) &data->V1
 
-#define dehCastAs(T, V1, V2) \
-    T *const V2 = (T *const) &data->V1
+#define dehDataAs(T, E, V1) \
+    T *const V1 = (T *const) &E->data
+
+#define dehCastAs(T, V1, DATA, V2) \
+    T *const V2 = (T *const) &DATA->V1
 
 
 #define deh_define_state_function(NAME, TYPE, CODE) \
     static void NAME (deEntity_t *const this) { dehData(TYPE); CODE }
 
-// for lazzyes like me
 
-typedef deState_t   Scene;
 typedef deState_t   State;
 typedef deEntity_t  Entity;
 typedef deSystem_t  System;
 typedef deManager_t Manager;
 
-typedef deState_t   *const SceneRef;
 typedef deState_t   *const StateRef;
 typedef deEntity_t  *const EntityRef;
 typedef deSystem_t  *const SystemRef;

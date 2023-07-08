@@ -1,19 +1,19 @@
 #pragma once
 
 #define dehScene_define(NAME, TYPE, ENTER, UPDATE, LEAVE) \
-    deh_define_state_function ( NAME##_e, TYPE, ENTER  ); \
-    deh_define_state_function ( NAME##_u, TYPE, UPDATE ); \
-    deh_define_state_function ( NAME##_l, TYPE, LEAVE  ); \
-    const Scene NAME = { & NAME##_e, & NAME##_u, & NAME##_l };
+    dehState_define(NAME, TYPE, ENTER, UPDATE, LEAVE)
 
-#define dehScene_define_enter(NAME, TYPE, ENTER)          \
-    deh_define_state_function ( NAME##_e, TYPE, ENTER );  \
-    const Scene NAME = { .enter = & NAME##_e };
+#define dehScene_define_enter(NAME, TYPE, ENTER) \
+    dehState_define_enter(NAME, TYPE, ENTER)
     
-#define dehScene_define_update(NAME, TYPE, UPDATE)        \
-    deh_define_state_function ( NAME##_u, TYPE, UPDATE ); \
-    const Scene NAME = { .update = & NAME##_u };
-    
-#define dehScene_change(S)   deEntity_changeState(this, S)
-#define dehScene_set(S)      deEntity_forceState(this, S)
-#define dehScene_update()    deState_update(this)
+#define dehScene_define_update(NAME, TYPE, UPDATE) \
+    dehState_define_update(NAME, TYPE, UPDATE)
+
+#define dehScene_setState(S)   deEntity_setState(this, S)
+#define dehScene_forceState(S) deEntity_forceState(this, S)
+#define dehScene_update()      deState_update(this)
+
+
+typedef deState_t Scene;
+typedef deState_t deScene_t;
+typedef deState_t *const SceneRef;

@@ -8,7 +8,7 @@ static deEntityAPI *update(deEntity_t *const a)
 
 static deEntityAPI *change(deEntity_t *const a, const deState_t *const b)
 {
-    deEntity_changeState(a, b);
+    deEntity_setState(a, b);
     return (deEntityAPI *)deEntity;
 }
 

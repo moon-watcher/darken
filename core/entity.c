@@ -45,12 +45,7 @@ deEntity_t *deEntity_new(const deState_t *const s, deManager_t *const m)
     return e;
 }
 
-void deEntity_update(deEntity_t *const e)
-{
-    deState_exec(e, e->updateFn);
-}
-
-void deEntity_changeState(deEntity_t *const e, const deState_t *const s)
+void deEntity_setState(deEntity_t *const e, const deState_t *const s)
 {
     deState_leave(e);
     deEntity_forceState(e, s);
@@ -171,7 +166,7 @@ void deEntity_delete(deEntity_t *const e)
 //     deState_exec(e, e->updateFn);
 // }
 
-// void deEntity_changeState(deEntity_t *const e, const deState_t *const s)
+// void deEntity_setState(deEntity_t *const e, const deState_t *const s)
 // {
 //     deState_leave(e);
 //     deEntity_forceState(e, s);
