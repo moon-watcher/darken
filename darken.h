@@ -15,6 +15,8 @@
 #include "api/entity.h"
 #include "api/manager.h"
 
+#include "api2/e.h"
+
 #include "helpers/helpers.h"
 #include "helpers/scene.h"
 #include "helpers/state.h"
