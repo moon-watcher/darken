@@ -5,7 +5,7 @@ typedef struct deState_t   deState_t;
 
 typedef struct deEntity_t
 {
-    deState_f updateFn;
+    // deState_f updateFn;
 
     deState_t *state;
     deState_t *xtor;       // constructor, entity executor, destructor
@@ -21,7 +21,7 @@ void        deEntity_setState   ( deEntity_t *const, const deState_t *const );
 void        deEntity_forceState ( deEntity_t *const, const deState_t *const );
 void        deEntity_delete     ( deEntity_t *const );
 
-
+/*
 #define deEntity_update(E) \
     deState_exec(E, E->updateFn)
-    
+*/

@@ -2,7 +2,7 @@
 
 static deEntityAPI *update(deEntity_t *const a)
 {
-    deEntity_update(a);
+    // deEntity_update(a);
     return (deEntityAPI *)deEntity;
 }
 
