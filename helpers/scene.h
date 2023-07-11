@@ -14,6 +14,7 @@
     deh_define_state_function ( NAME##_u, TYPE, UPDATE ); \
     const Scene NAME = { .update = & NAME##_u };
     
-#define dehScene_change(S)   deEntity_changeState(this, S)
-#define dehScene_set(S)      deEntity_forceState(this, S)
-#define dehScene_update()    deState_update(this)
+#define dehScene_changeState(S) deEntity_changeState(this, S)
+#define dehScene_forceState(S)  deEntity_forceState(this, S)
+#define dehScene_update()       deState_update(this)
+

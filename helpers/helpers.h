@@ -3,14 +3,14 @@
 #define dehData(T) \
     T *const data = (T *const) &this->data
 
-#define dehDataEntityAs(T, E, V) \
-    T *const V = (T *const) &E->data
-
 #define dehCast(T, V1) \
     T *const V1 = (T *const) &data->V1
 
-#define dehCastAs(T, V1, V2) \
-    T *const V2 = (T *const) &data->V1
+#define dehDataAs(T, E, V1) \
+    T *const V1 = (T *const) &E->data
+
+#define dehCastAs(T, V1, DATA, V2) \
+    T *const V2 = (T *const) &DATA->V1
 
 
 #define deh_define_state_function(NAME, TYPE, CODE) \
