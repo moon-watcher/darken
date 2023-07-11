@@ -9,7 +9,7 @@ static deEntity_t *_newLess(const deState_t *const s)
     memset(e, 0, bytes);
 
     e->xtor = e->state = (deState_t *) s;
-    //e->updateFn = s->update;
+    e->updateFn = s->update;
 
     deState_enter(e);
 
@@ -40,12 +40,17 @@ deEntity_t *deEntity_new(const deState_t *const s, deManager_t *m)
     e->index = *free_pos;
     (*free_pos)++;
     e->xtor = e->state = (deState_t *) s;
-    // e->updateFn = s->update;
+    e->updateFn = s->update;
     e->manager = m;
 
     deState_enter(e);
 
     return e;
+}
+
+void deEntity_update(deEntity_t *const e)
+{
+    deState_exec(e, e->updateFn);
 }
 
 void deEntity_setState(deEntity_t *const e, const deState_t *const s)
@@ -58,8 +63,8 @@ void deEntity_forceState(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
 
-    // if (e->xtor->update == NULL)
-    //     e->updateFn = s->update;
+    if (e->xtor->update == NULL)
+        e->updateFn = s->update;
 
     deState_enter(e);
 }

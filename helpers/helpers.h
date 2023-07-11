@@ -17,11 +17,13 @@
     static void NAME (deEntity_t *const this) { dehData(TYPE); CODE }
 
 
+typedef deState_t   Scene;
 typedef deState_t   State;
 typedef deEntity_t  Entity;
 typedef deSystem_t  System;
 typedef deManager_t Manager;
 
+typedef deState_t   *const SceneRef;
 typedef deState_t   *const StateRef;
 typedef deEntity_t  *const EntityRef;
 typedef deSystem_t  *const SystemRef;
