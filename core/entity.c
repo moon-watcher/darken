@@ -1,6 +1,6 @@
 #include "../darken.h"
 
-deEntity_t *deEntity_newLess(const deState_t *const s)
+static deEntity_t *_newLess(const deState_t *const s)
 {
     unsigned bytes = sizeof(deEntity_t);
 
@@ -16,8 +16,11 @@ deEntity_t *deEntity_newLess(const deState_t *const s)
     return e;
 }
 
-deEntity_t *deEntity_new(const deState_t *const s, deManager_t *const m)
+deEntity_t *deEntity_new(const deState_t *const s, deManager_t *m)
 {
+    if (m == NULL)
+        return _newLess(s);
+        
     unsigned bytes = sizeof(deEntity_t) + m->maxBytes;
     unsigned *free_pos = (unsigned *)&m->free_pos;
 
