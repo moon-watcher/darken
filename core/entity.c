@@ -48,11 +48,6 @@ deEntity_t *deEntity_new(const deState_t *const s, deManager_t *m)
     return e;
 }
 
-void deEntity_update(deEntity_t *const e)
-{
-    deState_exec(e, e->updateFn);
-}
-
 void deEntity_setState(deEntity_t *const e, const deState_t *const s)
 {
     deState_leave(e);
