@@ -18,7 +18,6 @@
 #include "api2/e.h"
 
 #include "helpers/helpers.h"
-#include "helpers/scene.h"
 #include "helpers/state.h"
 #include "helpers/entity.h"
 #include "helpers/system.h"
