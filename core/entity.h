@@ -15,10 +15,10 @@ typedef struct deEntity_t
     unsigned char data[];  // Bytes for casting data & components
 } deEntity_t;
 
-deEntity_t *deEntity_new        ( const deState_t *const, deManager_t * );
-void        deEntity_setState   ( deEntity_t *const, const deState_t *const );
-void        deEntity_forceState ( deEntity_t *const, const deState_t *const );
-void        deEntity_delete     ( deEntity_t *const );
+deEntity_t *deEntity_new        ( const deState_t *const entity, deManager_t *manager );
+void        deEntity_setState   ( deEntity_t *const entity, const deState_t *const state );
+void        deEntity_forceState ( deEntity_t *const entity, const deState_t *const state );
+void        deEntity_delete     ( deEntity_t *const entity );
 
 
 #define deEntity_update(E) \
