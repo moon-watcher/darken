@@ -1,9 +1,5 @@
 #pragma once
 
-#include <genesis.h>
-
-#include "libs/upl.h"
-
 #include "core/state.h"
 #include "core/entity.h"
 #include "core/manager.h"

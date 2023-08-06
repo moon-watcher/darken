@@ -1,5 +1,11 @@
 #include "../darken.h"
 
+#include "../config/free.h"
+#include "../config/malloc.h"
+
+#include "../libs/upl.h"
+
+
 void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned maxItems, unsigned params)
 {
     this->updateFn = updateFn;

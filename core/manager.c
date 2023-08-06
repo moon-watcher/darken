@@ -1,10 +1,13 @@
 #include "../darken.h"
 
-void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int maxBytes)
+#include "../config/free.h"
+#include "../config/malloc.h"
+
+void deManager_init(deManager_t *const m, unsigned maxEntities, unsigned maxBytes)
 {
     m->maxBytes = maxBytes;
-    m->maxEntities = maxEntities;
-    m->entityList = malloc(sizeof(deEntity_t *) * max(maxEntities, 1));
+    m->maxEntities = maxEntities ? maxEntities : 1;
+    m->entityList = malloc(sizeof(deEntity_t *) * m->maxEntities);
     m->free_pos = 0;
     m->allocated_entities = 0;
 }
@@ -12,10 +15,8 @@ void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int
 void deManager_end(deManager_t *const m)
 {
     unsigned i = 0;
-    unsigned entities = m->allocated_entities;
-    unsigned free_pos = m->free_pos;
 
-    for (; i < free_pos; i++)
+    for (; i < m->free_pos; i++)
     {
         deEntity_t *const e = m->entityList[i];
         deState_leave(e);
@@ -23,7 +24,7 @@ void deManager_end(deManager_t *const m)
         free(e);
     }
 
-    for (; i < entities; i++)
+    for (; i < m->allocated_entities; i++)
         free(m->entityList[i]);
 
     free(m->entityList);
@@ -45,16 +46,11 @@ void deManager_update(deManager_t *const m)
         return;
     }
 
-    unsigned *const free_pos = &m->free_pos;
-
-    for (unsigned i = 0; i < *free_pos; i++)
-    {
-        deEntity_t *const e = m->entityList[i];
-        deState_update(e);
-    }
+    for (unsigned i = 0; i < m->free_pos; i++)
+        deState_update(m->entityList[i]);
 }
 
-void deManager_timeout(deManager_t *const m, unsigned int time)
+void deManager_timeout(deManager_t *const m, unsigned time)
 {
     m->pause = time;
 }
@@ -74,7 +70,7 @@ deEntity_t *deManager_newEntity(deManager_t *const m, const deState_t *const s)
     return deEntity_new(s, m);
 }
 
-deEntity_t *deManager_getEntity(deManager_t *const m, unsigned int index)
+deEntity_t *deManager_getEntity(deManager_t *const m, unsigned index)
 {
     return m->entityList[index];
 }
