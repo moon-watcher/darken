@@ -1,4 +1,9 @@
-#include "../darken.h"
+#include "state.h"
+#include "entity.h"
+#include "manager.h"
+
+#include "../config/free.h"
+#include "../config/malloc.h"
 
 void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int maxBytes)
 {

@@ -1,4 +1,9 @@
-#include "../darken.h"
+#include "state.h"
+#include "entity.h"
+#include "manager.h"
+
+#include "../config/free.h"
+#include "../config/malloc.h"
 
 static deEntity_t *_newLess(const deState_t *const s)
 {
@@ -18,14 +23,14 @@ static deEntity_t *_newLess(const deState_t *const s)
 
 deEntity_t *deEntity_new(const deState_t *const s, deManager_t *m)
 {
-    if (m == NULL)
+    if (m == 0)
         return _newLess(s);
 
     unsigned bytes = sizeof(deEntity_t) + m->maxBytes;
     unsigned *free_pos = (unsigned *)&m->free_pos;
 
     if (*free_pos >= max(m->maxEntities, 1))
-        return NULL;
+        return 0;
 
     if (*free_pos >= m->allocated_entities)
     {
@@ -58,7 +63,7 @@ void deEntity_forceState(deEntity_t *const e, const deState_t *const s)
 {
     e->state = (deState_t *)s;
 
-    if (e->xtor->update == NULL)
+    if (e->xtor->update == 0)
         e->updateFn = s->update;
 
     deState_enter(e);
@@ -68,7 +73,7 @@ void deEntity_delete(deEntity_t *const e)
 {
     deManager_t *const m = e->manager;
 
-    if (m != NULL)
+    if (m != 0)
     {
         unsigned *free_pos = (unsigned *)&m->free_pos;
 
@@ -92,6 +97,6 @@ void deEntity_delete(deEntity_t *const e)
     if (e->xtor != e->state)
         deState_exec(e, e->xtor->leave);
 
-    if (m == NULL)
+    if (m == 0)
         free(e);
 }

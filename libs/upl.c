@@ -1,5 +1,7 @@
-#include <genesis.h>
 #include "upl.h"
+
+#include "../config/free.h"
+#include "../config/malloc.h"
 
 // Unordered Pointers List
 
