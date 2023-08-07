@@ -1,13 +1,13 @@
 #include "darken.h"
 
-static int exit = 0;
+static int exit;
 
 int darken(const deState_t *const s)
 {
     exit = 0;
     int *exitCode = &exit;
 
-    deEntity_t *const e = deEntity_new(s, NULL);
+    deEntity_t *const e = deEntity_new(s, 0);
     deState_f const update = e->updateFn;
 
     while (!*exitCode)

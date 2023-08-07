@@ -1,10 +1,15 @@
-#include "../darken.h"
+#include "system.h"
+
+#include "../config/va_args.h"
+
+#include "../libs/upl.h"
 
 void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned maxItems, unsigned params)
 {
     this->updateFn = updateFn;
     this->maxItems = maxItems;
     this->params = params;
+    this->errorHandler = NULL;
 
     upl_init(&this->upl, this->maxItems * this->params);
 }
@@ -15,19 +20,8 @@ void deSystem_add(deSystem_t *const this, ...)
     va_start(ap, this);
 
     for (unsigned i = 0; i < this->params; i++)
-    {
-        int err = upl_add(&this->upl, va_arg(ap, void *const));
-
-        if (err < 0)
-        {
-            VDP_init();
-            VDP_drawText("System: Too much params", 0, 0);
-            VDP_drawText(this->name, 0, 1);
-            waitMs(10000);
-
-            return;
-        }
-    }
+        if (upl_add(&this->upl, va_arg(ap, void *const)) < 0 && this->errorHandler)
+            this->errorHandler(this);
 
     va_end(ap);
 }
@@ -45,4 +39,9 @@ void deSystem_update(deSystem_t *const this)
 void deSystem_end(deSystem_t *const this)
 {
     upl_end(&this->upl);
+}
+
+void deSystem_errorHandler(deSystem_t *const this, void (*eh)(deSystem_t *const))
+{
+    this->errorHandler = eh;
 }

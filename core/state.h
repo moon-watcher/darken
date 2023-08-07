@@ -14,7 +14,7 @@ typedef struct deState_t
 #define deState_exec(E, F)  \
     {                       \
         deState_f func = F; \
-        if (func != NULL)   \
+        if (func != 0)      \
             func(E);        \
     }
 
