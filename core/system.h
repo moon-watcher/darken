@@ -8,14 +8,14 @@ typedef void (*deSystem_f)();
 typedef struct deSystem_t
 {
     deSystem_f updateFn;
-    unsigned maxItems;
-    unsigned params;
+    unsigned int maxItems;
+    unsigned int params;
     upl_t upl;
     char *name;
     void (*errorHandler)(deSystem_t *const);
 } deSystem_t;
 
-void deSystem_init         ( deSystem_t *const system, deSystem_f const updateFn, unsigned maxItems, unsigned params );
+void deSystem_init         ( deSystem_t *const system, deSystem_f const updateFn, unsigned int maxItems, unsigned int params );
 void deSystem_add          ( deSystem_t *const system, ... );
 void deSystem_delete       ( deSystem_t *const system, void *const data );
 void deSystem_update       ( deSystem_t *const system );

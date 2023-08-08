@@ -1,15 +1,15 @@
 #include "system.h"
 
-#include "../config/va_args.h"
+#include "../config/va_arg.h"
 
 #include "../libs/upl.h"
 
-void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned maxItems, unsigned params)
+void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned int maxItems, unsigned int params)
 {
     this->updateFn = updateFn;
     this->maxItems = maxItems;
     this->params = params;
-    this->errorHandler = NULL;
+    this->errorHandler = 0;
 
     upl_init(&this->upl, this->maxItems * this->params);
 }
@@ -19,7 +19,7 @@ void deSystem_add(deSystem_t *const this, ...)
     va_list ap;
     va_start(ap, this);
 
-    for (unsigned i = 0; i < this->params; i++)
+    for (unsigned int i = 0; i < this->params; i++)
         if (upl_add(&this->upl, va_arg(ap, void *const)) < 0 && this->errorHandler)
             this->errorHandler(this);
 
