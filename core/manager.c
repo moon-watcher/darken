@@ -16,7 +16,7 @@ void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int
 
 void deManager_end(deManager_t *const m)
 {
-    unsigned i = 0;
+    int i = 0;
 
     for (; i < m->freePos; i++)
     {
@@ -41,7 +41,7 @@ void deManager_reset(deManager_t *const m)
 void deManager_update(deManager_t *const m)
 {
     if (m->pause == 0)
-        for (unsigned i = 0; i < m->freePos; i++)
+        for (int i = 0; i < m->freePos; i++)
             deState_update(m->entityList[i]);
 
     if (m->pause > 0)
