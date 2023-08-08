@@ -17,7 +17,16 @@ int upl_add(upl_t *const this, void *const add)
     unsigned *const freePos = &this->freePos;
 
     if (*freePos >= this->maxElements)
-        return -1;
+    {
+        unsigned int max = this->maxElements;
+
+        this->maxElements = max + max / 2;
+        void *list = malloc(this->maxElements * sizeof(void *));
+        memcpy(list, this->list, max);
+        free(this->list);
+
+        this->list = list;
+    }
 
     this->list[*freePos] = add;
     ++*freePos;
