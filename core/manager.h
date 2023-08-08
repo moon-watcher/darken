@@ -7,10 +7,10 @@ typedef struct deManager_t
     deEntity_t **entityList;
 
     // Next free position in entities array
-    unsigned int free_pos;
+    unsigned int freePos;
 
     // Number of allocated entities
-    unsigned int allocated_entities;
+    unsigned int allocatedEntities;
 
     unsigned int maxEntities;
     unsigned int maxBytes;

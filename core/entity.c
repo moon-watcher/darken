@@ -5,45 +5,31 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-static deEntity_t *_newLess(const deState_t *const s)
-{
-    unsigned bytes = sizeof(deEntity_t);
-
-    deEntity_t *e = malloc(bytes);
-
-    memset(e, 0, bytes);
-
-    e->xtor = e->state = (deState_t *)s;
-    e->updateFn = s->update;
-
-    deState_enter(e);
-
-    return e;
-}
-
 deEntity_t *deEntity_new(const deState_t *const s, deManager_t *m)
 {
+    deEntity_t *e;
+
     if (m == 0)
-        return _newLess(s);
-
-    unsigned bytes = sizeof(deEntity_t) + m->maxBytes;
-    unsigned *free_pos = (unsigned *)&m->free_pos;
-
-    if (*free_pos >= max(m->maxEntities, 1))
-        return 0;
-
-    if (*free_pos >= m->allocated_entities)
+        e = malloc(sizeof(deEntity_t));
+    else
     {
-        m->entityList[*free_pos] = malloc(bytes);
-        ++m->allocated_entities;
+        if (m->freePos >= m->maxEntities)
+            return 0;
+
+        if (m->freePos >= m->allocatedEntities)
+        {
+            m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
+            ++m->allocatedEntities;
+        }
+
+        e = m->entityList[m->freePos];
+
+        memset(e->data, 0, m->maxBytes);
+
+        e->index = m->freePos;
+        m->freePos++;
     }
 
-    deEntity_t *e = m->entityList[*free_pos];
-
-    memset(e, 0, bytes);
-
-    e->index = *free_pos;
-    (*free_pos)++;
     e->xtor = e->state = (deState_t *)s;
     e->updateFn = s->update;
     e->manager = m;
@@ -75,14 +61,12 @@ void deEntity_delete(deEntity_t *const e)
 
     if (m != 0)
     {
-        unsigned *free_pos = (unsigned *)&m->free_pos;
-
-        if (e->index >= *free_pos)
+        if (e->index >= m->freePos)
             return;
 
-        (*free_pos)--;
+        m->freePos--;
 
-        deEntity_t *const lastEntity = m->entityList[*free_pos];
+        deEntity_t *const lastEntity = m->entityList[m->freePos];
         unsigned const lastIndex = lastEntity->index;
 
         lastEntity->index = e->index;
