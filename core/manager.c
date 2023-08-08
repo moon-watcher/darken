@@ -7,9 +7,9 @@
 
 void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int maxBytes)
 {
-    m->maxBytes = maxBytes;
-    m->maxEntities = maxEntities;
-    m->entityList = malloc(sizeof(deEntity_t *) * max(maxEntities, 1));
+    m->maxBytes = maxBytes ? maxBytes : 1;
+    m->maxEntities = maxEntities ? maxEntities : 1;
+    m->entityList = malloc(sizeof(deEntity_t *) * m->maxEntities);
     m->freePos = 0;
     m->allocatedEntities = 0;
 }
@@ -17,10 +17,8 @@ void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int
 void deManager_end(deManager_t *const m)
 {
     unsigned i = 0;
-    unsigned entities = m->allocatedEntities;
-    unsigned freePos = m->freePos;
 
-    for (; i < freePos; i++)
+    for (; i < m->freePos; i++)
     {
         deEntity_t *const e = m->entityList[i];
         deState_leave(e);
@@ -28,7 +26,7 @@ void deManager_end(deManager_t *const m)
         free(e);
     }
 
-    for (; i < entities; i++)
+    for (; i < m->allocatedEntities; i++)
         free(m->entityList[i]);
 
     free(m->entityList);
@@ -42,21 +40,12 @@ void deManager_reset(deManager_t *const m)
 
 void deManager_update(deManager_t *const m)
 {
-    if (m->pause)
-    {
-        if (m->pause > 0)
-            --m->pause;
+    if (m->pause == 0)
+        for (unsigned i = 0; i < m->freePos; i++)
+            deState_update(m->entityList[i]);
 
-        return;
-    }
-
-    unsigned *const freePos = &m->freePos;
-
-    for (unsigned i = 0; i < *freePos; i++)
-    {
-        deEntity_t *const e = m->entityList[i];
-        deState_update(e);
-    }
+    if (m->pause > 0)
+        --m->pause;
 }
 
 void deManager_timeout(deManager_t *const m, unsigned int time)
