@@ -7,9 +7,9 @@
 
 void upl_init(upl_t *const this, unsigned maxElements)
 {
-    this->list = malloc(maxElements * sizeof(void *));
+    this->maxElements = maxElements ? maxElements : 1;
+    this->list = malloc(this->maxElements * sizeof(void *));
     this->freePos = 0;
-    this->maxElements = maxElements;
 }
 
 int upl_add(upl_t *const this, void *const add)
