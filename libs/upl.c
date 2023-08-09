@@ -5,28 +5,22 @@
 
 // Unordered Pointers List
 
-void upl_init(upl_t *const this, unsigned maxElements)
+int upl_init(upl_t *const this, unsigned size)
 {
-    this->maxElements = maxElements ? maxElements : 1;
-    this->list = malloc(this->maxElements * sizeof(void *));
+    this->size = size ? size : 1;
+    this->list = malloc(this->size * sizeof(void *));
     this->freePos = 0;
+
+    return this->list != 0;
 }
 
 int upl_add(upl_t *const this, void *const add)
 {
     unsigned *const freePos = &this->freePos;
 
-    if (*freePos >= this->maxElements)
-    {
-        unsigned int max = this->maxElements;
-
-        this->maxElements = max + max / 2;
-        void *list = malloc(this->maxElements * sizeof(void *));
-        memcpy(list, this->list, max);
-        free(this->list);
-
-        this->list = list;
-    }
+    if (*freePos >= this->size)
+        if (upl_resize(this, this->size + this->size / 2) == 0)
+            return -1;
 
     this->list[*freePos] = add;
     ++*freePos;
@@ -131,4 +125,24 @@ void upl_bulk_foreach(upl_t *const this, void (*iterator)(), unsigned nbItems)
 void upl_end(upl_t *const this)
 {
     free(this->list);
+}
+
+int upl_resize(upl_t *const this, unsigned int size)
+{
+    if (this->size == size)
+        return -1;
+
+    unsigned int oldSize = this->size;
+    this->size = size;
+    void *list = malloc(this->size * sizeof(void *));
+
+    if (list == 0)
+        return 0;
+
+    memcpy(list, this->list, oldSize);
+    free(this->list);
+
+    this->list = list;
+
+    return 1;
 }
