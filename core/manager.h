@@ -28,3 +28,4 @@ void deManager_resume  ( deManager_t *const manager );
 
 deEntity_t *deManager_createEntity     ( deManager_t *const manager, const deState_t *const state );
 deEntity_t *deManager_getEntityByIndex ( deManager_t *const manager, unsigned int index );
+void        deManager_deleteEntity     ( deManager_t *const manager, deEntity_t *const entity );
