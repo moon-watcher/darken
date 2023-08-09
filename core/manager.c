@@ -16,7 +16,7 @@ void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int
 
 void deManager_end(deManager_t *const m)
 {
-    int i = 0;
+    unsigned int i = 0;
 
     for (; i < m->freePos; i++)
     {
@@ -41,7 +41,7 @@ void deManager_reset(deManager_t *const m)
 void deManager_update(deManager_t *const m)
 {
     if (m->pause == 0)
-        for (int i = 0; i < m->freePos; i++)
+        for (unsigned int i = 0; i < m->freePos; i++)
             deState_update(m->entityList[i]);
 
     if (m->pause > 0)
@@ -63,12 +63,56 @@ void deManager_resume(deManager_t *const m)
     m->pause = 0;
 }
 
-deEntity_t *deManager_newEntity(deManager_t *const m, const deState_t *const s)
+deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
 {
-    return deEntity_new(s, m);
+    if (m->freePos >= m->maxEntities)
+        return 0;
+
+    if (m->freePos >= m->allocatedEntities)
+    {
+        m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
+        ++m->allocatedEntities;
+    }
+
+    deEntity_t *e = m->entityList[m->freePos];
+
+    memset(e->data, 0, m->maxBytes);
+
+    e->index = m->freePos;
+    m->freePos++;
+
+    e->xtor = e->state = (deState_t *)s;
+    e->updateFn = s->update;
+    e->manager = m;
+
+    deState_enter(e);
+
+    return e;
 }
 
-deEntity_t *deManager_getEntity(deManager_t *const m, unsigned int index)
+deEntity_t *deManager_getEntityByIndex(deManager_t *const m, unsigned int i)
 {
-    return m->entityList[index];
+    return m->entityList[i];
+}
+
+void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
+{
+    if (e->index >= m->freePos)
+        return;
+
+    m->freePos--;
+
+    deEntity_t *const lastEntity = m->entityList[m->freePos];
+    unsigned int const lastIndex = lastEntity->index;
+
+    lastEntity->index = e->index;
+    m->entityList[e->index] = lastEntity;
+
+    e->index = lastIndex;
+    m->entityList[lastIndex] = e;
+
+    deState_leave(e);
+
+    if (e->xtor != e->state)
+        deState_exec(e, e->xtor->leave);
 }

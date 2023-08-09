@@ -15,7 +15,7 @@ typedef struct deEntity_t
     unsigned char data[];  // Bytes for casting data & components
 } deEntity_t;
 
-deEntity_t *deEntity_new        ( const deState_t *const entity, deManager_t *manager );
+deEntity_t *deEntity_new        ( const deState_t *const entity );
 void        deEntity_setState   ( deEntity_t *const entity, const deState_t *const state );
 void        deEntity_forceState ( deEntity_t *const entity, const deState_t *const state );
 void        deEntity_delete     ( deEntity_t *const entity );
