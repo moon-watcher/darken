@@ -65,21 +65,28 @@ void deManager_resume(deManager_t *const m)
 
 deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
 {
-    if (m->freePos >= m->maxEntities)
-        return 0;
+    deEntity_t *e;
 
-    if (m->freePos >= m->allocatedEntities)
+    if (m == 0)
+        e = malloc(sizeof(deEntity_t));
+    else
     {
-        m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
-        ++m->allocatedEntities;
+        if (m->freePos >= m->maxEntities)
+            return 0;
+
+        if (m->freePos >= m->allocatedEntities)
+        {
+            m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
+            ++m->allocatedEntities;
+        }
+
+        e = m->entityList[m->freePos];
+
+        memset(e->data, 0, m->maxBytes);
+
+        e->index = m->freePos;
+        m->freePos++;
     }
-
-    deEntity_t *e = m->entityList[m->freePos];
-
-    memset(e->data, 0, m->maxBytes);
-
-    e->index = m->freePos;
-    m->freePos++;
 
     e->xtor = e->state = (deState_t *)s;
     e->updateFn = s->update;
@@ -97,22 +104,28 @@ deEntity_t *deManager_getEntityByIndex(deManager_t *const m, unsigned int i)
 
 void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
 {
-    if (e->index >= m->freePos)
-        return;
+    if (m != 0)
+    {
+        if (e->index >= m->freePos)
+            return;
 
-    m->freePos--;
+        m->freePos--;
 
-    deEntity_t *const lastEntity = m->entityList[m->freePos];
-    unsigned int const lastIndex = lastEntity->index;
+        deEntity_t *const lastEntity = m->entityList[m->freePos];
+        unsigned int const lastIndex = lastEntity->index;
 
-    lastEntity->index = e->index;
-    m->entityList[e->index] = lastEntity;
+        lastEntity->index = e->index;
+        m->entityList[e->index] = lastEntity;
 
-    e->index = lastIndex;
-    m->entityList[lastIndex] = e;
+        e->index = lastIndex;
+        m->entityList[lastIndex] = e;
+    }
 
     deState_leave(e);
 
     if (e->xtor != e->state)
         deState_exec(e, e->xtor->leave);
+
+    if (m == 0)
+        free(e);
 }
