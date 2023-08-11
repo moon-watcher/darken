@@ -65,28 +65,21 @@ void deManager_resume(deManager_t *const m)
 
 deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
 {
-    deEntity_t *e;
+    if (m->freePos >= m->maxEntities)
+        return 0;
 
-    if (m == 0)
-        e = malloc(sizeof(deEntity_t));
-    else
+    if (m->freePos >= m->allocatedEntities)
     {
-        if (m->freePos >= m->maxEntities)
-            return 0;
-
-        if (m->freePos >= m->allocatedEntities)
-        {
-            m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
-            ++m->allocatedEntities;
-        }
-
-        e = m->entityList[m->freePos];
-
-        memset(e->data, 0, m->maxBytes);
-
-        e->index = m->freePos;
-        m->freePos++;
+        m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
+        ++m->allocatedEntities;
     }
+
+    deEntity_t *e = m->entityList[m->freePos];
+
+    memset(e->data, 0, m->maxBytes);
+
+    e->index = m->freePos;
+    m->freePos++;
 
     e->xtor = e->state = (deState_t *)s;
     e->updateFn = s->update;

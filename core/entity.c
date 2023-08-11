@@ -7,7 +7,15 @@
 
 deEntity_t *deEntity_new(const deState_t *const s)
 {
-    return deManager_createEntity(0, s);
+    deEntity_t *e = malloc(sizeof(deEntity_t));
+
+    e->xtor = e->state = (deState_t *)s;
+    e->updateFn = s->update;
+    e->manager = 0;
+
+    deState_enter(e);
+
+    return e;
 }
 
 void deEntity_setState(deEntity_t *const e, const deState_t *const s)
