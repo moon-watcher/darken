@@ -1,20 +1,13 @@
 #pragma once
 
 typedef struct deEntity_t deEntity_t;
+// typedef struct dculist_t dculist_t;
+
+#include "../libs/dculist.h"
 
 typedef struct deManager_t
 {
-    deEntity_t **entityList;
-
-    // Next free position in entities array
-    unsigned int freePos;
-
-    // Number of allocated entities
-    unsigned int allocatedEntities;
-
-    unsigned int maxEntities;
-    unsigned int maxBytes;
-
+    dculist_t list;
     int pause;
 } deManager_t;
 

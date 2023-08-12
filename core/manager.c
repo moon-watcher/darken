@@ -5,120 +5,99 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int maxBytes)
+#include "../libs/dculist.h"
+
+
+
+void deManager_init(deManager_t *const this, unsigned int maxObjects, unsigned int objectSize)
 {
-    m->maxBytes = maxBytes ? maxBytes : 1;
-    m->maxEntities = maxEntities ? maxEntities : 1;
-    m->entityList = malloc(sizeof(deEntity_t *) * m->maxEntities);
-    m->freePos = 0;
-    m->allocatedEntities = 0;
+    dculist_init(&this->list, maxObjects, sizeof(deEntity_t) + objectSize);
+    this->pause = 0;
 }
 
-void deManager_end(deManager_t *const m)
+void deManager_end(deManager_t *const this)
 {
-    unsigned int i = 0;
-
-    for (; i < m->freePos; i++)
-    {
-        deEntity_t *const e = m->entityList[i];
-        deState_leave(e);
-        deState_exec(e, e->xtor->leave);
-        free(e);
-    }
-
-    for (; i < m->allocatedEntities; i++)
-        free(m->entityList[i]);
-
-    free(m->entityList);
+    dculist_end(&this->list, deState_destroy);
 }
 
-void deManager_reset(deManager_t *const m)
+void deManager_reset(deManager_t *const this)
 {
-    while (m->freePos)
-        deEntity_delete(m->entityList[0]);
+    dculist_reset(&this->list, deEntity_delete);
 }
 
-void deManager_update(deManager_t *const m)
+void deManager_update(deManager_t *const this)
 {
-    if (m->pause == 0)
-        for (unsigned int i = 0; i < m->freePos; i++)
-            deState_update(m->entityList[i]);
+    if (this->pause == 0)
+        dclist_iterate(&this->list, deState_update);
 
-    if (m->pause > 0)
-        --m->pause;
+    if (this->pause > 0)
+        --this->pause;
 }
 
-void deManager_timeout(deManager_t *const m, unsigned int time)
+void deManager_timeout(deManager_t *const this, unsigned int time)
 {
-    m->pause = time;
+    this->pause = time;
 }
 
-void deManager_pause(deManager_t *const m)
+void deManager_pause(deManager_t *const this)
 {
-    m->pause = -1;
+    this->pause = -1;
 }
 
-void deManager_resume(deManager_t *const m)
+void deManager_resume(deManager_t *const this)
 {
-    m->pause = 0;
+    this->pause = 0;
 }
 
-deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
+deEntity_t *deManager_createEntity(deManager_t *const this, const deState_t *const state)
 {
-    if (m->freePos >= m->maxEntities)
-        return 0;
+    deEntity_t *e = dculist_add(&this->list);
 
-    if (m->freePos >= m->allocatedEntities)
-    {
-        m->entityList[m->freePos] = malloc(sizeof(deEntity_t) + m->maxBytes);
-        ++m->allocatedEntities;
-    }
+    memset(e->data, 0, this->list.objectSize - sizeof(deEntity_t));
 
-    deEntity_t *e = m->entityList[m->freePos];
+    e->index = this->list.freePos - 1;
 
-    memset(e->data, 0, m->maxBytes);
+    e->xtor = e->state = (deState_t *)state;
+    e->updateFn = state->update;
+    e->manager = this;
 
-    e->index = m->freePos;
-    m->freePos++;
-
-    e->xtor = e->state = (deState_t *)s;
-    e->updateFn = s->update;
-    e->manager = m;
-
-    deState_enter(e);
+    DARKEN_STATE_ENTER(e);
 
     return e;
 }
 
-deEntity_t *deManager_getEntityByIndex(deManager_t *const m, unsigned int i)
+deEntity_t *deManager_getEntityByIndex(deManager_t *const this, unsigned int index)
 {
-    return m->entityList[i];
+    return dculist_get(&this->list, index);
 }
 
-void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
+
+
+
+void deManager_deleteEntity(deManager_t *const this, deEntity_t *const e)
 {
-    if (m != 0)
+    if (this != 0)
     {
-        if (e->index >= m->freePos)
+        deEntity_t *lastEntity = dculist_delete(&this->list, e->index);
+
+        if (lastEntity == 0)
             return;
 
-        m->freePos--;
-
-        deEntity_t *const lastEntity = m->entityList[m->freePos];
+        
         unsigned int const lastIndex = lastEntity->index;
 
         lastEntity->index = e->index;
-        m->entityList[e->index] = lastEntity;
+        this->list.array[e->index] = lastEntity;
 
         e->index = lastIndex;
-        m->entityList[lastIndex] = e;
+        this->list.array[lastIndex] = e;
     }
 
-    deState_leave(e);
+    DARKEN_STATE_LEAVE(e);
 
     if (e->xtor != e->state)
-        deState_exec(e, e->xtor->leave);
+        DARKEN_STATE_EXEC(e, e->xtor->leave);
 
-    if (m == 0)
+    if (this == 0)
         free(e);
 }

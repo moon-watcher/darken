@@ -22,4 +22,4 @@ void        deEntity_delete     ( deEntity_t *const entity );
 
 
 #define deEntity_update(E) \
-    deState_exec(E, E->updateFn)
+    DARKEN_STATE_EXEC(E, E->updateFn)

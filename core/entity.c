@@ -13,14 +13,14 @@ deEntity_t *deEntity_new(const deState_t *const s)
     e->updateFn = s->update;
     e->manager = 0;
 
-    deState_enter(e);
+    DARKEN_STATE_ENTER(e);
 
     return e;
 }
 
 void deEntity_setState(deEntity_t *const e, const deState_t *const s)
 {
-    deState_leave(e);
+    DARKEN_STATE_LEAVE(e);
     deEntity_forceState(e, s);
 }
 
@@ -31,7 +31,7 @@ void deEntity_forceState(deEntity_t *const e, const deState_t *const s)
     if (e->xtor->update == 0)
         e->updateFn = s->update;
 
-    deState_enter(e);
+    DARKEN_STATE_ENTER(e);
 }
 
 void deEntity_delete(deEntity_t *const e)
