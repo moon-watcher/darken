@@ -11,7 +11,6 @@ typedef struct deEntity_t
     deState_t *xtor;       // constructor, entity executor, destructor
     
     deManager_t *manager;
-    unsigned index;        // Index of entities in deManager_t's entities array
     unsigned char data[];  // Bytes for casting data & components
 } deEntity_t;
 
@@ -22,4 +21,4 @@ void        deEntity_delete     ( deEntity_t *const entity );
 
 
 #define deEntity_update(E) \
-    deState_exec(E, E->updateFn)
+    DARKEN_STATE_EXEC(E, E->updateFn)
