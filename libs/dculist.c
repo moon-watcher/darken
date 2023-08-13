@@ -63,12 +63,12 @@ int dculist_find(dculist_t *const this, void *const data)
     return -1;
 }
 
-unsigned int dculist_remove(dculist_t *const this, void *const data, void (*callback)(void *const))
+void dculist_remove(dculist_t *const this, void *const data, void (*callback)(void *const))
 {
     int const index = dculist_find(this, data);
 
     if (index < 0)
-        return 0;
+        return;
 
     this->freePos--;
 
@@ -76,6 +76,4 @@ unsigned int dculist_remove(dculist_t *const this, void *const data, void (*call
         callback(this->list[index]);
 
     this->list[index] = this->list[this->freePos];
-
-    return 1;
 }
