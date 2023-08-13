@@ -15,18 +15,18 @@ void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int
 
 void deManager_end(deManager_t *const m)
 {
-    dculist_end(&m->list, deState_destruct);
+    dculist_end(&m->list, deEntity_stateDestruct);
 }
 
 void deManager_reset(deManager_t *const m)
 {
-    dculist_reset(&m->list, deState_destruct);
+    dculist_reset(&m->list, deEntity_stateDestruct);
 }
 
 void deManager_update(deManager_t *const m)
 {
     if (m->pause == 0)
-        dculist_iterator(&m->list, deState_update);
+        dculist_iterator(&m->list, deEntity_stateUpdate);
 
     if (m->pause > 0)
         --m->pause;
@@ -42,7 +42,7 @@ deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const 
     e->updateFn = s->update;
     e->manager = m;
 
-    DARKEN_STATE_ENTER(e);
+    deEntity_stateEnter(e);
 
     return e;
 }
@@ -50,10 +50,10 @@ deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const 
 void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
 {
     if (m != 0)
-        dculist_remove(&m->list, e, deState_destruct);
+        dculist_remove(&m->list, e, deEntity_stateDestruct);
     else
     {
-        deState_destruct(e);
+        deEntity_stateDestruct(e);
         free(e);
     }
 }

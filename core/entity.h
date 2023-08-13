@@ -14,11 +14,16 @@ typedef struct deEntity_t
     unsigned char data[];  // Bytes for casting data & components
 } deEntity_t;
 
-deEntity_t *deEntity_new        ( const deState_t *const entity );
-void        deEntity_setState   ( deEntity_t *const entity, const deState_t *const state );
-void        deEntity_forceState ( deEntity_t *const entity, const deState_t *const state );
-void        deEntity_delete     ( deEntity_t *const entity );
 
+deEntity_t *deEntity_new    ( const deState_t *const entity );
+void        deEntity_delete ( deEntity_t *const entity );
 
-#define deEntity_update(E) \
-    DARKEN_STATE_EXEC(E, E->updateFn)
+void deEntity_stateSet      ( deEntity_t *const entity, const deState_t *const state );
+void deEntity_stateForce    ( deEntity_t *const entity, const deState_t *const state );
+void deEntity_stateEnter    ( deEntity_t *const entity );
+void deEntity_stateUpdate   ( deEntity_t *const entity );
+void deEntity_stateLeave    ( deEntity_t *const entity );
+void deEntity_stateDestruct ( deEntity_t *const entity );
+
+// #define deEntity_update(E) \
+//     DARKEN_STATE_EXEC(E, E->updateFn)
