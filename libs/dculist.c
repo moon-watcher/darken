@@ -5,11 +5,11 @@
 
 // Dynamic Chacheable Unordered List
 
-void dculist_init(dculist_t *const this, unsigned int maxObjects, unsigned int objectSize)
+void dculist_init(dculist_t *const this, unsigned int size, unsigned int objectSize)
 {
     this->objectSize = objectSize ? objectSize : 1;
-    this->maxObjects = maxObjects ? maxObjects : 1;
-    this->list = malloc(sizeof(void *) * this->maxObjects);
+    this->size = size ? size : 1;
+    this->list = malloc(sizeof(void *) * this->size);
     this->freePos = 0;
     this->allocatedObjects = 0;
 }
@@ -40,8 +40,9 @@ void dculist_reset(dculist_t *const this, void (*callback)(void *const))
 
 void *dculist_new(dculist_t *const this)
 {
-    if (this->freePos >= this->maxObjects)
-        return 0;
+    if (this->freePos >= this->size)
+        if (dculist_resize(this, this->size + this->size / 2) == 0)
+            return 0;
 
     if (this->freePos >= this->allocatedObjects)
     {
@@ -76,4 +77,24 @@ void dculist_remove(dculist_t *const this, void *const data, void (*callback)(vo
         callback(this->list[index]);
 
     this->list[index] = this->list[this->freePos];
+}
+
+int dculist_resize(dculist_t *const this, unsigned int size)
+{
+    if (this->size == size)
+        return -1;
+
+    unsigned int oldsize = this->size;
+    this->size = size;
+    void *list = malloc(this->size * sizeof(void *));
+
+    if (list == 0)
+        return 0;
+
+    memcpy(list, this->list, oldsize);
+    free(this->list);
+
+    this->list = list;
+
+    return 1;
 }
