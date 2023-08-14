@@ -5,13 +5,11 @@
 
 // Unordered Pointers List
 
-int upl_init(upl_t *const this, unsigned int size)
+void upl_init(upl_t *const this, unsigned int size)
 {
     this->size = size ? size : 1;
     this->list = malloc(this->size * sizeof(void *));
     this->freePos = 0;
-
-    return this->list != 0;
 }
 
 int upl_add(upl_t *const this, void *const add)
@@ -28,63 +26,7 @@ int upl_add(upl_t *const this, void *const add)
     return *freePos - 1;
 }
 
-int upl_find(upl_t *const this, void *const data)
-{
-    void **const list = this->list;
-    unsigned int *const freePos = &this->freePos;
-
-    for (unsigned int i = 0; i < *freePos; i++)
-        if (list[i] == data)
-            return i;
-
-    return -1;
-}
-
-void upl_remove(upl_t *const this, unsigned int index)
-{
-    unsigned int *const freePos = &this->freePos;
-
-    if (*freePos == 0)
-        return;
-
-    void **const list = this->list;
-
-    --*freePos;
-    list[index] = list[*freePos];
-}
-
-void upl_removeByData(upl_t *const this, void *const data)
-{
-    int i = upl_find(this, data);
-
-    if (i < 0)
-        return;
-
-    upl_remove(this, i);
-}
-
-void upl_bulk_removeByData(upl_t *const this, void *const data, unsigned int nbItems)
-{
-    int i = upl_find(this, data);
-
-    if (i < 0)
-        return;
-
-    void **const list = this->list;
-    unsigned int *const freePos = &this->freePos;
-
-    for (unsigned int j = 0; j < nbItems; j++)
-        list[i + j] = list[*freePos - (nbItems - j)];
-
-    *freePos -= nbItems;
-}
-
-void upl_foreach(upl_t *const this, void (*iterator)())
-{
-    upl_bulk_foreach(this, iterator, 1);
-}
-
-void upl_bulk_foreach(upl_t *const this, void (*iterator)(), unsigned int nbItems)
+void upl_iterator(upl_t *const this, void (*iterator)(), unsigned int nbItems)
 {
     void **const list = this->list;
     unsigned int *const freePos = &this->freePos;
@@ -122,17 +64,53 @@ void upl_bulk_foreach(upl_t *const this, void (*iterator)(), unsigned int nbItem
     }
 }
 
+void upl_remove(upl_t *const this, unsigned int index)
+{
+    unsigned int *const freePos = &this->freePos;
+
+    if (*freePos == 0)
+        return;
+
+    void **const list = this->list;
+
+    --*freePos;
+    list[index] = list[*freePos];
+}
+
 void upl_end(upl_t *const this)
 {
     free(this->list);
 }
+
+void upl_reset(upl_t *const this)
+{
+    this->freePos = 0;
+}
+
+void upl_removeByData(upl_t *const this, void *const data, unsigned int nbItems)
+{
+    int const index = upl_find(this, data);
+
+    if (index < 0)
+        return;
+
+    void **const list = this->list;
+    unsigned int *const freePos = &this->freePos;
+
+    for (unsigned int j = 0; j < nbItems; j++)
+        list[index + j] = list[*freePos - (nbItems - j)];
+
+    *freePos -= nbItems;
+}
+
+//////////////////////////////////////////////////////////////////////
 
 int upl_resize(upl_t *const this, unsigned int size)
 {
     if (this->size == size)
         return -1;
 
-    unsigned int oldSize = this->size;
+    unsigned int const oldSize = this->size;
     this->size = size;
     void *list = malloc(this->size * sizeof(void *));
 
@@ -145,4 +123,16 @@ int upl_resize(upl_t *const this, unsigned int size)
     this->list = list;
 
     return 1;
+}
+
+int upl_find(upl_t *const this, void *const data)
+{
+    void **const list = this->list;
+    unsigned int *const freePos = &this->freePos;
+
+    for (unsigned int i = 0; i < *freePos; i++)
+        if (list[i] == data)
+            return i;
+
+    return -1;
 }

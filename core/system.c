@@ -28,12 +28,12 @@ void deSystem_add(deSystem_t *const this, ...)
 
 void deSystem_delete(deSystem_t *const this, void *const data)
 {
-    upl_bulk_removeByData(&this->upl, data, this->params);
+    upl_removeByData(&this->upl, data, this->params);
 }
 
 void deSystem_update(deSystem_t *const this)
 {
-    upl_bulk_foreach(&this->upl, this->updateFn, this->params);
+    upl_iterator(&this->upl, this->updateFn, this->params);
 }
 
 void deSystem_end(deSystem_t *const this)

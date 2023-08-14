@@ -34,7 +34,7 @@ void deManager_update(deManager_t *const m)
 
 deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
 {
-    deEntity_t *e = dculist_new(&m->list);
+    deEntity_t *e = dculist_add(&m->list);
 
     memset(e->data, 0, m->list.objectSize - sizeof(deEntity_t));
 
