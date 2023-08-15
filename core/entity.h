@@ -5,13 +5,9 @@ typedef struct deState_t   deState_t;
 
 typedef struct deEntity_t
 {
-    // deState_f updateFn;
-
     deState_t *state;
-    
-    // deState_f destructor;
-    deState_t *xtor;       // constructor, entity executor, destructor
-    
+    deState_f destructor;
+    // deState_t *xtor;       // constructor, entity executor, destructor
     
     deManager_t *manager;
     unsigned char data[];  // Bytes for casting data & components

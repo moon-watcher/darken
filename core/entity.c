@@ -9,9 +9,11 @@ deEntity_t *deEntity_new(const deState_t *const s)
 {
     deEntity_t *e = malloc(sizeof(deEntity_t));
 
-    e->xtor = e->state = (deState_t *)s;
-    // e->updateFn = s->update;
+    e->state = (deState_t *)s;
+    e->destructor = s->leave;
     e->manager = 0;
+    // e->xtor = e->state = (deState_t *)s;
+    // e->updateFn = s->update;
 
     deEntity_stateEnter(e);
 
@@ -65,8 +67,11 @@ void deEntity_stateDestruct(deEntity_t *const e)
 {
     deEntity_stateLeave(e);
 
+    /*
     if (e->xtor == e->state)
         return;
 
     EXEC(e, e->xtor->leave);
+    */
+    EXEC(e, e->destructor);
 }
