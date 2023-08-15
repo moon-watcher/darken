@@ -39,7 +39,7 @@ deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const 
     memset(e->data, 0, m->list.objectSize - sizeof(deEntity_t));
 
     e->xtor = e->state = (deState_t *)s;
-    e->updateFn = s->update;
+    // e->updateFn = s->update;
     e->manager = m;
 
     deEntity_stateEnter(e);

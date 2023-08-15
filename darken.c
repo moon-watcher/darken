@@ -2,18 +2,18 @@
 
 static int exit;
 
-int darken(const deState_t *const s)
+int darken(const deState_t *const state)
 {
     exit = 0;
-    int *exitCode = &exit;
+    int *const exitCode = &exit;
 
-    deEntity_t *const e = deEntity_new(s);
-    deState_f const update = e->updateFn;
+    deEntity_t *const entity = deEntity_new(state);
+    deState_f const update = state->update;
 
-    while (!*exitCode)
-        update(e);
+    while (0 == *exitCode)
+        update(entity);
 
-    deEntity_delete(e);
+    deEntity_delete(entity);
 
     return *exitCode;
 }
