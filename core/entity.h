@@ -1,17 +1,17 @@
 #pragma once
 
-typedef struct deManager_t deManager_t;
+typedef struct de_manager de_manager;
 
-typedef struct deEntity_t
+typedef struct de_entity
 {
-    deState_t *state;
+    de_state *state;
 
-    deState_f update;
-    deState_f destructor;
+    de_state_f update;
+    de_state_f destructor;
 
-    deManager_t *manager;
+    de_manager *manager;
     unsigned char data[]; // Bytes for casting data & components
-} deEntity_t;
+} de_entity;
 
-deEntity_t *deEntity_new(const deState_t *const entity);
-void deEntity_delete(deEntity_t *const entity);
+de_entity *de_entity_new(const de_state *const);
+void de_entity_delete(de_entity *const);

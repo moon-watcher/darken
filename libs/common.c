@@ -5,14 +5,14 @@
 
 // DarkEn List Utils
 
-void darkenLibsCommon_init(uplist_t *const this, unsigned int size)
+void de_libs_common_init(de_libs_uplist *const this, unsigned int size)
 {
     this->size = size ? size : 1;
     this->list = malloc(this->size * sizeof(void *));
     this->freePos = 0;
 }
 
-int darkenLibsCommon_resize(uplist_t *const this, unsigned int size)
+int de_libs_common_resize(de_libs_uplist *const this, unsigned int size)
 {
     if (this->size == size)
         return -1;
@@ -32,7 +32,7 @@ int darkenLibsCommon_resize(uplist_t *const this, unsigned int size)
     return 1;
 }
 
-int darkenLibsCommon_find(uplist_t *const this, void *const data)
+int de_libs_common_find(de_libs_uplist *const this, void *const data)
 {
     void **const list = this->list;
     unsigned int *const freePos = &this->freePos;
@@ -44,7 +44,7 @@ int darkenLibsCommon_find(uplist_t *const this, void *const data)
     return -1;
 }
 
-void darkenLibsCommon_remove(uplist_t *const this, unsigned int index, void (*callback)(void *const))
+void de_libs_common_remove(de_libs_uplist *const this, unsigned int index, void (*callback)(void *const))
 {
     unsigned int *const freePos = &this->freePos;
 

@@ -5,5 +5,5 @@
 #include "core/manager.h"
 #include "core/system.h"
 
-int darken(const deState_t *const state);
+int darken(const de_state *const state);
 void darken_end(int code);

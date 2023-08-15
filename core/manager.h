@@ -1,18 +1,18 @@
 #pragma once
 
-typedef struct deEntity_t deEntity_t;
+typedef struct de_entity de_entity;
 
 #include "../libs/dculist.h"
 
-typedef struct deManager_t
+typedef struct de_manager
 {
-    dculist_t list;
-} deManager_t;
+    de_libs_dculist list;
+} de_manager;
 
-void deManager_init(deManager_t *const manager, unsigned int maxEntities, unsigned int maxBytes);
-void deManager_end(deManager_t *const manager);
-void deManager_reset(deManager_t *const manager);
-void deManager_update(deManager_t *const manager);
+void de_manager_init(de_manager *const, unsigned int, unsigned int);
+void de_manager_end(de_manager *const);
+void de_manager_reset(de_manager *const);
+void de_manager_update(de_manager *const);
 
-deEntity_t *deManager_createEntity(deManager_t *const manager, const deState_t *const state);
-void deManager_deleteEntity(deManager_t *const manager, deEntity_t *const entity);
+de_entity *de_manager_entity_create(de_manager *const, const de_state *const);
+void de_manager_entity_delete(de_manager *const, de_entity *const);

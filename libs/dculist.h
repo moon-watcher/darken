@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct dculist_t
+typedef struct de_libs_dculist
 {
     void **list;
     unsigned int freePos; // Next free position in entities array
@@ -12,11 +12,11 @@ typedef struct dculist_t
 
     void (*update_f)(void *const);
     void (*remove_f)(void *const);
-} dculist_t;
+} de_libs_dculist;
 
-void dculist_init(dculist_t *const list, unsigned int size, unsigned int objectSize);
-void *dculist_add(dculist_t *const list);
-void dculist_iterator(dculist_t *const list, void (*callback)(void *const));
-void dculist_remove(dculist_t *const list, void *const data, void (*callback)(void *const));
-void dculist_end(dculist_t *const list, void (*callback)(void *const));
-void dculist_reset(dculist_t *const list, void (*callback)(void *const));
+void de_libs_dculist_init(de_libs_dculist *const list, unsigned int size, unsigned int objectSize);
+void *de_libs_dculist_add(de_libs_dculist *const list);
+void de_libs_dculist_iterator(de_libs_dculist *const list, void (*callback)(void *const));
+void de_libs_dculist_remove(de_libs_dculist *const list, void *const data, void (*callback)(void *const));
+void de_libs_dculist_end(de_libs_dculist *const list, void (*callback)(void *const));
+void de_libs_dculist_reset(de_libs_dculist *const list, void (*callback)(void *const));

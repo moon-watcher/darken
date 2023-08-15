@@ -4,44 +4,44 @@
 
 #include "../libs/uplist.h"
 
-void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned int maxItems, unsigned int params)
+void de_system_init(de_system *const this, de_system_f const updateFn, unsigned int maxItems, unsigned int params)
 {
     this->updateFn = updateFn;
     this->maxItems = maxItems;
     this->params = params;
     this->errorHandler = 0;
 
-    uplist_init(&this->upl, this->maxItems * this->params);
+    de_libs_uplist_init(&this->upl, this->maxItems * this->params);
 }
 
-void deSystem_add(deSystem_t *const this, ...)
+void de_system_add(de_system *const this, ...)
 {
     va_list ap;
     va_start(ap, this);
 
     for (unsigned int i = 0; i < this->params; i++)
-        if (uplist_add(&this->upl, va_arg(ap, void *const)) < 0 && this->errorHandler)
+        if (de_libs_uplist_add(&this->upl, va_arg(ap, void *const)) < 0 && this->errorHandler)
             this->errorHandler(this);
 
     va_end(ap);
 }
 
-void deSystem_delete(deSystem_t *const this, void *const data)
+void de_system_delete(de_system *const this, void *const data)
 {
-    uplist_removeByData(&this->upl, data, this->params);
+    de_libs_uplist_removeByData(&this->upl, data, this->params);
 }
 
-void deSystem_update(deSystem_t *const this)
+void de_system_update(de_system *const this)
 {
-    uplist_iterator(&this->upl, this->updateFn, this->params);
+    de_libs_uplist_iterator(&this->upl, this->updateFn, this->params);
 }
 
-void deSystem_end(deSystem_t *const this)
+void de_system_end(de_system *const this)
 {
-    uplist_end(&this->upl);
+    de_libs_uplist_end(&this->upl);
 }
 
-void deSystem_errorHandler(deSystem_t *const this, void (*eh)(deSystem_t *const))
+void de_system_errorHandler(de_system *const this, void (*eh)(de_system *const))
 {
     this->errorHandler = eh;
 }

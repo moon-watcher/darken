@@ -7,47 +7,47 @@
 
 #include "../libs/dculist.h"
 
-void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int objectSize)
+void de_manager_init(de_manager *const m, unsigned int maxEntities, unsigned int objectSize)
 {
-    dculist_init(&m->list, maxEntities, objectSize + sizeof(deEntity_t));
+    de_libs_dculist_init(&m->list, maxEntities, objectSize + sizeof(de_entity));
 }
 
-void deManager_end(deManager_t *const m)
+void de_manager_end(de_manager *const m)
 {
-    dculist_end(&m->list, deState_destruct);
+    de_libs_dculist_end(&m->list, de_state_destruct);
 }
 
-void deManager_reset(deManager_t *const m)
+void de_manager_reset(de_manager *const m)
 {
-    dculist_reset(&m->list, deState_destruct);
+    de_libs_dculist_reset(&m->list, de_state_destruct);
 }
 
-void deManager_update(deManager_t *const m)
+void de_manager_update(de_manager *const m)
 {
-    dculist_iterator(&m->list, deState_update);
+    de_libs_dculist_iterator(&m->list, de_state_update);
 }
 
-deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
+de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s)
 {
-    deEntity_t *e = dculist_add(&m->list);
+    de_entity *e = de_libs_dculist_add(&m->list);
 
-    memset(e->data, 0, m->list.objectSize - sizeof(deEntity_t));
+    memset(e->data, 0, m->list.objectSize - sizeof(de_entity));
 
     e->destructor = s->leave;
     e->manager = m;
 
-    deState_force(e, s);
+    de_state_force(e, s);
 
     return e;
 }
 
-void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
+void de_manager_entity_delete(de_manager *const m, de_entity *const e)
 {
     if (m != 0)
-        dculist_remove(&m->list, e, deState_destruct);
+        de_libs_dculist_remove(&m->list, e, de_state_destruct);
     else
     {
-        deState_destruct(e);
+        de_state_destruct(e);
         free(e);
     }
 }

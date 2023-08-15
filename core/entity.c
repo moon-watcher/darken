@@ -5,19 +5,19 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-deEntity_t *deEntity_new(const deState_t *const s)
+de_entity *de_entity_new(const de_state *const s)
 {
-    deEntity_t *e = malloc(sizeof(deEntity_t));
+    de_entity *e = malloc(sizeof(de_entity));
 
     e->destructor = s->leave;
     e->manager = 0;
 
-    deState_force(e, s);
+    de_state_force(e, s);
 
     return e;
 }
 
-void deEntity_delete(deEntity_t *const e)
+void de_entity_delete(de_entity *const e)
 {
-    deManager_deleteEntity(e->manager, e);
+    de_manager_entity_delete(e->manager, e);
 }
