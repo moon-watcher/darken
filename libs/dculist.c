@@ -67,7 +67,7 @@ void dculist_remove(dculist_t *const this, void *const data, void (*callback)(vo
 
 void dculist_end(dculist_t *const this, void (*callback)(void *const))
 {
-    dculist_iterator(this, callback);
+    dculist_reset(this, callback);
 
     void **const list = this->list;
 
