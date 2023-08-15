@@ -14,6 +14,3 @@ void uplist_remove(uplist_t *const list, unsigned int index);
 void uplist_end(uplist_t *const list);
 void uplist_reset(uplist_t *const list);
 void uplist_removeByData(uplist_t *const list, void *const data, unsigned int nbItems);
-
-int uplist_resize(uplist_t *const list, unsigned int size);
-int uplist_find(uplist_t *const list, void *const data);
