@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libs/upl.h"
+#include "../libs/uplist.h"
 
 typedef struct deSystem_t deSystem_t;
 typedef void (*deSystem_f)();
@@ -10,7 +10,7 @@ typedef struct deSystem_t
     deSystem_f updateFn;
     unsigned int maxItems;
     unsigned int params;
-    upl_t upl;
+    uplist_t upl;
     char *name;
     void (*errorHandler)(deSystem_t *const);
 } deSystem_t;
