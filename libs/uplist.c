@@ -8,9 +8,7 @@
 
 void uplist_init(uplist_t *const this, unsigned int size)
 {
-    this->size = size ? size : 1;
-    this->list = malloc(this->size * sizeof(void *));
-    this->freePos = 0;
+    delutil_init(this, size);
 }
 
 int uplist_add(uplist_t *const this, void *const add)
@@ -67,15 +65,7 @@ void uplist_iterator(uplist_t *const this, void (*iterator)(), unsigned int nbIt
 
 void uplist_remove(uplist_t *const this, unsigned int index)
 {
-    unsigned int *const freePos = &this->freePos;
-
-    if (*freePos == 0)
-        return;
-
-    void **const list = this->list;
-
-    --*freePos;
-    list[index] = list[*freePos];
+    delutil_remove(this, index, 0);
 }
 
 void uplist_end(uplist_t *const this)

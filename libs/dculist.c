@@ -8,9 +8,7 @@
 
 void dculist_init(dculist_t *const this, unsigned int size, unsigned int objectSize)
 {
-    this->size = size ? size : 1;
-    this->list = malloc(this->size * sizeof(void *));
-    this->freePos = 0;
+    delutil_init(this, size);
 
     this->objectSize = objectSize ? objectSize : 1;
     this->allocatedObjects = 0;
@@ -55,14 +53,7 @@ void dculist_remove(dculist_t *const this, void *const data, void (*callback)(vo
     if (index < 0)
         return;
 
-    void **const list = this->list;
-    unsigned int *const freePos = &this->freePos;
-
-    if (callback)
-        callback(list[index]);
-
-    --*freePos;
-    list[index] = list[*freePos];
+    delutil_remove(this, index, callback);
 }
 
 void dculist_end(dculist_t *const this, void (*callback)(void *const))
