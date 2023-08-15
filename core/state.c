@@ -14,7 +14,7 @@ void deState_force(deEntity_t *const e, const deState_t *const s)
     void nullf() {}
 
     e->state = (deState_t *) s;
-    e->update = s->update ?: nullf;
+    e->update = e->state->update ?: nullf;
 
     if (e->state->enter)
         e->state->enter(e);
