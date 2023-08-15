@@ -3,7 +3,9 @@
 
 void deState_set(deEntity_t *const e, const deState_t *const s)
 {
-    deState_leave(e);
+    if (e->state->leave != 0)
+        e->state->leave(e);
+
     deState_force(e, s);
 }
 
@@ -11,32 +13,23 @@ void deState_force(deEntity_t *const e, const deState_t *const s)
 {
     void nullf() {}
 
-    e->state.enter  = s->enter  ?: nullf;
-    e->state.update = s->update ?: nullf;
-    e->state.leave  = s->leave  ?: nullf;
+    e->state = (deState_t *) s;
+    e->update = s->update ?: nullf;
 
-    deState_enter(e);
-}
-
-void deState_enter(deEntity_t *const e)
-{
-    e->state.enter(e);
+    if (e->state->enter)
+        e->state->enter(e);
 }
 
 void deState_update(deEntity_t *const e)
 {
-    e->state.update(e);
-}
-
-void deState_leave(deEntity_t *const e)
-{
-    e->state.leave(e);
+    e->update(e);
 }
 
 void deState_destruct(deEntity_t *const e)
 {
-    deState_leave(e);
+    if (e->state->leave != 0)
+        e->state->leave(e);
 
-    if (e->state.leave != e->destructor)
+    if (e->state->leave != e->destructor && e->destructor != 0)
         e->destructor(e);
 }
