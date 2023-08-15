@@ -1,5 +1,5 @@
 #include "dculist.h"
-#include "utils.h"
+#include "common.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
@@ -8,7 +8,7 @@
 
 void dculist_init(dculist_t *const this, unsigned int size, unsigned int objectSize)
 {
-    delutil_init(this, size);
+    darkenLibsCommon_init(this, size);
 
     this->objectSize = objectSize ? objectSize : 1;
     this->allocatedObjects = 0;
@@ -17,7 +17,7 @@ void dculist_init(dculist_t *const this, unsigned int size, unsigned int objectS
 void *dculist_add(dculist_t *const this)
 {
     if (this->freePos >= this->size)
-        if (delutil_resize(this, this->size + this->size / 2) == 0)
+        if (darkenLibsCommon_resize(this, this->size + this->size / 2) == 0)
             return 0;
 
     void **const list = this->list;
@@ -48,12 +48,12 @@ void dculist_iterator(dculist_t *const this, void (*callback)(void *const))
 
 void dculist_remove(dculist_t *const this, void *const data, void (*callback)(void *const))
 {
-    int const index = delutil_find(this, data);
+    int const index = darkenLibsCommon_find(this, data);
 
     if (index < 0)
         return;
 
-    delutil_remove(this, index, callback);
+    darkenLibsCommon_remove(this, index, callback);
 }
 
 void dculist_end(dculist_t *const this, void (*callback)(void *const))

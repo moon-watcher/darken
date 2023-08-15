@@ -1,5 +1,5 @@
 #include "uplist.h"
-#include "utils.h"
+#include "common.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
@@ -8,7 +8,7 @@
 
 void uplist_init(uplist_t *const this, unsigned int size)
 {
-    delutil_init(this, size);
+    darkenLibsCommon_init(this, size);
 }
 
 int uplist_add(uplist_t *const this, void *const add)
@@ -16,7 +16,7 @@ int uplist_add(uplist_t *const this, void *const add)
     unsigned int *const freePos = &this->freePos;
 
     if (*freePos >= this->size)
-        if (delutil_resize(this, this->size + this->size / 2) == 0)
+        if (darkenLibsCommon_resize(this, this->size + this->size / 2) == 0)
             return -1;
 
     this->list[*freePos] = add;
@@ -65,7 +65,7 @@ void uplist_iterator(uplist_t *const this, void (*iterator)(), unsigned int nbIt
 
 void uplist_remove(uplist_t *const this, unsigned int index)
 {
-    delutil_remove(this, index, 0);
+    darkenLibsCommon_remove(this, index, 0);
 }
 
 void uplist_end(uplist_t *const this)
@@ -80,7 +80,7 @@ void uplist_reset(uplist_t *const this)
 
 void uplist_removeByData(uplist_t *const this, void *const data, unsigned int nbItems)
 {
-    int const index = delutil_find(this, data);
+    int const index = darkenLibsCommon_find(this, data);
 
     if (index < 0)
         return;
