@@ -10,7 +10,6 @@
 void deManager_init(deManager_t *const m, unsigned int maxEntities, unsigned int objectSize)
 {
     dculist_init(&m->list, maxEntities, objectSize + sizeof(deEntity_t));
-    m->pause = 0;
 }
 
 void deManager_end(deManager_t *const m)
@@ -25,11 +24,7 @@ void deManager_reset(deManager_t *const m)
 
 void deManager_update(deManager_t *const m)
 {
-    if (m->pause == 0)
-        dculist_iterator(&m->list, deState_update);
-
-    if (m->pause > 0)
-        --m->pause;
+    dculist_iterator(&m->list, deState_update);
 }
 
 deEntity_t *deManager_createEntity(deManager_t *const m, const deState_t *const s)
@@ -55,19 +50,4 @@ void deManager_deleteEntity(deManager_t *const m, deEntity_t *const e)
         deState_destruct(e);
         free(e);
     }
-}
-
-void deManager_timeout(deManager_t *const m, unsigned int time)
-{
-    m->pause = time;
-}
-
-void deManager_pause(deManager_t *const m)
-{
-    m->pause = -1;
-}
-
-void deManager_resume(deManager_t *const m)
-{
-    m->pause = 0;
 }

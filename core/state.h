@@ -10,3 +10,10 @@ typedef struct deState_t
     deState_f update;
     deState_f leave;
 } deState_t;
+
+void deState_set      ( deEntity_t *const entity, const deState_t *const state );
+void deState_force    ( deEntity_t *const entity, const deState_t *const state );
+void deState_enter    ( deEntity_t *const entity );
+void deState_update   ( deEntity_t *const entity );
+void deState_leave    ( deEntity_t *const entity );
+void deState_destruct ( deEntity_t *const entity );
