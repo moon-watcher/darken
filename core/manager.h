@@ -2,11 +2,11 @@
 
 typedef struct de_entity de_entity;
 
-#include "../libs/dculist.h"
+#include "../libs/culist.h"
 
 typedef struct de_manager
 {
-    dculist list;
+    culist list;
 } de_manager;
 
 void de_manager_init(de_manager *const, unsigned int, unsigned int);

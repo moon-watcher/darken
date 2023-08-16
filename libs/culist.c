@@ -1,12 +1,11 @@
-#include "dculist.h"
-// #include "common.h"
+#include "culist.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-// Dynamic Chacheable Unordered List
+// Chacheable Unordered List
 
-void dculist_init(dculist *const this, unsigned int size, unsigned int objectSize)
+void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 {
     uplist *const upl = &this->upl;
     
@@ -16,7 +15,7 @@ void dculist_init(dculist *const this, unsigned int size, unsigned int objectSiz
     this->allocatedObjects = 0;
 }
 
-void *dculist_add(dculist *const this)
+void *culist_add(culist *const this)
 {
     uplist *const upl = &this->upl;
     unsigned int next = upl->next;
@@ -37,7 +36,7 @@ void *dculist_add(dculist *const this)
     return upl->list[next];
 }
 
-void dculist_iterator(dculist *const this, void (*callback)(void *const))
+void culist_iterator(culist *const this, void (*callback)(void *const))
 {
     if (callback == 0)
         return;
@@ -45,7 +44,7 @@ void dculist_iterator(dculist *const this, void (*callback)(void *const))
     uplist_iterator(&this->upl, callback, 1);
 }
 
-void dculist_remove(dculist *const this, void *const data, void (*callback)(void *const))
+void culist_remove(culist *const this, void *const data, void (*callback)(void *const))
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
@@ -59,9 +58,9 @@ void dculist_remove(dculist *const this, void *const data, void (*callback)(void
     uplist_remove(upl, index);
 }
 
-void dculist_end(dculist *const this, void (*callback)(void *const))
+void culist_end(culist *const this, void (*callback)(void *const))
 {
-    dculist_reset(this, callback);
+    culist_reset(this, callback);
 
     uplist *const upl = &this->upl;
     void **const list = upl->list;
@@ -74,10 +73,10 @@ void dculist_end(dculist *const this, void (*callback)(void *const))
     uplist_end(upl);
 }
 
-void dculist_reset(dculist *const this, void (*callback)(void *const))
+void culist_reset(culist *const this, void (*callback)(void *const))
 {
     uplist *const upl = &this->upl;
 
-    dculist_iterator(this, callback);
+    culist_iterator(this, callback);
     uplist_reset(upl);
 }

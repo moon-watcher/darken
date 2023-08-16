@@ -5,31 +5,31 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-#include "../libs/dculist.h"
+#include "../libs/culist.h"
 
 void de_manager_init(de_manager *const m, unsigned int maxEntities, unsigned int objectSize)
 {
-    dculist_init(&m->list, maxEntities, objectSize + sizeof(de_entity));
+    culist_init(&m->list, maxEntities, objectSize + sizeof(de_entity));
 }
 
 void de_manager_end(de_manager *const m)
 {
-    dculist_end(&m->list, de_state_destruct);
+    culist_end(&m->list, de_state_destruct);
 }
 
 void de_manager_reset(de_manager *const m)
 {
-    dculist_reset(&m->list, de_state_destruct);
+    culist_reset(&m->list, de_state_destruct);
 }
 
 void de_manager_update(de_manager *const m)
 {
-    dculist_iterator(&m->list, de_state_update);
+    culist_iterator(&m->list, de_state_update);
 }
 
 de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s)
 {
-    de_entity *e = dculist_add(&m->list);
+    de_entity *e = culist_add(&m->list);
 
     memset(e->data, 0, m->list.objectSize - sizeof(de_entity));
 
@@ -44,7 +44,7 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
 void de_manager_entity_delete(de_manager *const m, de_entity *const e)
 {
     if (m != 0)
-        dculist_remove(&m->list, e, de_state_destruct);
+        culist_remove(&m->list, e, de_state_destruct);
     else
     {
         de_state_destruct(e);
