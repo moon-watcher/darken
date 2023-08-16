@@ -6,17 +6,17 @@
 
 // Unordered Pointers List
 
-void de_libs_uplist_init(de_libs_uplist *const this, unsigned int size)
+void uplist_init(uplist *const this, unsigned int size)
 {
-    de_libs_common_init(this, size);
+    de_common_init(this, size);
 }
 
-int de_libs_uplist_add(de_libs_uplist *const this, void *const add)
+int uplist_add(uplist *const this, void *const add)
 {
     unsigned int *const freePos = &this->freePos;
 
     if (*freePos >= this->size)
-        if (de_libs_common_resize(this, this->size + this->size / 2) == 0)
+        if (de_common_resize(this, this->size + this->size / 2) == 0)
             return -1;
 
     this->list[*freePos] = add;
@@ -25,7 +25,7 @@ int de_libs_uplist_add(de_libs_uplist *const this, void *const add)
     return *freePos - 1;
 }
 
-void de_libs_uplist_iterator(de_libs_uplist *const this, void (*iterator)(), unsigned int nbItems)
+void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 {
     void **const list = this->list;
     unsigned int *const freePos = &this->freePos;
@@ -63,24 +63,24 @@ void de_libs_uplist_iterator(de_libs_uplist *const this, void (*iterator)(), uns
     }
 }
 
-void de_libs_uplist_remove(de_libs_uplist *const this, unsigned int index)
+void uplist_remove(uplist *const this, unsigned int index)
 {
-    de_libs_common_remove(this, index, 0);
+    de_common_remove(this, index, 0);
 }
 
-void de_libs_uplist_end(de_libs_uplist *const this)
+void uplist_end(uplist *const this)
 {
     free(this->list);
 }
 
-void de_libs_uplist_reset(de_libs_uplist *const this)
+void uplist_reset(uplist *const this)
 {
     this->freePos = 0;
 }
 
-void de_libs_uplist_removeByData(de_libs_uplist *const this, void *const data, unsigned int nbItems)
+void uplist_removeByData(uplist *const this, void *const data, unsigned int nbItems)
 {
-    int const index = de_libs_common_find(this, data);
+    int const index = de_common_find(this, data);
 
     if (index < 0)
         return;

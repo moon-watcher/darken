@@ -10,7 +10,7 @@ typedef struct de_system
     de_system_f updateFn;
     unsigned int maxItems;
     unsigned int params;
-    de_libs_uplist upl;
+    uplist upl;
     char *name;
     void (*errorHandler)(de_system *const);
 } de_system;

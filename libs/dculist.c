@@ -6,18 +6,18 @@
 
 // Dynamic Chacheable Unordered List
 
-void de_libs_dculist_init(de_libs_dculist *const this, unsigned int size, unsigned int objectSize)
+void dculist_init(dculist *const this, unsigned int size, unsigned int objectSize)
 {
-    de_libs_common_init(this, size);
+    de_common_init(this, size);
 
     this->objectSize = objectSize ? objectSize : 1;
     this->allocatedObjects = 0;
 }
 
-void *de_libs_dculist_add(de_libs_dculist *const this)
+void *dculist_add(dculist *const this)
 {
     if (this->freePos >= this->size)
-        if (de_libs_common_resize(this, this->size + this->size / 2) == 0)
+        if (de_common_resize(this, this->size + this->size / 2) == 0)
             return 0;
 
     void **const list = this->list;
@@ -34,7 +34,7 @@ void *de_libs_dculist_add(de_libs_dculist *const this)
     return list[*freePos - 1];
 }
 
-void de_libs_dculist_iterator(de_libs_dculist *const this, void (*callback)(void *const))
+void dculist_iterator(dculist *const this, void (*callback)(void *const))
 {
     if (callback == 0)
         return;
@@ -46,19 +46,19 @@ void de_libs_dculist_iterator(de_libs_dculist *const this, void (*callback)(void
         callback(list[i]);
 }
 
-void de_libs_dculist_remove(de_libs_dculist *const this, void *const data, void (*callback)(void *const))
+void dculist_remove(dculist *const this, void *const data, void (*callback)(void *const))
 {
-    int const index = de_libs_common_find(this, data);
+    int const index = de_common_find(this, data);
 
     if (index < 0)
         return;
 
-    de_libs_common_remove(this, index, callback);
+    de_common_remove(this, index, callback);
 }
 
-void de_libs_dculist_end(de_libs_dculist *const this, void (*callback)(void *const))
+void dculist_end(dculist *const this, void (*callback)(void *const))
 {
-    de_libs_dculist_reset(this, callback);
+    dculist_reset(this, callback);
 
     void **const list = this->list;
 
@@ -68,9 +68,9 @@ void de_libs_dculist_end(de_libs_dculist *const this, void (*callback)(void *con
     free(list);
 }
 
-void de_libs_dculist_reset(de_libs_dculist *const this, void (*callback)(void *const))
+void dculist_reset(dculist *const this, void (*callback)(void *const))
 {
-    de_libs_dculist_iterator(this, callback);
+    dculist_iterator(this, callback);
 
     this->freePos = 0;
 }

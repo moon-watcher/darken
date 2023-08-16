@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct de_libs_dculist
+typedef struct dculist
 {
     void **list;
     unsigned int freePos; // Next free position in entities array
@@ -12,11 +12,11 @@ typedef struct de_libs_dculist
 
     void (*update_f)(void *const);
     void (*remove_f)(void *const);
-} de_libs_dculist;
+} dculist;
 
-void de_libs_dculist_init(de_libs_dculist *const, unsigned int, unsigned int);
-void *de_libs_dculist_add(de_libs_dculist *const);
-void de_libs_dculist_iterator(de_libs_dculist *const, void (*)(void *const));
-void de_libs_dculist_remove(de_libs_dculist *const, void *const, void (*)(void *const));
-void de_libs_dculist_end(de_libs_dculist *const, void (*)(void *const));
-void de_libs_dculist_reset(de_libs_dculist *const, void (*)(void *const));
+void dculist_init(dculist *const, unsigned int, unsigned int);
+void *dculist_add(dculist *const);
+void dculist_iterator(dculist *const, void (*)(void *const));
+void dculist_remove(dculist *const, void *const, void (*)(void *const));
+void dculist_end(dculist *const, void (*)(void *const));
+void dculist_reset(dculist *const, void (*)(void *const));
