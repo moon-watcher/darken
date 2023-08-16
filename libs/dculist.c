@@ -1,5 +1,5 @@
 #include "dculist.h"
-#include "common.h"
+// #include "common.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
@@ -8,7 +8,9 @@
 
 void dculist_init(dculist *const this, unsigned int size, unsigned int objectSize)
 {
-    de_common_init(this, size);
+    uplist *const upl = &this->upl;
+    
+    uplist_init(upl, size);
 
     this->objectSize = objectSize ? objectSize : 1;
     this->allocatedObjects = 0;
@@ -16,22 +18,23 @@ void dculist_init(dculist *const this, unsigned int size, unsigned int objectSiz
 
 void *dculist_add(dculist *const this)
 {
-    if (this->freePos >= this->size)
-        if (de_common_resize(this, this->size + this->size / 2) == 0)
-            return 0;
+    uplist *const upl = &this->upl;
+    unsigned int next = upl->next;
 
-    void **const list = this->list;
-    unsigned int *const freePos = &this->freePos;
-
-    if (*freePos >= this->allocatedObjects)
+    if (next < this->allocatedObjects)
+        ++upl->next;
+    else
     {
-        list[*freePos] = malloc(this->objectSize);
+        int pos = uplist_add(upl, malloc(this->objectSize));
+
+        if (pos < 0)
+            return 0; 
+            
+        next = pos;
         ++this->allocatedObjects;
     }
-
-    ++*freePos;
-
-    return list[*freePos - 1];
+    
+    return upl->list[next];
 }
 
 void dculist_iterator(dculist *const this, void (*callback)(void *const))
@@ -39,38 +42,42 @@ void dculist_iterator(dculist *const this, void (*callback)(void *const))
     if (callback == 0)
         return;
 
-    void **const list = this->list;
-    unsigned int *const freePos = &this->freePos;
-
-    for (unsigned int i = 0; i < *freePos; i++)
-        callback(list[i]);
+    uplist_iterator(&this->upl, callback, 1);
 }
 
 void dculist_remove(dculist *const this, void *const data, void (*callback)(void *const))
 {
-    int const index = de_common_find(this, data);
+    uplist *const upl = &this->upl;
+    int const index = uplist_find(upl, data);
 
     if (index < 0)
         return;
 
-    de_common_remove(this, index, callback);
+    if(callback)
+        callback(upl->list[index]);
+        
+    uplist_remove(upl, index);
 }
 
 void dculist_end(dculist *const this, void (*callback)(void *const))
 {
     dculist_reset(this, callback);
 
-    void **const list = this->list;
+    uplist *const upl = &this->upl;
+    void **const list = upl->list;
 
     for (unsigned int i = 0; i < this->allocatedObjects; i++)
         free(list[i]);
 
-    free(list);
+    this->allocatedObjects = 0;
+
+    uplist_end(upl);
 }
 
 void dculist_reset(dculist *const this, void (*callback)(void *const))
 {
-    dculist_iterator(this, callback);
+    uplist *const upl = &this->upl;
 
-    this->freePos = 0;
+    dculist_iterator(this, callback);
+    uplist_reset(upl);
 }

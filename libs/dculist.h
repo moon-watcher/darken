@@ -1,18 +1,13 @@
 #pragma once
 
+#include "uplist.h"
+
 typedef struct dculist
 {
-    void **list;
-    unsigned int freePos; // Next free position in entities array
-    unsigned int size;
-    unsigned int resizable:1;
-
-    //
+    uplist upl;
+    
     unsigned int allocatedObjects; // Number of allocated entities
     unsigned int objectSize;
-
-    void (*update_f)(void *const);
-    void (*remove_f)(void *const);
 } dculist;
 
 void dculist_init(dculist *const, unsigned int, unsigned int);

@@ -1,7 +1,7 @@
 #include "../config/malloc.h"
 #include "../config/free.h"
 
-void *realloc(void *ptr, unsigned int size)
+void *de_implement_realloc(void *ptr, unsigned int size)
 {
     void *p = malloc(size);
 

@@ -1,3 +1,3 @@
 #pragma once 
 
-void *realloc(void *, unsigned int);
+void *de_implement_realloc(void *, unsigned int);
