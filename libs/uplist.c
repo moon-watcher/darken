@@ -11,21 +11,21 @@ void uplist_init(uplist *const this, unsigned int size)
     this->size = size ? size : 1;
     this->list = malloc(this->size * sizeof(void *));
     this->next = 0;
-    // this->resizable = 0;
+    this->resizable = 0;
 }
 
 int uplist_add(uplist *const this, void *const add)
 {
     unsigned int const next = this->next;
 
-    // if (next >= this->size)
-    // {
-    //     if (this->resizable == 0)
-    //         return -2;
+    if (next >= this->size)
+    {
+        if (this->resizable == 0)
+            return -2;
 
-    //     if (uplist_resize(this, this->size + this->size / 2) == 0)
-    //         return -1;
-    // }
+        if (uplist_resize(this, this->size + this->size / 2) == 0)
+            return -1;
+    }
 
     this->list[next] = add;
     ++this->next;
@@ -112,22 +112,22 @@ void uplist_removeByData(uplist *const this, void *const data, unsigned int nbIt
     *next -= nbItems;
 }
 
-// unsigned int uplist_resize(uplist *const this, unsigned int size)
-// {
-//     if (this->resizable == 0)
-//         return 3;
+unsigned int uplist_resize(uplist *const this, unsigned int size)
+{
+    if (this->resizable == 0)
+        return 3;
 
-//     if (this->size == size)
-//         return 2;
+    if (this->size == size)
+        return 2;
 
-//     this->size = size;
-//     this->list = realloc(this->list, this->size * sizeof(void *));
+    this->size = size;
+    this->list = realloc(this->list, this->size * sizeof(void *));
 
-//     if (this->list != 0)
-//         return 1;
+    if (this->list != 0)
+        return 1;
 
-//     return 0;
-// }
+    return 0;
+}
 
 int uplist_find(uplist *const this, void *const data)
 {
