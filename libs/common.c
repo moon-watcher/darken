@@ -2,6 +2,7 @@
 
 #include "../config/free.h"
 #include "../config/malloc.h"
+#include "../config/realloc.h"
 
 // DarkEn List Utils
 
@@ -17,17 +18,11 @@ int de_common_resize(uplist *const this, unsigned int size)
     if (this->size == size)
         return -1;
 
-    unsigned int const oldSize = this->size;
     this->size = size;
-    void *list = malloc(this->size * sizeof(void *));
+    this->list = realloc(this->list, this->size * sizeof(void *));
 
-    if (list == 0)
+    if (this->list == 0)
         return 0;
-
-    memcpy(list, this->list, oldSize);
-    free(this->list);
-
-    this->list = list;
 
     return 1;
 }
