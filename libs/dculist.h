@@ -5,6 +5,7 @@ typedef struct dculist
     void **list;
     unsigned int freePos; // Next free position in entities array
     unsigned int size;
+    unsigned int resizable:1;
 
     //
     unsigned int allocatedObjects; // Number of allocated entities

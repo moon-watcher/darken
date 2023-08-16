@@ -5,6 +5,7 @@ typedef struct uplist
     void **list;
     unsigned int freePos;
     unsigned int size;
+    unsigned int resizable:1;
 } uplist;
 
 void uplist_init(uplist *const, unsigned int);

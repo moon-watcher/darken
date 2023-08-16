@@ -15,6 +15,9 @@ void de_common_init(uplist *const this, unsigned int size)
 
 int de_common_resize(uplist *const this, unsigned int size)
 {
+    if (this->resizable == 0)
+        return 2;
+
     if (this->size == size)
         return -1;
 
