@@ -1,10 +1,10 @@
+// Unordered list of pointers
+
 #include "uplist.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
 #include "../config/realloc.h"
-
-// Unordered Pointers List
 
 void uplist_init(uplist *const this, unsigned int size)
 {
@@ -40,7 +40,7 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItem
 
     void **const list = this->list;
     unsigned int *const next = &this->next;
-    
+
     for (unsigned int i = 0; i < *next; i += nbItems)
         iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
 }
@@ -112,8 +112,6 @@ int uplist_find(uplist *const this, void *const data)
     return -1;
 }
 
-
-
 // void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 // {
 //     if (iterator == 0 || nbItems == 0)
@@ -162,8 +160,6 @@ int uplist_find(uplist *const this, void *const data)
 //     funcs[nbItems](this->list, next, iterator, nbItems);
 // }
 
-
-
 // void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 // {
 //     if (iterator == 0 || nbItems == 0)
@@ -171,7 +167,7 @@ int uplist_find(uplist *const this, void *const data)
 
 //     void **const list = this->list;
 //     unsigned int *const next = &this->next;
-    
+
 //     switch (nbItems)
 //     {
 //     case 1:

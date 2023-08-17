@@ -1,9 +1,9 @@
+// Cacheable unordered list (of pointers)
+
 #include "culist.h"
 
 #include "../config/free.h"
 #include "../config/malloc.h"
-
-// Chacheable Unordered List
 
 void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 {
