@@ -16,7 +16,7 @@ void de_state_force(de_entity *const e, const de_state *const s)
     e->state = (de_state *)s;
     e->update = e->state->update ?: nullf;
 
-    if (e->state->enter)
+    if (e->state->enter != 0)
         e->state->enter(e);
 }
 
