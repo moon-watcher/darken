@@ -35,8 +35,9 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
         e = malloc(sizeof(de_entity));
     else
     {
-        e = culist_add(&m->list);
-        memset(e->data, 0, m->list.objectSize - sizeof(de_entity));
+        culist *const list = &m->list;
+        e = culist_add(list);
+        memset(e->data, 0, list->objectSize - sizeof(de_entity));
     }
 
     e->destructor = s->leave;
