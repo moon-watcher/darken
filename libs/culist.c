@@ -71,3 +71,15 @@ void culist_reset(culist *const this, void (*callback)())
     culist_iterator(this, callback);
     uplist_reset(&this->upl);
 }
+
+// void culist_iterator(culist *const this, void (*callback)())
+// {
+//     if (callback == 0)
+//         return;
+
+//     void **const list = this->upl.list;
+//     unsigned int *const next = &this->upl.next;
+
+//     for (unsigned int i = 0; i < *next; i++)
+//         callback(list[i]);
+// }
