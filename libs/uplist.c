@@ -46,18 +46,23 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItem
     if (items == 1)
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0]);
+
     else if (items == 2)
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0], list[i + 1]);
+
     else if (items == 3)
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0], list[i + 1], list[i + 2]);
+
     else if (items == 4)
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
+
     else if (items == 5)
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
+
     else
         for (unsigned int i = 0; i < *next; i += items)
             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
@@ -65,14 +70,13 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItem
 
 void uplist_remove(uplist *const this, unsigned int index)
 {
-    void **const list = this->list;
     unsigned int *const next = &this->next;
 
     if (*next == 0)
         return;
 
-    --*next;
-    list[index] = list[*next];
+    void **const list = this->list;
+    list[index] = list[--*next];
 }
 
 void uplist_end(uplist *const this)
@@ -109,10 +113,7 @@ unsigned int uplist_resize(uplist *const this, unsigned int size)
     this->size = size;
     this->list = realloc(this->list, this->size * sizeof(void *));
 
-    if (this->list != 0)
-        return 1;
-
-    return 0;
+    return this->list != 0;
 }
 
 int uplist_find(uplist *const this, void *const data)
