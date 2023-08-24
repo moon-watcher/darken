@@ -16,18 +16,17 @@ void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 void *culist_add(culist *const this)
 {
     uplist *const upl = &this->upl;
-    unsigned int next = upl->next;
+    int next = upl->next;
 
-    if (next < this->allocatedObjects)
+    if (next < (int)this->allocatedObjects)
         ++upl->next;
     else
     {
-        int const pos = uplist_add(upl, malloc(this->objectSize));
+        next = uplist_add(upl, malloc(this->objectSize));
 
-        if (pos < 0)
+        if (next < 0)
             return 0;
 
-        next = pos;
         ++this->allocatedObjects;
     }
 
@@ -36,34 +35,37 @@ void *culist_add(culist *const this)
 
 void culist_iterator(culist *const this, void (*callback)())
 {
-    uplist_iterator(&this->upl, callback, 1);
+    if (callback != 0)
+        uplist_iterator(&this->upl, callback, 1);
 }
 
 void culist_remove(culist *const this, void *const data, void (*callback)())
 {
-    int const index = uplist_find(&this->upl, data);
+    uplist *const upl = &this->upl;
+    int const index = uplist_find(upl, data);
 
     if (index < 0)
         return;
 
     if (callback != 0)
-        callback(this->upl.list[index]);
+        callback(upl->list[index]);
 
-    uplist_remove(&this->upl, index);
+    uplist_remove(upl, index);
 }
 
 void culist_end(culist *const this, void (*callback)())
 {
     culist_reset(this, callback);
 
-    void **const list = this->upl.list;
+    uplist *const upl = &this->upl;
+    void **const list = upl->list;
 
     for (unsigned int i = 0; i < this->allocatedObjects; i++)
         free(list[i]);
 
     this->allocatedObjects = 0;
 
-    uplist_end(&this->upl);
+    uplist_end(upl);
 }
 
 void culist_reset(culist *const this, void (*callback)())
