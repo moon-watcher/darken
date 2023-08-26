@@ -1,10 +1,17 @@
 #include "darken.h"
+#include "include.h"
+
+static de_manager man;
 
 void darken_init(darken *const de, const de_state *const s)
 {
-    de->exitCode = 0;
-    de->entity = de_entity_new(s);
     de->state = s;
+    de->entity = de_entity_new(de->state);
+
+    de_state_f const enter = de->state->enter;
+
+    if (enter != 0)
+        enter(de->entity);
 }
 
 void darken_update(darken *const de)
@@ -17,32 +24,25 @@ void darken_update(darken *const de)
 
 void darken_state(darken *const de, const de_state *const s)
 {
-    de->state = s;
+    de_state_set(de->entity, s);
 }
 
 void darken_loop(darken *const de)
 {
-    int *const exitCode = &de->exitCode;
-    de_state *const state = de->state;
+    de->loop = 1;
+
+    char *const loop = &de->loop;
+    de_state_f const update = de->state->update;
     de_entity *const entity = de->entity;
 
-    while (0 != exitCode)
-        state->update(entity);
+    while (loop)
+        update(entity);
 }
 
 void darken_end(darken *const de)
 {
-    de->exitCode = 1;
     de_entity_delete(de->entity);
     de->entity = 0;
+    de->state = 0;
+    de->loop = 0;
 }
-
-// void darken_loop(darken *const de)
-// {
-//     int *const exitCode = &de->exitCode;
-//     de_state_f const update = de->state->update;
-//     de_entity *const entity = de->entity;
-
-//     while (0 != exitCode)
-//         update(entity);
-// }
