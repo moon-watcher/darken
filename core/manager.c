@@ -30,7 +30,7 @@ void de_manager_update(de_manager *const m)
 de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s)
 {
     de_entity *e;
-    
+
     if (m == 0)
         e = malloc(sizeof(de_entity));
     else
@@ -40,7 +40,7 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
         memset(e->data, 0, list->objectSize - sizeof(de_entity));
     }
 
-    e->destructor = s->leave;
+    e->xtor = (de_state *)s;
     e->manager = m;
 
     de_state_force(e, s);

@@ -5,10 +5,8 @@ typedef struct de_manager de_manager;
 typedef struct de_entity
 {
     de_state *state;
-
+    de_state *xtor;
     de_state_f update;
-    de_state_f destructor;
-
     de_manager *manager;
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
