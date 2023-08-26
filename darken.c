@@ -1,24 +1,48 @@
 #include "darken.h"
 
-static int exit;
-
-int darken(const de_state *const state)
+void darken_init(darken *const de, const de_state *const s)
 {
-    exit = 0;
-    int *const exitCode = &exit;
-
-    de_entity *const entity = de_entity_new(state);
-    de_state_f const update = state->update;
-
-    while (0 == *exitCode)
-        update(entity);
-
-    de_entity_delete(entity);
-
-    return *exitCode;
+    de->exitCode = 0;
+    de->entity = de_entity_new(s);
+    de->state = s;
 }
 
-void darken_end(int exitCode)
+void darken_update(darken *const de)
 {
-    exit = exitCode;
+    de_state_f const update = de->state->update;
+    de_entity *const entity = de->entity;
+
+    update(entity);
 }
+
+void darken_state(darken *const de, const de_state *const s)
+{
+    de->state = s;
+}
+
+void darken_loop(darken *const de)
+{
+    int *const exitCode = &de->exitCode;
+    de_state *const state = de->state;
+    de_entity *const entity = de->entity;
+
+    while (0 != exitCode)
+        state->update(entity);
+}
+
+void darken_end(darken *const de)
+{
+    de->exitCode = 1;
+    de_entity_delete(de->entity);
+    de->entity = 0;
+}
+
+// void darken_loop(darken *const de)
+// {
+//     int *const exitCode = &de->exitCode;
+//     de_state_f const update = de->state->update;
+//     de_entity *const entity = de->entity;
+
+//     while (0 != exitCode)
+//         update(entity);
+// }
