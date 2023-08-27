@@ -5,15 +5,9 @@
 #include "core/manager.h"
 #include "core/system.h"
 
-typedef struct
-{
-    de_entity *entity;
-    de_state *state;
-    char loop;
-} darken;
-
-void darken_init(darken *const, const de_state *const);
-void darken_update(darken *const);
-void darken_state(darken *const, const de_state *const);
-void darken_loop(darken *const);
-void darken_end(darken *const);
+de_entity *darken_init(const de_state *const);
+void darken_end(de_entity *const);
+void darken_state(de_entity *const, const de_state *const);
+void darken_update(de_entity *const);
+void darken_loop(de_entity *const);
+void darken_break(de_entity *const);
