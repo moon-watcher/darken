@@ -11,6 +11,11 @@
     if (e->xtor == 0 || e->xtor->update == 0) \
         return;
 
+void darken(const de_state *const s)
+{
+    darken_loop(darken_init(s));
+}
+
 de_entity *darken_init(const de_state *const s)
 {
     de_entity *e = malloc(sizeof(de_entity));
