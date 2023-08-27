@@ -7,7 +7,7 @@
     if (e->xtor != 0 && e->xtor->F != 0) \
         e->xtor->F(e);
 
-#define ISVALID                                \
+#define ISVALID                               \
     if (e->xtor == 0 || e->xtor->update == 0) \
         return;
 
