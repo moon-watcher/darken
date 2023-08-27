@@ -3,14 +3,6 @@
 #include "config/free.h"
 #include "config/malloc.h"
 
-#define EXEC(F)                          \
-    if (e->xtor != 0 && e->xtor->F != 0) \
-        e->xtor->F(e);
-
-#define ISVALID                               \
-    if (e->xtor == 0 || e->xtor->update == 0) \
-        return;
-
 void darken(const de_state *const s)
 {
     darken_loop(darken_init(s));
@@ -23,7 +15,8 @@ de_entity *darken_init(const de_state *const s)
     e->xtor = (de_state *)s;
     e->update = e->xtor->update;
 
-    EXEC(enter);
+    if (e->xtor != 0 && e->xtor->enter != 0)
+        e->xtor->enter(e);
 
     return e;
 }
@@ -36,24 +29,28 @@ void darken_end(de_entity *const e)
 
 void darken_state(de_entity *const e, const de_state *const s)
 {
-    EXEC(leave);
+    if (e->xtor != 0 && e->xtor->leave != 0)
+        e->xtor->leave(e);
 
     e->xtor = (de_state *)s;
     e->update = e->xtor->update;
 
-    EXEC(enter);
+    if (e->xtor != 0 && e->xtor->enter != 0)
+        e->xtor->enter(e);
 }
 
 void darken_update(de_entity *const e)
 {
-    ISVALID;
+    if (e->xtor == 0 || e->xtor->update == 0)
+        return;
 
     e->xtor->update(e);
 }
 
 void darken_loop(de_entity *const e)
 {
-    ISVALID;
+    if (e->xtor == 0 || e->xtor->update == 0)
+        return;
 
     de_state_f const update = e->xtor->update;
 
@@ -63,7 +60,9 @@ void darken_loop(de_entity *const e)
 
 void darken_break(de_entity *const e)
 {
-    EXEC(leave);
+    if (e->xtor != 0 && e->xtor->enter != 0)
+        e->xtor->enter(e);
+
     e->xtor = 0;
 }
 
@@ -71,7 +70,8 @@ void darken_break(de_entity *const e)
 
 // void darken_loop(de_entity *const e)
 // {
-//     ISVALID
+//     if (e->xtor == 0 || e->xtor->update == 0)
+//         return;
 
 //     de_state_f const update = e->xtor->update;
 
