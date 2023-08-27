@@ -1,46 +1,39 @@
 #include "darken.h"
 #include "include.h"
 
-static de_manager man;
+// static de_manager man;
 
-void darken_init(darken *const de, const de_state *const s)
+de_entity *darken_init(const de_state *const s)
 {
-    de->entity = malloc(sizeof(de_entity));
+    de_entity *e = malloc(sizeof(de_entity));
 
-    de->entity->xtor = (de_state *)s;
+    e->xtor = (de_state *)s;
 
-    if (de->entity->xtor->enter != 0)
-        de->entity->xtor->enter(de->entity);
+    de_state_f const enter = e->xtor->enter;
+    
+    if (enter != 0)
+        enter(e);
 
-    // de->xtor = s;
-    // de->entity = de_entity_new(de->xtor);
-
-    // de_state_f const enter = de->xtor->enter;
-
-    // if (enter != 0)
-    //     enter(de->entity);
+    return e;
 }
 
-// void darken_update(darken *const de)
-// {
-//     de_state_f const update = de->xtor->update;
-//     de_entity *const entity = de->entity;
 
-//     update(entity);
-// }
-
-void darken_state(darken *const de, const de_state *const s)
+void darken_state(de_entity *const e, const de_state *const s)
 {
-    if (de->entity->xtor->leave != 0)
-        de->entity->xtor->leave(de->entity);
+    de_state_f const leave = e->xtor->leave;
 
-    de->entity->xtor = s;
+    if (leave != 0)
+        leave(e);
 
-    if (de->entity->xtor->enter != 0)
-        de->entity->xtor->enter(de->entity);
+    e->xtor = s;
+
+    de_state_f const enter = e->xtor->enter;
+    
+    if (enter != 0)
+        enter(e);
 }
 
-void darken_loop(darken *const de)
+void darken_loop(de_entity *const e)
 {
     // de->loop = 1;
 
@@ -51,21 +44,22 @@ void darken_loop(darken *const de)
     // de_state_f *const updatefff = &entity->xtor->update;
 
     while (1)
-         // if (de->entity->xtor->update != 0) de->entity->xtor->update(de->entity);
+         // if (e->xtor->update != 0) e->xtor->update(e);
 
 
     {
         drawText("TEXT2", 13, 0); waitMs(500);
-        darken_state(de, &entity_scene_state_test_2);
-        if (de->entity->xtor->update != 0)
-            de->entity->xtor->update(de->entity);
+        darken_state(e, &entity_scene_state_test_2);
+        if (e->xtor->update != 0)
+            e->xtor->update(e);
 
         drawText("TEXT1",  3, 0); waitMs(500);
-        darken_state(de, &entity_scene_state_test_1);
-        if (de->entity->xtor->update != 0)
-            de->entity->xtor->update(de->entity);
+        darken_state(e, &entity_scene_state_test_1);
+        if (e->xtor->update != 0)
+            e->xtor->update(e);
     }
 }
+
 
 // void darken_end(darken *const de)
 // {
