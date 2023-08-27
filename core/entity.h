@@ -1,6 +1,8 @@
 #pragma once
 
-typedef struct de_manager de_manager;
+#include "../libs/culist.h"
+
+typedef culist de_manager;
 
 typedef struct de_entity
 {

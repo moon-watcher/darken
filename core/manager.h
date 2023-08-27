@@ -4,10 +4,7 @@ typedef struct de_entity de_entity;
 
 #include "../libs/culist.h"
 
-typedef struct de_manager
-{
-    culist list;
-} de_manager;
+typedef culist de_manager;
 
 void de_manager_init(de_manager *const, unsigned int, unsigned int);
 void de_manager_end(de_manager *const);
