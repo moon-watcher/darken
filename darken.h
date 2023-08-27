@@ -8,8 +8,8 @@
 typedef struct
 {
     de_entity *entity;
-    de_state *state;
-    char loop;
+    // de_state *state;
+    // char loop;
 } darken;
 
 void darken_init(darken *const, const de_state *const);
