@@ -34,7 +34,7 @@ void darken_end(de_entity *const e)
 void darken_state(de_entity *const e, const de_state *const s)
 {
     if (s == 0)
-        return 0;
+        return;
 
     if (e->xtor != 0 && e->xtor->leave != 0)
         e->xtor->leave(e);
