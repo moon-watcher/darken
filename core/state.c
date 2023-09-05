@@ -3,7 +3,12 @@
 
 void de_state_set(de_entity *const e, const de_state *const s)
 {
-    de_state_f const leave_s = e->state->leave;
+    de_state *const state = e->state;
+
+    if (state == s)
+        return;
+
+    de_state_f const leave_s = state->leave;
 
     if (leave_s != 0)
         leave_s(e);
