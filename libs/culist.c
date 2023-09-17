@@ -5,6 +5,20 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
+static int getnext(culist *const this)
+{
+    uplist *const upl = &this->upl;
+    int next = upl->next;
+
+    if (next < (int)this->allocatedObjects)
+        ++upl->next;
+    else if ((next = uplist_add(upl, malloc(this->objectSize))) >= 0)
+        ++this->allocatedObjects;
+
+    return next;
+}
+
+
 void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 {
     uplist_init(&this->upl, size);
@@ -15,22 +29,22 @@ void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 
 void *culist_add(culist *const this)
 {
-    uplist *const upl = &this->upl;
-    int next = upl->next;
+    int next = getnext(this);
 
-    if (next < (int)this->allocatedObjects)
-        ++upl->next;
-    else
-    {
-        next = uplist_add(upl, malloc(this->objectSize));
+    if (next < 0)
+        return;
 
-        if (next < 0)
-            return 0;
+    return this->upl.list[next];
+}
 
-        ++this->allocatedObjects;
-    }
+void *culist_set(culist *const this, void *const value)
+{
+    int next = getnext(this);
 
-    return upl->list[next];
+    if (next < 0)
+        return 0;
+
+    return this->upl.list[next] = value;
 }
 
 void culist_iterator(culist *const this, void (*callback)())
