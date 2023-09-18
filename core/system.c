@@ -22,7 +22,7 @@ void de_system_add(de_system *const this, ...)
     va_list ap;
     va_start(ap, this);
 
-    if (eh)
+    if (eh != 0)
     {
         while (params--)
             if (uplist_add(upl, va_arg(ap, void *const)) < 0)

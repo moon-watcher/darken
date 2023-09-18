@@ -27,7 +27,7 @@ void *culist_add(culist *const this, void *const value)
     if (next < 0)
         return 0;
 
-    if (value)
+    if (value != 0)
         upl->list[next] = value;
 
     return upl->list[next];
