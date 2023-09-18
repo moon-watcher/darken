@@ -6,11 +6,11 @@
 #include "../config/malloc.h"
 #include "../config/realloc.h"
 
-
-#define IT(F, ...)                                                                           \
-    static void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) { \
-        for (unsigned int i = 0; i < *n; i += nb)                                            \
-            it(__VA_ARGS__);                                                                 \
+#define IT(F, ...)                                                                         \
+    static void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) \
+    {                                                                                      \
+        for (unsigned int i = 0; i < *n; i += nb)                                          \
+            it(__VA_ARGS__);                                                               \
     }
 
 IT(f0, );
