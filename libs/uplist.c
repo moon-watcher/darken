@@ -6,6 +6,25 @@
 #include "../config/malloc.h"
 #include "../config/realloc.h"
 
+
+#define IT(F, ...)                                                                           \
+    static void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) { \
+        for (unsigned int i = 0; i < *n; i += nb)                                            \
+            it(__VA_ARGS__);                                                                 \
+    }
+
+IT(f0, );
+IT(f1, list[i + 0]);
+IT(f2, list[i + 0], list[i + 1]);
+IT(f3, list[i + 0], list[i + 1], list[i + 2]);
+IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
+IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
+IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
+IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
+
+static void (*const it_funcs[])() = { f0, f1, f2, f3, f4, f5, f6, f7, };
+
+
 void uplist_init(uplist *const this, unsigned int size)
 {
     this->size = size ?: 1;
@@ -35,37 +54,8 @@ int uplist_add(uplist *const this, void *const add)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 {
-    unsigned int const items = nbItems;
-
-    if (iterator == 0 || items == 0)
-        return;
-
-    void **const list = this->list;
-    unsigned int *const next = &this->next;
-
-    if (items == 1)
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0]);
-
-    else if (items == 2)
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0], list[i + 1]);
-
-    else if (items == 3)
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0], list[i + 1], list[i + 2]);
-
-    else if (items == 4)
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-
-    else if (items == 5)
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-
-    else
-        for (unsigned int i = 0; i < *next; i += items)
-            iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
+    if (iterator)
+        it_funcs[nbItems](this->list, &this->next, iterator, nbItems);
 }
 
 void uplist_remove(uplist *const this, unsigned int index)
@@ -133,98 +123,44 @@ int uplist_find(uplist *const this, void *const data)
 //     if (iterator == 0 || nbItems == 0)
 //         return;
 
-//     void f1(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0]);
-//     }
-//     void f2(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1]);
-//     }
-//     void f3(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2]);
-//     }
-//     void f4(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-//     }
-//     void f5(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-//     }
-//     void f6(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-//     }
-//     void f7(void **const list, unsigned int *const next, void (*iterator)(), unsigned int nbItems)
-//     {
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
-//     }
-
-//     void **const list = this->list;
-//     unsigned int *const next = &this->next;
-
-//     void (*const funcs[])(void **const, unsigned int *const, void (*)(), unsigned int) = { 0, &f1, &f2, &f3, &f4, &f5, &f6, &f7, };
-//     funcs[nbItems](this->list, next, iterator, nbItems);
-// }
-
-// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
-// {
-//     if (iterator == 0 || nbItems == 0)
-//         return;
-
-//     void **const list = this->list;
-//     unsigned int *const next = &this->next;
-
-//     switch (nbItems)
-//     {
-//     case 1:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0]);
-//         break;
-//     case 2:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1]);
-//         break;
-//     case 3:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2]);
-//         break;
-//     case 4:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-//         break;
-//     case 5:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-//         break;
-//     case 6:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-//         break;
-//     case 7:
-//         for (unsigned int i = 0; i < *next; i += nbItems)
-//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
-//         break;
-//     }
-// }
-
-// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
-// {
-//     if (iterator == 0 || nbItems == 0)
-//         return;
-
 //     void **const list = this->list;
 //     unsigned int *const next = &this->next;
 
 //     for (unsigned int i = 0; i < *next; i += nbItems)
 //         iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
+// }
+
+// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
+// {
+//     if (iterator == 0 || nbItems == 0)
+//         return;
+
+//     unsigned int const items = nbItems;
+
+//     void **const list = this->list;
+//     unsigned int *const next = &this->next;
+
+//     if (items == 1)
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0]);
+
+//     else if (items == 2)
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0], list[i + 1]);
+
+//     else if (items == 3)
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0], list[i + 1], list[i + 2]);
+
+//     else if (items == 4)
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
+
+//     else if (items == 5)
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
+
+//     else
+//         for (unsigned int i = 0; i < *next; i += items)
+//             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
 // }
