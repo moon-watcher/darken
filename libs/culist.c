@@ -18,6 +18,7 @@ static int getnext(culist *const this)
     return next;
 }
 
+//
 
 void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
 {
@@ -84,7 +85,7 @@ void culist_removeEx(culist *const this, void *const data, void (*callback)(), u
     if (callback != 0)
         callback(upl->list[index]);
 
-   uplist_removeByData(upl, data, params);
+    uplist_removeByData(upl, data, params);
 }
 
 void culist_end(culist *const this, void (*callback)())

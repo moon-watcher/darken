@@ -5,7 +5,7 @@
 typedef struct culist
 {
     uplist upl;
-    
+
     unsigned int allocatedObjects; // Number of allocated entities
     unsigned int objectSize;
 } culist;
