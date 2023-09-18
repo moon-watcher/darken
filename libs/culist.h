@@ -11,8 +11,7 @@ typedef struct culist
 } culist;
 
 void culist_init(culist *const, unsigned int, unsigned int);
-void *culist_add(culist *const);
-void *culist_set(culist *const, void *const);
+void *culist_add(culist *const, void *const);
 void culist_iterator(culist *const, void (*)());
 void culist_iteratorEx(culist *const, void (*)(), unsigned int);
 void culist_remove(culist *const, void *const, void (*)());

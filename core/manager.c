@@ -35,7 +35,7 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
         e = malloc(sizeof(de_entity));
     else
     {
-        e = culist_add(m);
+        e = culist_add(m, 0);
         memset(e->data, 0, m->objectSize - sizeof(de_entity));
     }
 

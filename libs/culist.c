@@ -28,24 +28,24 @@ void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
     this->allocatedObjects = 0;
 }
 
-void *culist_add(culist *const this)
+void *culist_add(culist *const this, void *const value)
 {
-    int next = getnext(this);
+    uplist *const upl = &this->upl;
+    int next = upl->next;
 
-    if (next < 0)
-        return;
-
-    return this->upl.list[next];
-}
-
-void *culist_set(culist *const this, void *const value)
-{
-    int next = getnext(this);
+    if (next < (int)this->allocatedObjects)
+        ++upl->next;
+        
+    else if ((next = uplist_add(upl, malloc(this->objectSize))) >= 0)
+        ++this->allocatedObjects;
 
     if (next < 0)
         return 0;
 
-    return this->upl.list[next] = value;
+    if (value)
+        upl->list[next] = value;
+
+    return upl->list[next];
 }
 
 void culist_iterator(culist *const this, void (*callback)())
