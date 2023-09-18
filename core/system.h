@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../libs/uplist.h"
-#include "../libs/culist.h"
 
 typedef struct de_system de_system;
 typedef void (*de_system_f)();
@@ -9,10 +8,8 @@ typedef void (*de_system_f)();
 typedef struct de_system
 {
     de_system_f updateFn;
-    unsigned int maxItems;
     unsigned int params;
-    culist list;
-    char *name;
+    uplist upl;
     void (*errorHandler)(de_system *const);
 } de_system;
 
