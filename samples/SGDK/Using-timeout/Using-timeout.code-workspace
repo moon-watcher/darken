@@ -10,17 +10,16 @@
 			"include.h": "c",
 			"culist.h": "c"
 		},
-
+		"workbench.tree.indent": 24,
 		"C_Cpp.default.systemIncludePath": [
-			"D:\\MDDev\\SGDKs\\SGDK-master\\inc",
-			"D:\\MDDev\\SGDKs\\SGDK-master\\src",
-			"D:\\MDDev\\SGDKs\\SGDK-master\\res",
+			"D:/MDDev/SGDKs/SGDK-master/inc",
+			"D:/MDDev/SGDKs/SGDK-master/src",
+			"D:/MDDev/SGDKs/SGDK-master/res",
 		],
-
 		"C_Cpp.default.includePath": [
-			"D:\\MDDev\\SGDKs\\SGDK-master\\src",
-			"D:\\MDDev\\SGDKs\\SGDK-master\\inc",
-			"D:\\MDDev\\SGDKs\\SGDK-master\\res",
+			"D:/MDDev/SGDKs/SGDK-master/src",
+			"D:/MDDev/SGDKs/SGDK-master/inc",
+			"D:/MDDev/SGDKs/SGDK-master/res",
 			// "../data",
 			// "../entities",
 			// "../inc",

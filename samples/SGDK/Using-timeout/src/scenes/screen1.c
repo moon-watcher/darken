@@ -1,16 +1,29 @@
 #include "include.h"
 
-static de_entity *player1;
-// static de_entity *player2;
+static de_entity *p1;
+
+static void VDP_drawText_wrapper(char *string, int *const x, int *const y)
+{
+    VDP_drawText(string, *x, *y);
+}
 
 static void enter(de_entity *const this)
 {
-    player1 = de_manager_entity_create(&playersManager, &entity_player_state_xtor);
-    // player2 = de_manager_entity_create(&playersManager, &entity_player_state_xtor);
+    p1 = de_manager_entity_create(&playersManager, &entity_player_state_xtor);
 
-    // struct player *const player1data = (struct player *const)&player1->data;
-    // player1data->x = 1;
-    // player1data->y = 1;
+    struct player *const p1data = (struct player *const)&p1->data;
+    ComponentTimer *const p1timer = (ComponentTimer *const)&p1data->timer;
+    unsigned int *const p1x = (unsigned int *const)&p1data->x;
+
+    *p1x = 14;
+    p1data->y = 14;
+
+    p1timer->counter = 0;
+    p1timer->max = 60;
+    p1timer->trigger = &VDP_drawText_wrapper;
+    p1timer->param1 = (void *) "Hello, Timer";
+    p1timer->param2 = (void *) p1x;
+    p1timer->param3 = (void *) &p1data->y;
 }
 
 static void update(de_entity *const this)
@@ -20,8 +33,7 @@ static void update(de_entity *const this)
 
 static void leave(de_entity *const this)
 {
-    de_entity_delete(player1);
-    // de_entity_delete(player2);
+    de_entity_delete(p1);
 }
 
 const de_state entity_scene_state_screen1 = {
