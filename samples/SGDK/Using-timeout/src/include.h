@@ -1,7 +1,7 @@
 #pragma once
 
 #include <genesis.h>
-#include "darken/darken.h"
+#include "../../../../darken.h"
 #include "components/Timer.h"
 
 const de_state entity_scene_state_xtor;
