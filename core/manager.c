@@ -9,22 +9,24 @@
 
 void de_manager_init(de_manager *const m, unsigned int maxEntities, unsigned int objectSize)
 {
-    culist_init(m, maxEntities, objectSize + sizeof(de_entity));
+    m->pause = 0;
+    culist_init(&m->list, maxEntities, objectSize + sizeof(de_entity));
 }
 
 void de_manager_end(de_manager *const m)
 {
-    culist_end(m, de_state_destruct);
+    culist_end(&m->list, de_state_destruct);
 }
 
 void de_manager_reset(de_manager *const m)
 {
-    culist_reset(m, de_state_destruct);
+    culist_reset(&m->list, de_state_destruct);
 }
 
 void de_manager_update(de_manager *const m)
 {
-    culist_iterator(m, de_state_update);
+    if (m->pause == 0)
+        culist_iterator(&m->list, de_state_update);
 }
 
 de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s)
@@ -35,8 +37,8 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
         e = malloc(sizeof(de_entity));
     else
     {
-        e = culist_add(m, 0);
-        memset(e->data, 0, m->objectSize - sizeof(de_entity));
+        e = culist_add(&m->list, 0);
+        memset(e->data, 0, m->list.objectSize - sizeof(de_entity));
     }
 
     e->xtor = (de_state *)s;
@@ -50,7 +52,7 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
 void de_manager_entity_delete(de_manager *const m, de_entity *const e)
 {
     if (m != 0)
-        culist_remove(m, e, de_state_destruct);
+        culist_remove(&m->list, e, de_state_destruct);
     else
     {
         de_state_destruct(e);
@@ -60,5 +62,5 @@ void de_manager_entity_delete(de_manager *const m, de_entity *const e)
 
 void de_manager_entity_foreach(de_manager *const m, void (*iterator)(de_entity *const e))
 {
-    culist_iterator(m, iterator);
+    culist_iterator(&m->list, iterator);
 }
