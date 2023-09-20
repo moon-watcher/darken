@@ -7,8 +7,8 @@ typedef culist de_manager;
 
 typedef struct de_entity
 {
-#if DARKEN_ENTITY_INNERDATA_LEN > 0
-    unsigned char inner_data[DARKEN_ENTITY_INNERDATA_LEN];
+#if DARKEN_ENTITY_INNERDATA > 0
+    unsigned char innerdata[DARKEN_ENTITY_INNERDATA];
 #endif
 
     de_state *state;
