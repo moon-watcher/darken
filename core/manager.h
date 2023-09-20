@@ -13,3 +13,4 @@ void de_manager_update(de_manager *const);
 
 de_entity *de_manager_entity_create(de_manager *const, const de_state *const);
 void de_manager_entity_delete(de_manager *const, de_entity *const);
+void de_manager_entity_foreach(de_manager *const, void (*)(de_entity *const));

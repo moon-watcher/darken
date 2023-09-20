@@ -57,3 +57,8 @@ void de_manager_entity_delete(de_manager *const m, de_entity *const e)
         free(e);
     }
 }
+
+void de_manager_entity_foreach(de_manager *const m, void (*iterator)(de_entity *const e))
+{
+    culist_iterator(m, iterator);
+}
