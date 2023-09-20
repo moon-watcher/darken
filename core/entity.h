@@ -1,11 +1,16 @@
 #pragma once
 
+#include "../config/entity.h"
 #include "../libs/culist.h"
 
 typedef culist de_manager;
 
 typedef struct de_entity
 {
+#if DARKEN_ENTITY_INNERDATA_LEN > 0
+    unsigned char inner_data[DARKEN_ENTITY_INNERDATA_LEN];
+#endif
+
     de_state *state;
     de_state *xtor;
     de_state_f update;
