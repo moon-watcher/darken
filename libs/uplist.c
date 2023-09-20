@@ -54,7 +54,7 @@ int uplist_add(uplist *const this, void *const add)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 {
-    if (iterator)
+    if (iterator != 0)
         it_funcs[nbItems](this->list, &this->next, iterator, nbItems);
 }
 
