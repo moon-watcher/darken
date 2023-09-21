@@ -44,7 +44,7 @@ de_entity *de_manager_entity_create(de_manager *const m, const de_state *const s
     e->xtor = (de_state *)s;
     e->manager = m;
 
-    de_state_force(e, s);
+    de_state_set(e, s);
 
     return e;
 }

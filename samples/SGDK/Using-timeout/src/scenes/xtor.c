@@ -7,7 +7,7 @@ static void constructor(de_entity *const this)
     de_system_init(&sys_timer, &sys_timer_f, 20, 1);
 
     // And jump to some scene state
-    de_state_force(this, &entity_scene_state_screen1);
+    de_state_set(this, &entity_scene_state_screen1);
 }
 
 static void mainLoopUpdater(de_entity *const this)

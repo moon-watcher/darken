@@ -1,7 +1,7 @@
 #include "state.h"
 #include "entity.h"
 
-void de_state_set(de_entity *const e, const de_state *const s)
+void de_state_change(de_entity *const e, const de_state *const s)
 {
     de_state *const state = e->state;
 
@@ -13,10 +13,10 @@ void de_state_set(de_entity *const e, const de_state *const s)
     if (leave_s != 0)
         leave_s(e);
 
-    de_state_force(e, s);
+    de_state_set(e, s);
 }
 
-void de_state_force(de_entity *const e, const de_state *const s)
+void de_state_set(de_entity *const e, const de_state *const s)
 {
     e->state = (de_state *)s;
     e->update = s->update ?: ({ void f() {}; f; });

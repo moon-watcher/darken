@@ -11,7 +11,7 @@ typedef struct de_state
     de_state_f leave;
 } de_state;
 
+void de_state_change(de_entity *const, const de_state *const);
 void de_state_set(de_entity *const, const de_state *const);
-void de_state_force(de_entity *const, const de_state *const);
 void de_state_update(de_entity *const);
 void de_state_destruct(de_entity *const);
