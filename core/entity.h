@@ -10,6 +10,10 @@ typedef struct de_entity
     unsigned char innerdata[DARKEN_ENTITY_INNERDATA];
 #endif
 
+#if DARKEN_ENTITY_TMP
+    void *tmp;
+#endif
+
     de_state *state;
     de_state *xtor;
     de_state_f update;
@@ -19,3 +23,7 @@ typedef struct de_entity
 
 de_entity *de_entity_new(const de_state *const);
 void de_entity_delete(de_entity *const);
+
+#if DARKEN_ENTITY_TMP
+    void *de_entity_tmp(de_entity *const, unsigned int);
+#endif
