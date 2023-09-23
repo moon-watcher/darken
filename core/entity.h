@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config/entity.h"
+#include "../config/darken.h"
 
 typedef struct de_manager de_manager;
 
@@ -10,7 +10,7 @@ typedef struct de_entity
     unsigned char innerdata[DARKEN_ENTITY_INNERDATA];
 #endif
 
-#if DARKEN_ENTITY_STATEDATA
+#if DARKEN_STATE_STATEDATA
     void *statedata;
 #endif
 
