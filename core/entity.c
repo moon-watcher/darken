@@ -2,12 +2,12 @@
 #include "entity.h"
 #include "manager.h"
 
-de_entity *de_entity_new(const de_state *const s)
+de_entity *de_entity_new(const de_state *const state)
 {
-    return de_manager_entity_create(0, s);
+    return de_manager_entity_create(0, state);
 }
 
-void de_entity_delete(de_entity *const e)
+void de_entity_delete(de_entity *const this)
 {
-    de_manager_entity_delete(e->manager, e);
+    de_manager_entity_delete(this->manager, this);
 }
