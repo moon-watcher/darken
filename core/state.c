@@ -1,76 +1,74 @@
 #include "state.h"
 #include "entity.h"
 
+#include "../config/darken.h"
 #include "../config/free.h"
 
-void *de_state_data(de_entity *const e, unsigned int size)
+void de_state_change(de_entity *const entity, const de_state *const state)
 {
-#if DARKEN_ENTITY_STATEDATA
-    if (e->statedata == 0)
-        e->statedata = malloc(size);
+    de_state *const e_state = entity->state;
 
-    return e->statedata;
-#else
-    return 0;
-#endif
-}
-
-void de_state_free(de_entity *const e)
-{
-#if DARKEN_ENTITY_STATEDATA
-    if (e->statedata != 0)
+    if (e_state == state)
         return;
 
-    free(e->statedata);
-    e->statedata = 0;
-#else
-    ;
-#endif
-}
-
-void de_state_change(de_entity *const e, const de_state *const s)
-{
-    de_state *const state = e->state;
-
-    if (state == s)
-        return;
-
-    de_state_f const leave_s = state->leave;
+    de_state_f const leave_s = e_state->leave;
 
     if (leave_s != 0)
-        leave_s(e);
+        leave_s(entity);
 
-    de_state_set(e, s);
+    de_state_set(entity, state);
 }
 
-void de_state_set(de_entity *const e, const de_state *const s)
+void de_state_set(de_entity *const entity, const de_state *const state)
 {
-    de_state_free(e);
+    de_state_free(entity);
 
-    e->state = (de_state *)s;
-    e->update = s->update ?: ({ void f() {}; f; });
+    entity->state = (de_state *)state;
+    entity->update = state->update ?: ({ void f() {}; f; });
 
-    de_state_f const enter_s = s->enter;
+    de_state_f const enter_s = state->enter;
 
     if (enter_s != 0)
-        enter_s(e);
+        enter_s(entity);
 }
 
-void de_state_update(de_entity *const e)
+void de_state_update(de_entity *const entity)
 {
-    e->update(e);
+    entity->update(entity);
 }
 
-void de_state_destruct(de_entity *const e)
+void de_state_destruct(de_entity *const entity)
 {
-    de_state_f const leave_s = e->state->leave;
-    de_state_f const leave_x = e->xtor->leave;
+    de_state_f const leave_s = entity->state->leave;
+    de_state_f const leave_x = entity->xtor->leave;
 
     if (leave_s != 0)
-        leave_s(e);
+        leave_s(entity);
 
-    de_state_free(e);
+    de_state_free(entity);
 
     if (leave_s != leave_x && leave_x != 0)
-        leave_x(e);
+        leave_x(entity);
+}
+
+void *de_state_data(de_entity *const entity, unsigned int size)
+{
+#if DARKEN_STATE_STATEDATA
+    if (entity->statedata == 0)
+        entity->statedata = malloc(size);
+
+    return entity->statedata;
+#endif
+    return 0;
+}
+
+void de_state_free(de_entity *const entity)
+{
+#if DARKEN_STATE_STATEDATA
+    if (entity->statedata != 0)
+        return;
+
+    free(entity->statedata);
+    entity->statedata = 0;
+#endif
 }
