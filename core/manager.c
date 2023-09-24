@@ -2,6 +2,9 @@
 #include "entity.h"
 #include "manager.h"
 
+#include "../common/free.h"
+#include "../common/reserve.h"
+
 #include "../config/free.h"
 #include "../config/malloc.h"
 
@@ -34,10 +37,7 @@ void de_manager_update(de_manager *const this)
 void *de_manager_data(de_manager *const this, unsigned int size)
 {
 #if DARKEN_MANAGER_DATA
-    if (this->data == 0)
-        this->data = malloc(size);
-
-    return this->data;
+    return de__reserve(this->data, size);
 #endif
     return 0;
 }
@@ -45,11 +45,7 @@ void *de_manager_data(de_manager *const this, unsigned int size)
 void de_manager_free(de_manager *const this)
 {
 #if DARKEN_MANAGER_DATA
-    if (this->data != 0)
-        return;
-
-    free(this->data);
-    this->data = 0;
+    de__free(this->data);
 #endif
 }
 

@@ -1,8 +1,10 @@
 #include "state.h"
 #include "entity.h"
 
+#include "../common/free.h"
+#include "../common/reserve.h"
+
 #include "../config/darken.h"
-#include "../config/free.h"
 
 void de_state_change(de_entity *const entity, const de_state *const state)
 {
@@ -54,10 +56,7 @@ void de_state_destruct(de_entity *const entity)
 void *de_state_data(de_entity *const entity, unsigned int size)
 {
 #if DARKEN_STATE_STATEDATA
-    if (entity->statedata == 0)
-        entity->statedata = malloc(size);
-
-    return entity->statedata;
+    return de__reserve(entity->statedata, size);
 #endif
     return 0;
 }
@@ -65,10 +64,6 @@ void *de_state_data(de_entity *const entity, unsigned int size)
 void de_state_free(de_entity *const entity)
 {
 #if DARKEN_STATE_STATEDATA
-    if (entity->statedata != 0)
-        return;
-
-    free(entity->statedata);
-    entity->statedata = 0;
+    de__free(entity->statedata);
 #endif
 }
