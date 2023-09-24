@@ -71,10 +71,10 @@ void darken_loop(de_entity *const e)
 
 void darken_break(de_entity *const e)
 {
-    de_state_f const enter = e->xtor->enter;
+    de_state_f const leave = e->xtor->leave;
 
-    if (enter != 0)
-        enter(e);
+    if (leave != 0)
+        leave(e);
 
     e->xtor = 0;
 }
