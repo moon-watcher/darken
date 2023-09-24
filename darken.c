@@ -16,10 +16,12 @@ de_entity *darken_init(const de_state *const s)
     de_entity *e = malloc(sizeof(de_entity));
 
     e->xtor = (de_state *)s;
-    e->update = e->xtor->update;
+    e->update = s->update ?: ({ void f() {}; f; });
 
-    if (e->xtor->enter != 0)
-        e->xtor->enter(e);
+    de_state_f const enter = s->enter;
+
+    if (enter != 0)
+        enter(e);
 
     return e;
 }
@@ -36,42 +38,43 @@ void darken_state(de_entity *const e, const de_state *const s)
     if (s == 0)
         return;
 
-    if (e->xtor != 0 && e->xtor->leave != 0)
-        e->xtor->leave(e);
+    de_state_f const leave = e->xtor->leave;
+
+    if (leave != 0)
+        leave(e);
 
     e->xtor = (de_state *)s;
+    e->update = s->update ?: ({ void f() {}; f; });
 
-    if (e->xtor->update != 0)
-        e->update = e->xtor->update;
-    else
-        e->update = ({ void f() {}; f; });
+    de_state_f const enter = s->enter;
 
-    if (e->xtor->enter != 0)
-        e->xtor->enter(e);
+    if (enter != 0)
+        enter(e);
 }
 
 void darken_update(de_entity *const e)
 {
-    if (e->xtor != 0 && e->xtor->update != 0)
-        e->xtor->update(e);
+    de_state_f const update = e->xtor->update;
+
+    if (update != 0)
+        update(e);
 }
 
 void darken_loop(de_entity *const e)
 {
-    if (e->xtor == 0)
-        return;
-
     de_state_f const update = e->xtor->update;
 
     if (update != 0)
-        while (e->xtor)
+        while (e->xtor != 0)
             update(e);
 }
 
 void darken_break(de_entity *const e)
 {
-    if (e->xtor != 0 && e->xtor->enter != 0)
-        e->xtor->enter(e);
+    de_state_f const enter = e->xtor->enter;
+
+    if (enter != 0)
+        enter(e);
 
     e->xtor = 0;
 }
