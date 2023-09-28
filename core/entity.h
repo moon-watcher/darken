@@ -18,7 +18,10 @@ typedef struct de_entity
     de_state *xtor;
     de_state_f update;
     de_manager *manager;
+
+#if DARKEN_ENTITY_DATA
     unsigned char data[]; // Bytes for casting data & components
+#endif
 } de_entity;
 
 de_entity *de_entity_new(const de_state *const);

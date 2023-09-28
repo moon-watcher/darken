@@ -2,16 +2,17 @@
 #include "entity.h"
 #include "manager.h"
 
-#include "../common/free.h"
-#include "../common/reserve.h"
-
 #include "../config/free.h"
 #include "../config/malloc.h"
+#include "../config/darken.h"
 
 #include "../libs/culist.h"
 
 void de_manager_init(de_manager *const this, unsigned int maxEntities, unsigned int objectSize)
 {
+#if DARKEN_ENTITY_DATA == 0
+    objectSize = 0;
+#endif
     this->pause = 0;
     culist_init(&this->cul, maxEntities, objectSize + sizeof(de_entity));
     de_manager_free(this);
@@ -37,7 +38,7 @@ void de_manager_update(de_manager *const this)
 void *de_manager_data(de_manager *const this, unsigned int size)
 {
 #if DARKEN_MANAGER_DATA
-    return de__reserve(this->data, size);
+    return this->data = malloc(size);
 #endif
     return 0;
 }
@@ -45,7 +46,7 @@ void *de_manager_data(de_manager *const this, unsigned int size)
 void de_manager_free(de_manager *const this)
 {
 #if DARKEN_MANAGER_DATA
-    de__free(this->data);
+    free(this->data);
 #endif
 }
 

@@ -1,1 +1,0 @@
-void *de__reserve(void *, unsigned int);
