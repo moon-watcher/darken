@@ -35,6 +35,11 @@ void de_manager_update(de_manager *const this)
         culist_iterator(&this->cul, de_state_update);
 }
 
+void de_manager_iterate(de_manager *const this, void (*iterator)())
+{
+    culist_iterator(&this->cul, iterator);
+}
+
 void *de_manager_data(de_manager *const this, unsigned int size)
 {
 #if DARKEN_MANAGER_DATA

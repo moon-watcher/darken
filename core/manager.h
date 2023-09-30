@@ -19,6 +19,7 @@ void de_manager_init(de_manager *const, unsigned int, unsigned int);
 void de_manager_end(de_manager *const);
 void de_manager_reset(de_manager *const);
 void de_manager_update(de_manager *const);
+void de_manager_iterate(de_manager *const, void (*)());
 void *de_manager_data(de_manager *const, unsigned int);
 void de_manager_free(de_manager *const);
 
