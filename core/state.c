@@ -41,15 +41,11 @@ void de_state_update(de_entity *const entity)
 void de_state_destruct(de_entity *const entity)
 {
     de_state_f const leave_s = entity->state->leave;
-    de_state_f const leave_x = entity->xtor->leave;
 
     if (leave_s != 0)
         leave_s(entity);
 
     de_state_free(entity);
-
-    if (leave_s != leave_x && leave_x != 0)
-        leave_x(entity);
 }
 
 void *de_state_data(de_entity *const entity, unsigned int size)

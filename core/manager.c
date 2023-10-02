@@ -67,7 +67,6 @@ de_entity *de_manager_entity_create(de_manager *const this, const de_state *cons
         memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
     }
 
-    entity->xtor = (de_state *)state;
     entity->manager = this;
 
     de_state_set(entity, state);
