@@ -4,35 +4,29 @@
 
 #include "../config/free.h"
 #include "../config/malloc.h"
-#include "../config/darken.h"
 
 #include "../libs/culist.h"
 
 void de_manager_init(de_manager *const this, unsigned int maxEntities, unsigned int objectSize)
 {
-#if DARKEN_ENTITY_DATA == 0
-    objectSize = 0;
-#endif
-    this->pause = 0;
     culist_init(&this->cul, maxEntities, objectSize + sizeof(de_entity));
     de_manager_free(this);
 }
 
 void de_manager_end(de_manager *const this)
 {
-    culist_end(&this->cul, de_state_destruct);
+    culist_end(&this->cul, de_state_leave);
     de_manager_free(this);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_reset(&this->cul, de_state_destruct);
+    culist_reset(&this->cul, de_state_leave);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    if (this->pause == 0)
-        culist_iterator(&this->cul, de_state_update);
+    culist_iterator(&this->cul, de_state_update);
 }
 
 void de_manager_iterate(de_manager *const this, void (*iterator)())
@@ -40,20 +34,6 @@ void de_manager_iterate(de_manager *const this, void (*iterator)())
     culist_iterator(&this->cul, iterator);
 }
 
-void *de_manager_data(de_manager *const this, unsigned int size)
-{
-#if DARKEN_MANAGER_DATA
-    return this->data = malloc(size);
-#endif
-    return 0;
-}
-
-void de_manager_free(de_manager *const this)
-{
-#if DARKEN_MANAGER_DATA
-    free(this->data);
-#endif
-}
 
 de_entity *de_manager_entity_create(de_manager *const this, const de_state *const state)
 {
@@ -67,10 +47,10 @@ de_entity *de_manager_entity_create(de_manager *const this, const de_state *cons
         memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
     }
 
-    entity->xtor = (de_state *)state;
     entity->manager = this;
+    entity->state = (de_state *)state;
 
-    de_state_set(entity, state);
+    de_state_enter(entity);
 
     return entity;
 }
@@ -78,15 +58,21 @@ de_entity *de_manager_entity_create(de_manager *const this, const de_state *cons
 void de_manager_entity_delete(de_manager *const this, de_entity *const entity)
 {
     if (this != 0)
-        culist_remove(&this->cul, entity, de_state_destruct);
+        culist_remove(&this->cul, entity, de_state_leave);
     else
     {
-        de_state_destruct(entity);
+        de_state_leave(entity);
         free(entity);
     }
 }
 
-void de_manager_entity_iterator(de_manager *const this, void (*iterator)(de_entity *const entity))
+
+void *de_manager_data(de_manager *const this, unsigned int size)
 {
-    culist_iterator(&this->cul, iterator);
+    return this->data = malloc(size);
+}
+
+void de_manager_free(de_manager *const this)
+{
+    free(this->data);
 }

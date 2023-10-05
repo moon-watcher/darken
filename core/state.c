@@ -1,56 +1,35 @@
 #include "state.h"
 #include "entity.h"
 
-#include "../config/free.h"
-#include "../config/malloc.h"
-#include "../config/darken.h"
-
-void de_state_change(de_entity *const entity, const de_state *const state)
+void de_state_set(de_entity *const entity, const de_state *const newState)
 {
-    de_state *const e_state = entity->state;
-
-    if (e_state == state)
+    if (entity->state == newState)
         return;
 
-    de_state_f const leave_s = e_state->leave;
-
-    if (leave_s != 0)
-        leave_s(entity);
-
-    de_state_set(entity, state);
+    de_state_leave(entity);
+    entity->state = (de_state *)newState;
+    de_state_enter(entity);
 }
 
-void de_state_set(de_entity *const entity, const de_state *const state)
+void de_state_enter(de_entity *const entity)
 {
-    de_state_free(entity);
-
-    entity->state = (de_state *)state;
-    entity->update = state->update ?: ({ void f() {}; f; });
-
-    de_state_f const enter_s = state->enter;
-
-    if (enter_s != 0)
-        enter_s(entity);
+    entity->state->enter(entity);
 }
 
 void de_state_update(de_entity *const entity)
 {
-    entity->update(entity);
+    entity->state->update(entity);
 }
 
-void de_state_destruct(de_entity *const entity)
+void de_state_leave(de_entity *const entity)
 {
-    de_state_f const leave_s = entity->state->leave;
-    de_state_f const leave_x = entity->xtor->leave;
-
-    if (leave_s != 0)
-        leave_s(entity);
-
-    de_state_free(entity);
-
-    if (leave_s != leave_x && leave_x != 0)
-        leave_x(entity);
+    entity->state->leave(entity);
 }
+
+
+#include "../config/free.h"
+#include "../config/malloc.h"
+#include "../config/darken.h"
 
 void *de_state_data(de_entity *const entity, unsigned int size)
 {

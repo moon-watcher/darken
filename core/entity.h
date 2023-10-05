@@ -15,8 +15,6 @@ typedef struct de_entity
 #endif
 
     de_state *state;
-    de_state *xtor;
-    de_state_f update;
     de_manager *manager;
 
 #if DARKEN_ENTITY_DATA
