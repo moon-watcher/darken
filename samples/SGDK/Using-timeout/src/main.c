@@ -2,5 +2,5 @@
 
 int main()
 {
-    darken(&entity_scene_state_xtor);
+    darken(&scene_xtor);
 }

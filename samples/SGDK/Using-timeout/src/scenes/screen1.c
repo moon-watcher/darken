@@ -36,7 +36,7 @@ static void leave(de_entity *const this)
     de_entity_delete(p1);
 }
 
-const de_state entity_scene_state_screen1 = {
+const de_state scene_screen1 = {
     &enter,
     &update,
     &leave,

@@ -27,21 +27,25 @@ void de_state_leave(de_entity *const entity)
 }
 
 
-#include "../config/free.h"
-#include "../config/malloc.h"
 #include "../config/darken.h"
+
+#if DARKEN_STATE_DATA
+    #include "../config/free.h"
+    #include "../config/malloc.h"
+#endif
 
 void *de_state_data(de_entity *const entity, unsigned int size)
 {
-#if DARKEN_STATE_STATEDATA
-    return entity->statedata = malloc(size);
+#if DARKEN_STATE_DATA
+    return entity->state_data = malloc(size);
 #endif
+
     return 0;
 }
 
 void de_state_free(de_entity *const entity)
 {
-#if DARKEN_STATE_STATEDATA
-    free(entity->statedata);
+#if DARKEN_STATE_DATA
+    free(entity->state_data);
 #endif
 }

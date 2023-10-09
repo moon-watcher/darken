@@ -6,12 +6,12 @@ typedef struct de_manager de_manager;
 
 typedef struct de_entity
 {
-#if DARKEN_ENTITY_INNERDATA > 0
-    unsigned char innerdata[DARKEN_ENTITY_INNERDATA];
+#if DARKEN_ENTITY_FIXEDDATA > 0
+    unsigned char fixed_data[DARKEN_ENTITY_FIXEDDATA];
 #endif
 
-#if DARKEN_STATE_STATEDATA
-    void *statedata;
+#if DARKEN_STATE_DATA
+    void *state_data;
 #endif
 
     de_state *state;

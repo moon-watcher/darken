@@ -21,5 +21,5 @@ void de_manager_iterate(de_manager *const, void (*)());
 de_entity *de_manager_entity_create(de_manager *const, const de_state *const);
 void de_manager_entity_delete(de_manager *const, de_entity *const);
 
-// void *de_manager_data(de_manager *const, unsigned int);
-// void de_manager_free(de_manager *const);
+void *de_manager_data(de_manager *const, unsigned int);
+void de_manager_free(de_manager *const);
