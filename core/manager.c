@@ -10,13 +10,11 @@
 void de_manager_init(de_manager *const this, unsigned int maxEntities, unsigned int objectSize)
 {
     culist_init(&this->cul, maxEntities, objectSize + sizeof(de_entity));
-    de_manager_free(this);
 }
 
 void de_manager_end(de_manager *const this)
 {
     culist_end(&this->cul, de_state_leave);
-    de_manager_free(this);
 }
 
 void de_manager_reset(de_manager *const this)
@@ -34,7 +32,6 @@ void de_manager_iterate(de_manager *const this, void (*iterator)())
     culist_iterator(&this->cul, iterator);
 }
 
-
 de_entity *de_manager_entity_create(de_manager *const this, const de_state *const state)
 {
     de_entity *entity;
@@ -44,7 +41,10 @@ de_entity *de_manager_entity_create(de_manager *const this, const de_state *cons
     else
     {
         entity = culist_add(&this->cul, 0);
+
+#if DARKEN_ENTITY_DATA
         memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
+#endif
     }
 
     entity->manager = this;
@@ -64,15 +64,4 @@ void de_manager_entity_delete(de_manager *const this, de_entity *const entity)
         de_state_leave(entity);
         free(entity);
     }
-}
-
-
-void *de_manager_data(de_manager *const this, unsigned int size)
-{
-    return this->data = malloc(size);
-}
-
-void de_manager_free(de_manager *const this)
-{
-    free(this->data);
 }

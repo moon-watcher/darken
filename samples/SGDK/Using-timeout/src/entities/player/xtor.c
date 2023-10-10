@@ -27,7 +27,7 @@ static void leave(de_entity *const this)
     de_system_delete(&sys_timer, timer);
 }
 
-const de_state entity_player_state_xtor = {
+const de_state entity_player_state_constructor = {
     &enter,
     &update,
     &leave,

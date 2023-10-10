@@ -6,7 +6,7 @@
 
 const de_state scene_xtor;
 const de_state scene_screen1;
-const de_state entity_player_state_xtor;
+const de_state entity_player_state_constructor;
 
 de_manager playersManager;
 

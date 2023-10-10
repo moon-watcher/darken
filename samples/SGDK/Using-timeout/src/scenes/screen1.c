@@ -9,7 +9,7 @@ static void VDP_drawText_wrapper(char *string, int *const x, int *const y)
 
 static void enter(de_entity *const this)
 {
-    p1 = de_manager_entity_create(&playersManager, &entity_player_state_xtor);
+    p1 = de_manager_entity_create(&playersManager, &entity_player_state_constructor);
 
     struct player *const p1data = (struct player *const)&p1->data;
     ComponentTimer *const p1timer = (ComponentTimer *const)&p1data->timer;

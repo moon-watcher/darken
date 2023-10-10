@@ -6,16 +6,16 @@ typedef struct de_manager de_manager;
 
 typedef struct de_entity
 {
-#if DARKEN_ENTITY_FIXEDDATA > 0
-    unsigned char fixed_data[DARKEN_ENTITY_FIXEDDATA];
-#endif
+    de_state *state;
+    de_manager *manager;
 
-#if DARKEN_STATE_DATA
+#if DARKEN_ENTITY_STATEDATA
     void *state_data;
 #endif
 
-    de_state *state;
-    de_manager *manager;
+#if DARKEN_ENTITY_FIXEDDATA > 0
+    unsigned char fixed_data[DARKEN_ENTITY_FIXEDDATA];
+#endif
 
 #if DARKEN_ENTITY_DATA
     unsigned char data[]; // Bytes for casting data & components

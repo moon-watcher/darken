@@ -15,6 +15,3 @@ void de_state_set(de_entity *const, const de_state *const);
 void de_state_enter(de_entity *const);
 void de_state_update(de_entity *const);
 void de_state_leave(de_entity *const);
-
-void *de_state_data(de_entity *const, unsigned int);
-void de_state_free(de_entity *const);

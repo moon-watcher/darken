@@ -13,7 +13,7 @@ void darken_loop(darken *const this)
 
     if (*loop != 3)
         return;
-    
+
     de_entity *const entity = this->entity;
     de_entity *const looper = this->looper;
 
@@ -34,7 +34,7 @@ void darken_break(darken *const this)
 void darken_end(darken *const this)
 {
     darken_break(this);
-    
+
     de_entity_delete(this->looper);
     de_entity_delete(this->entity);
 }
@@ -42,7 +42,7 @@ void darken_end(darken *const this)
 void darken_looper(darken *const this, de_state *const state)
 {
     this->loop |= 1 << 0;
-    
+
     if (this->looper == 0)
         this->looper = de_entity_new(state);
     else
