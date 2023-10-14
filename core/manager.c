@@ -2,8 +2,7 @@
 #include "entity.h"
 #include "manager.h"
 
-#include "../config/free.h"
-#include "../config/malloc.h"
+#include "../config/darken.h"
 
 #include "../libs/culist.h"
 
@@ -34,18 +33,11 @@ void de_manager_iterate(de_manager *const this, void (*iterator)())
 
 de_entity *de_manager_entity_create(de_manager *const this, const de_state *const state)
 {
-    de_entity *entity;
+    de_entity *const entity = culist_add(&this->cul, 0);
 
-    if (this == 0)
-        entity = malloc(sizeof(de_entity));
-    else
-    {
-        entity = culist_add(&this->cul, 0);
-
-#if DARKEN_ENTITY_DATA
-        memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
-#endif
-    }
+// #if DARKEN_ENTITY_DATA
+    memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
+// #endif
 
     entity->manager = this;
     entity->state = (de_state *)state;
@@ -55,13 +47,7 @@ de_entity *de_manager_entity_create(de_manager *const this, const de_state *cons
     return entity;
 }
 
-void de_manager_entity_delete(de_manager *const this, de_entity *const entity)
+void *de_manager_entity_delete(de_manager *const this, de_entity *const entity)
 {
-    if (this != 0)
-        culist_remove(&this->cul, entity, de_state_leave);
-    else
-    {
-        de_state_leave(entity);
-        free(entity);
-    }
+    return culist_remove(&this->cul, entity, de_state_leave);
 }

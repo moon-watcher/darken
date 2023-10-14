@@ -13,8 +13,7 @@ void de_state_set(de_entity *const entity, const de_state *const newState)
 
 void de_state_enter(de_entity *const entity)
 {
-    if(entity->state->enter != 0)
-        entity->state->enter(entity);
+    entity->state->enter(entity);
 }
 
 void de_state_update(de_entity *const entity)
@@ -24,6 +23,5 @@ void de_state_update(de_entity *const entity)
 
 void de_state_leave(de_entity *const entity)
 {
-    if(entity->state->leave != 0)
-        entity->state->leave(entity);
+    entity->state->leave(entity);
 }

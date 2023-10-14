@@ -2,26 +2,36 @@
 
 void darken_init(darken *const this)
 {
-    this->looper = 0;
-    this->entity = 0;
+    this->scene = 0;
     this->loop = 0;
+}
+
+void darken_scene(darken *const this, de_scene *const newscene, unsigned int size)
+{
+    this->loop = 1;
+    
+    // if (this->scene != 0)
+    //     de_entity_delete(this->scene);
+// #include "include.h"
+// dev0 = 11;
+// VDP_drawText("1AEEHola",0,3); waitMs(2000);
+
+    this->scene = de_entity_new(newscene, size);
 }
 
 void darken_loop(darken *const this)
 {
     unsigned char *const loop = &this->loop;
 
-    if (*loop != 3)
+    if (*loop != 1)
         return;
 
-    de_entity *const entity = this->entity;
-    de_entity *const looper = this->looper;
+    de_entity *const scene = this->scene;
+    
+    while (*loop == 1)
+        scene->state->update(scene);
 
-    while (*loop == 3)
-        looper->state->update(entity);
-
-    de_state_leave(entity);
-    de_state_leave(looper);
+    de_state_leave(scene);
 
     darken_init(this);
 }
@@ -35,26 +45,5 @@ void darken_end(darken *const this)
 {
     darken_break(this);
 
-    de_entity_delete(this->looper);
-    de_entity_delete(this->entity);
-}
-
-void darken_looper(darken *const this, de_state *const state)
-{
-    this->loop |= 1 << 0;
-
-    if (this->looper == 0)
-        this->looper = de_entity_new(state);
-    else
-        de_state_set(this->looper, state);
-}
-
-void darken_state(darken *const this, de_state *const state)
-{
-    this->loop |= 1 << 1;
-
-    if (this->entity == 0)
-        this->entity = de_entity_new(state);
-    else
-        de_state_set(this->entity, state);
+    de_entity_delete(this->scene);
 }

@@ -5,4 +5,3 @@
 #include "core/manager.h"
 #include "core/system.h"
 #include "core/darken.h"
-#include "helpers.h"

@@ -14,7 +14,7 @@ static void looper_update1(de_entity *const this)
     waitMs(1000);
     de_state_update(this);
     SYS_doVBlankProcess();
-    darken_looper(&main_darken, &looper2);
+    darken_looper(&main_darken, &looper2, 399);
 }
 static void looper_leave1(de_entity *const this)
 {
@@ -64,12 +64,12 @@ static void state2_leave (de_entity *const this) { drawText("state 2 leave ",1,3
 
 
 
-int sample1main()
+void sample1main()
 {
     darken_init(&main_darken);
 
-    darken_looper(&main_darken, &looper1);
-    darken_state(&main_darken, &state1);
+    darken_looper(&main_darken, &looper1, 0);
+    darken_state(&main_darken, &state1, 123);
 
     darken_loop(&main_darken);
    
