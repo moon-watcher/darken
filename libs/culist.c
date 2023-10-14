@@ -45,32 +45,32 @@ void culist_iteratorEx(culist *const this, void (*callback)(), unsigned int para
         uplist_iterator(&this->upl, callback, params);
 }
 
-void culist_remove(culist *const this, void *const data, void (*callback)())
+void *culist_remove(culist *const this, void *const data, void (*callback)())
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
 
     if (index < 0)
-        return;
+        return 0;
 
     if (callback != 0)
         callback(upl->list[index]);
 
-    uplist_remove(upl, index);
+    return uplist_remove(upl, index);
 }
 
-void culist_removeEx(culist *const this, void *const data, void (*callback)(), unsigned int params)
+void *culist_removeEx(culist *const this, void *const data, void (*callback)(), unsigned int params)
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
 
     if (index < 0)
-        return;
+        return 0;
 
     if (callback != 0)
         callback(upl->list[index]);
 
-    uplist_removeByData(upl, data, params);
+    return uplist_removeByData(upl, data, params);
 }
 
 void culist_end(culist *const this, void (*callback)())
