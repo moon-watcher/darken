@@ -23,7 +23,7 @@ IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i +
 
 static void (*const it_funcs[])() = { f0, f1, f2, f3, f4, f5, f6, f7, };
 
-static unsigned int s_resize(uplist *const this)
+static unsigned int static_resize(uplist *const this)
 {
     unsigned int const oldSize = this->size;
     this->size += this->resizeBy ?: 1;
@@ -51,7 +51,7 @@ int uplist_add(uplist *const this, void *const add)
 {
     unsigned int const next = this->next;
 
-    if (next >= this->size && s_resize(this) == 0)
+    if (next >= this->size && static_resize(this) == 0)
         return -1;
 
     this->list[next] = add;
@@ -66,15 +66,16 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItem
         it_funcs[nbItems](this->list, &this->next, iterator, nbItems);
 }
 
-void uplist_remove(uplist *const this, unsigned int index)
+void *uplist_remove(uplist *const this, unsigned int index)
 {
     unsigned int *const next = &this->next;
 
     if (*next == 0)
-        return;
+        return 0;
 
     void **const list = this->list;
-    list[index] = list[--*next];
+    
+    return list[index] = list[--*next];
 }
 
 void uplist_end(uplist *const this)
@@ -87,12 +88,12 @@ void uplist_reset(uplist *const this)
     this->next = 0;
 }
 
-void uplist_removeByData(uplist *const this, void *const data, unsigned int nbItems)
+int uplist_removeByData(uplist *const this, void *const data, unsigned int nbItems)
 {
     int const index = uplist_find(this, data);
 
     if (index < 0)
-        return;
+        return -1;
 
     void **const list = this->list;
     unsigned int *const next = &this->next;
@@ -100,7 +101,7 @@ void uplist_removeByData(uplist *const this, void *const data, unsigned int nbIt
     for (unsigned int j = 0; j < nbItems; j++)
         list[index + j] = list[*next - (nbItems - j)];
 
-    *next -= nbItems;
+    return *next -= nbItems;
 }
 
 int uplist_find(uplist *const this, void *const data)
