@@ -4,8 +4,8 @@
 #include "darken/darken.h"
 #include "components/Timer.h"
 
-const de_state entity_scene_state_xtor;
-const de_state entity_scene_state_screen1;
+const de_state scene_xtor;
+const de_state scene_screen1;
 const de_state entity_player_state_xtor;
 
 de_manager playersManager;

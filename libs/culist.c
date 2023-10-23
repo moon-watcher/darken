@@ -13,7 +13,7 @@ void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
     this->allocatedObjects = 0;
 }
 
-void *culist_add(culist *const this, void *const value)
+void *culist_add(culist *const this)
 {
     uplist *const upl = &this->upl;
     int next = upl->next;
@@ -21,14 +21,10 @@ void *culist_add(culist *const this, void *const value)
     if (next < (int)this->allocatedObjects)
         ++upl->next;
 
-    else if ((next = uplist_add(upl, malloc(this->objectSize))) >= 0)
-        ++this->allocatedObjects;
-
-    if (next < 0)
+    else if ((next = uplist_add(upl, malloc(this->objectSize))) < 0)
         return 0;
 
-    if (value != 0)
-        upl->list[next] = value;
+    ++this->allocatedObjects;
 
     return upl->list[next];
 }
@@ -45,7 +41,7 @@ void culist_iteratorEx(culist *const this, void (*callback)(), unsigned int para
         uplist_iterator(&this->upl, callback, params);
 }
 
-void *culist_remove(culist *const this, void *const data, void (*callback)())
+int culist_remove(culist *const this, void *const data, void (*callback)())
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
@@ -65,7 +61,7 @@ int culist_removeEx(culist *const this, void *const data, void (*callback)(), un
     int const index = uplist_find(upl, data);
 
     if (index < 0)
-        return -1;
+        return 0;
 
     if (callback != 0)
         callback(upl->list[index]);
