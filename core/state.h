@@ -11,5 +11,6 @@ typedef struct de_state
     de_state_f leave;
 } de_state;
 
-void de_state_update(de_entity *const);
-void de_xtor_update(de_entity *const);
+de_entity *de_state_update(de_entity *const);
+de_entity *de_xtor_enter(de_entity *const);
+de_entity *de_xtor_update(de_entity *const);

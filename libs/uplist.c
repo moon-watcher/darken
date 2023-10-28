@@ -5,24 +5,6 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-#define IT(F, ...)                                                                         \
-    static void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) \
-    {                                                                                      \
-        for (unsigned int i = 0; i < *n; i += nb)                                          \
-            it(__VA_ARGS__);                                                               \
-    }
-
-IT(f0, );
-IT(f1, list[i + 0]);
-IT(f2, list[i + 0], list[i + 1]);
-IT(f3, list[i + 0], list[i + 1], list[i + 2]);
-IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
-
-static void (*const it_funcs[])() = { f0, f1, f2, f3, f4, f5, f6, f7, };
-
 void uplist_init(uplist *const this, unsigned int size)
 {
     this->size = size ?: 1;
@@ -64,8 +46,33 @@ int uplist_resize(uplist *const this, unsigned int increment)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
 {
-    if (iterator != 0)
-        it_funcs[nbItems](this->list, &this->next, iterator, nbItems);
+    if (iterator == 0)
+        return;
+
+    #define IT(F, ...)                                                                  \
+        void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) \
+        {                                                                               \
+            for (unsigned int i = 0; i < *n; i += nb)                                   \
+                it(__VA_ARGS__);                                                        \
+        }
+
+    IT(f0, );
+    IT(f1, list[i + 0]);
+    IT(f2, list[i + 0], list[i + 1]);
+    IT(f3, list[i + 0], list[i + 1], list[i + 2]);
+    IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
+    IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
+    IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
+    IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
+
+    void (*const funcs[])() = { f0, f1, f2, f3, f4, f5, f6, f7, };
+
+    funcs[nbItems](this->list, &this->next, iterator, nbItems);
+}
+
+void uplist_iteratorEx(uplist *const this, void (*iterator)(), unsigned int nbItems)
+{
+    iterator(this->list, nbItems);
 }
 
 int uplist_remove(uplist *const this, unsigned int index)

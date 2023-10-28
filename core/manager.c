@@ -38,9 +38,6 @@ void de_manager_iterate(de_manager *const this, void (*iterator)())
 
 de_entity *de_manager_entity_new(de_manager *const this, const de_state *const xtor)
 {
-    if(xtor == 0)
-        return 0;
-
     de_entity *entity = culist_add(&this->cul);
 
 #if DARKEN_ENTITY_FIXEDDATA

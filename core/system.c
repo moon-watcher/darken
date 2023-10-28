@@ -26,7 +26,7 @@ void de_system_add(de_system *const this, ...)
             uplist_add(upl, va_arg(ap, void *const));
     else
         while (params--)
-            if (uplist_add(upl, va_arg(ap, void *const)) < 0)
+            if (uplist_add(upl, va_arg(ap, void *const)) == -1)
                 this->errorHandler(this);
 
     va_end(ap);
