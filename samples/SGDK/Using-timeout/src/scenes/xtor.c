@@ -7,12 +7,13 @@ static void constructor(de_entity *const this)
     de_system_init(&sys_timer, &sys_timer_f, 20, 1);
 
     // And jump to some scene state
-    de_state_set(this, &scene_screen1);
+    de_entity_set(this, &scene_screen1);
 }
 
 static void mainLoopUpdater(de_entity *const this)
 {
-    de_state_update(this);
+    // de_entity_update(this);
+    this->update(this);
 
     de_manager_update(&playersManager);
     de_system_update(&sys_timer);
@@ -27,7 +28,7 @@ static void destructor(de_entity *const this)
     de_system_end(&sys_timer);
 }
 
-const de_state sample_scene_xtor = {
+const de_state scene_xtor = {
     &constructor,
     &mainLoopUpdater,
     &destructor,

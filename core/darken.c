@@ -1,39 +1,21 @@
 #include "./darken.h"
 
-void darken_init(darken *const this)
+#include "../config/free.h"
+#include "../config/malloc.h"
+
+void darken_init(darken *const this, unsigned int size)
 {
-    this->scene = 0;
+    this->scene = malloc(sizeof(de_entity) + size);
     this->loop = 0;
 }
-
-void darken_scene(darken *const this, de_scene *const newscene, unsigned int size)
+void darken_looper(darken *const this, const de_state *const xtor)
 {
-    this->loop = 1;
-    
-    // if (this->scene != 0)
-    //     de_entity_delete(this->scene);
-// #include "include.h"
-// dev0 = 11;
-// VDP_drawText("1AEEHola",0,3); waitMs(2000);
-
-    this->scene = de_entity_new(newscene, size);
+    this->scene->xtor = xtor;
 }
 
-void darken_loop(darken *const this)
+void darken_state(darken *const this, const de_state *const state)
 {
-    unsigned char *const loop = &this->loop;
-
-    if (*loop != 1)
-        return;
-
-    de_entity *const scene = this->scene;
-    
-    while (*loop == 1)
-        scene->state->update(scene);
-
-    de_state_leave(scene);
-
-    darken_init(this);
+    this->scene->state = state;
 }
 
 void darken_break(darken *const this)
@@ -41,9 +23,22 @@ void darken_break(darken *const this)
     this->loop = 0;
 }
 
+void darken_loop(darken *const this)
+{
+    this->loop = 1;
+    de_entity *const scene = this->scene;
+
+    de_xtor_enter(scene);
+    de_entity_enter(scene);
+
+    while (this->loop != 0)
+        de_xtor_update(scene);
+
+    de_entity_destruct(scene);
+}
+
 void darken_end(darken *const this)
 {
-    darken_break(this);
-
-    de_entity_delete(this->scene);
+    free(this->scene);
+    this->loop = 0;
 }

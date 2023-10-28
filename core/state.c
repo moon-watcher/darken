@@ -1,27 +1,25 @@
-#include "state.h"
 #include "entity.h"
 
-void de_state_set(de_entity *const entity, const de_state *const newState)
+__attribute__((always_inline)) inline de_entity *de_state_update(de_entity *const entity)
 {
-    if (entity->state == newState)
-        return;
+    if (entity->state->update != 0)
+        entity->state->update(entity);
 
-    de_state_leave(entity);
-    entity->state = (de_state *)newState;
-    de_state_enter(entity);
+    return entity;
 }
 
-void de_state_enter(de_entity *const entity)
+__attribute__((always_inline)) inline de_entity *de_xtor_enter(de_entity *const entity)
 {
-    entity->state->enter(entity);
+    if (entity->xtor->enter != 0)
+        entity->xtor->enter(entity);
+
+    return entity;
 }
 
-void de_state_update(de_entity *const entity)
+__attribute__((always_inline)) inline de_entity *de_xtor_update(de_entity *const entity)
 {
-    entity->state->update(entity);
-}
+    if (entity->xtor->update != 0)
+        entity->xtor->update(entity);
 
-void de_state_leave(de_entity *const entity)
-{
-    entity->state->leave(entity);
+    return entity;
 }
