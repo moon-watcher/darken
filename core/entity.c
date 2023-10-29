@@ -39,6 +39,8 @@ __attribute__((always_inline)) inline de_entity *de_entity_leave(de_entity *cons
     if (this->state->leave != 0)
         this->state->leave(this);
 
+    this->state = 0;
+    
 #if DARKEN_ENTITY_TEMPDATA
     if(this->tempdata != 0)
     {
@@ -62,6 +64,8 @@ void de_entity_destruct(de_entity *const this)
 
     if (this->xtor->leave != 0 && this->xtor->leave != this->state->leave)
         this->xtor->leave(this);
+
+    this->xtor = 0;
 }
 
 void de_entity_set_updateType(de_entity *const this, unsigned char type)
