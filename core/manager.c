@@ -44,8 +44,8 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
     memset(entity->fixeddata, 0, DARKEN_ENTITY_FIXEDDATA);
 #endif
 
-#if DARKEN_ENTITY_PTRDATA
-    entity->ptrdata = 0;
+#if DARKEN_ENTITY_TEMPDATA
+    entity->tempdata = 0;
 #endif
 
 #if DARKEN_ENTITY_DATA

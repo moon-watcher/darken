@@ -11,8 +11,8 @@ typedef struct de_entity
     unsigned char fixeddata[DARKEN_ENTITY_FIXEDDATA];
 #endif
 
-#if DARKEN_ENTITY_PTRDATA
-    void *ptrdata;
+#if DARKEN_ENTITY_TEMPDATA
+    void *tempdata;
 #endif
 
     de_state *state;

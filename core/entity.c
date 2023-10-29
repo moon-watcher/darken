@@ -1,4 +1,5 @@
 #include "../config/darken.h"
+#include "../config/free.h"
 
 #include "state.h"
 #include "entity.h"
@@ -37,6 +38,14 @@ __attribute__((always_inline)) inline de_entity *de_entity_leave(de_entity *cons
 {
     if (this->state->leave != 0)
         this->state->leave(this);
+
+#if DARKEN_ENTITY_TEMPDATA
+    if(this->tempdata != 0)
+    {
+        free(this->tempdata);
+        this->tempdata = 0;
+    }
+#endif
 
     return this;
 }
