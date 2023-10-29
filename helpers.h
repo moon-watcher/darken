@@ -19,7 +19,7 @@
 #endif
 
 #define deh_cast(DATA, TYPE, VAR) \
-    TYPE *VAR = (TYPE *const)&DATA->VAR
+    TYPE *const VAR = (TYPE *const)&DATA->VAR
 
 #define deh_castAs(DATA, TYPE, VAR, AS) \
     TYPE *const AS = (TYPE *const)&DATA->VAR
