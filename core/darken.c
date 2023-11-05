@@ -34,8 +34,8 @@ void darken_loop(darken *const this)
     if (scene->state->enter != 0)
         scene->state->enter(scene);
 
-    while (this->loop != 0)
-        if (scene->xtor->update != 0)
+    if (scene->xtor->update != 0)
+        while (this->loop != 0)
             scene->xtor->update(scene);
 
     if (scene->state != 0)

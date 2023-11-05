@@ -72,7 +72,7 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
     return entity;
 }
 
-unsigned int de_manager_entity_delete(de_manager *const this, de_entity *const entity)
+int de_manager_entity_delete(de_manager *const this, de_entity *const entity)
 {
     return culist_remove(&this->cul, entity, _entity_destruct);
 }
