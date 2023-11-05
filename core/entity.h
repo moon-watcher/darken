@@ -26,9 +26,6 @@ typedef struct de_entity
 } de_entity;
 
 de_entity *de_entity_set(de_entity *const, const de_state *const);
-de_entity *de_entity_enter(de_entity *const);
 de_entity *de_entity_update(de_entity *const);
-de_entity *de_entity_leave(de_entity *const);
 unsigned int de_entity_delete(de_entity *const);
-void de_entity_destruct(de_entity *const);
-void de_entity_set_updateType(de_entity *const, unsigned char);
+void de_entity_updateType(de_entity *const, unsigned char);

@@ -2,11 +2,20 @@
 #include "entity.h"
 #include "manager.h"
 
-#include "../config/free.h"
-#include "../config/malloc.h"
 #include "../config/darken.h"
 
 #include "../libs/culist.h"
+
+static void _entity_destruct(de_entity *const this)
+{
+    if (this->state != 0)
+        de_state_leave(this);
+
+    if (this->xtor->leave != 0 && this->xtor->leave != this->state->leave)
+        this->xtor->leave(this);
+
+    this->xtor = 0;
+}
 
 void de_manager_init(de_manager *const this, unsigned int maxEntities, unsigned int objectSize)
 {
@@ -18,12 +27,12 @@ void de_manager_init(de_manager *const this, unsigned int maxEntities, unsigned 
 
 void de_manager_end(de_manager *const this)
 {
-    culist_end(&this->cul, de_entity_destruct);
+    culist_end(&this->cul, _entity_destruct);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_reset(&this->cul, de_entity_destruct);
+    culist_reset(&this->cul, _entity_destruct);
 }
 
 void de_manager_update(de_manager *const this)
@@ -65,5 +74,5 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
 
 unsigned int de_manager_entity_delete(de_manager *const this, de_entity *const entity)
 {
-    return culist_remove(&this->cul, entity, de_entity_destruct);
+    return culist_remove(&this->cul, entity, _entity_destruct);
 }
