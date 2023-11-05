@@ -32,7 +32,7 @@ void de_system_add(de_system *const this, ...)
     va_end(ap);
 }
 
-unsigned int de_system_delete(de_system *const this, void *const data)
+int de_system_delete(de_system *const this, void *const data)
 {
     return uplist_removeByData(&this->upl, data, this->params);
 }
