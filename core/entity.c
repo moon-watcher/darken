@@ -14,7 +14,7 @@ de_entity *de_entity_set(de_entity *const this, const de_state *const state)
         de_state_leave(this);
 
     this->state = (de_state *)state;
-    de_entity_updateType(this, DARKEN_ENTITY_DEFAULT_UPDATEPOLICY);
+    de_entity_updateType(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
     
     if (this->state->enter != 0)
         this->state->enter(this);
