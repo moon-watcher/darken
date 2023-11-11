@@ -13,7 +13,7 @@ typedef struct de_system
     void (*errorHandler)(de_system *const);
 } de_system;
 
-void de_system_init(de_system *const, de_system_f const, unsigned int, unsigned int);
+void de_system_init(de_system *const, de_system_f const, unsigned int);
 void de_system_add(de_system *const, ...);
 int de_system_delete(de_system *const, void *const);
 void de_system_update(de_system *const);

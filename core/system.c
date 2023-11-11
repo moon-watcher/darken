@@ -4,13 +4,13 @@
 
 #include "../libs/uplist.h"
 
-void de_system_init(de_system *const this, de_system_f const updateFn, unsigned int maxItems, unsigned int params)
+void de_system_init(de_system *const this, de_system_f const updateFn, unsigned int params)
 {
     this->updateFn = updateFn;
-    this->params = params;
+    this->params = params ?: 1;
     this->errorHandler = 0;
 
-    uplist_init(&this->upl, maxItems * this->params);
+    uplist_init(&this->upl, this->params);
 }
 
 void de_system_add(de_system *const this, ...)

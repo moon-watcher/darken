@@ -4,7 +4,7 @@ static void constructor(de_entity *const this)
 {
     // Initialization stuff
     de_manager_init(&playersManager, 20, sizeof(struct player));
-    de_system_init(&sys_timer, &sys_timer_f, 20, 1);
+    de_system_init(&sys_timer, &sys_timer_f, 1);
 
     // And jump to some scene state
     de_entity_set(this, &scene_screen1);
