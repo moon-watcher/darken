@@ -28,10 +28,10 @@ int uplist_add(uplist *const this, void *const add)
 
 int uplist_resize(uplist *const this, unsigned int increment)
 {
-    unsigned int const oldSize = this->size;
+    unsigned int const oldSize = this->size * sizeof(void *);
     this->size += increment ?: this->resizeBy;
 
-    void *p = malloc(this->size);
+    void *p = malloc(this->size * sizeof(void *));
 
     if (p == 0)
         return 0;
