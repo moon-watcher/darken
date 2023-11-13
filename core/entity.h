@@ -30,6 +30,13 @@ typedef struct de_entity
 #endif
 } de_entity;
 
+typedef struct de_entity_def
+{
+    de_manager *manager;
+    de_state *xtor;
+} de_entity_def;
+
+de_entity *de_entity_new(de_entity_def *const);
 de_entity *de_entity_set(de_entity *const, const de_state *const);
 de_entity *de_entity_update(de_entity *const);
 int de_entity_delete(de_entity *const);
