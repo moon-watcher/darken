@@ -40,10 +40,8 @@ int de_system_delete(de_system *const this, void *const data)
 
 void de_system_update(de_system *const this)
 {
-    if (this->pause != 0)
-        return;
-
-    uplist_iterator(&this->upl, this->updateFn, this->params);
+    if (this->pause == 0 && this->upl.next > 0)
+        uplist_iterator(&this->upl, this->updateFn, this->params);
 }
 
 void de_system_end(de_system *const this)
