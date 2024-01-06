@@ -6,7 +6,6 @@
 
 void de_system_init(de_system *const this, de_system_f const updateFn, unsigned int params)
 {
-    this->pause = 0;
     this->updateFn = updateFn;
     this->params = params ?: 1;
     this->errorHandler = 0;
@@ -40,21 +39,10 @@ int de_system_delete(de_system *const this, void *const data)
 
 void de_system_update(de_system *const this)
 {
-    if (this->pause == 0 && this->upl.next > 0)
-        uplist_iterator(&this->upl, this->updateFn, this->params);
+    uplist_iterator(&this->upl, this->updateFn, this->params);
 }
 
 void de_system_end(de_system *const this)
 {
     uplist_end(&this->upl);
-}
-
-void de_system_pause(de_system *const this)
-{
-    this->pause = 1;
-}
-
-void de_system_resume(de_system *const this)
-{
-    this->pause = 0;
 }

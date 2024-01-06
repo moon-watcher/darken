@@ -7,7 +7,6 @@ typedef void (*de_system_f)();
 
 typedef struct de_system
 {
-    unsigned int pause:1;
     de_system_f updateFn;
     unsigned int params;
     uplist upl;
@@ -19,5 +18,3 @@ void de_system_add(de_system *const, ...);
 int de_system_delete(de_system *const, void *const);
 void de_system_update(de_system *const);
 void de_system_end(de_system *const);
-void de_system_pause(de_system *const);
-void de_system_resume(de_system *const);
