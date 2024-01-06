@@ -5,7 +5,7 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-void culist_init(culist *const this, unsigned int size, unsigned int objectSize)
+void culist_init(culist *const this, unsigned int objectSize, unsigned int size)
 {
     uplist_init(&this->upl, size);
 

@@ -22,7 +22,7 @@ void de_manager_init(de_manager *const this, unsigned int objectSize)
 #if DARKEN_ENTITY_DATA == 0
     objectSize = 0;
 #endif
-    culist_init(&this->cul, 1, objectSize + sizeof(de_entity));
+    culist_init(&this->cul, objectSize + sizeof(de_entity), 1);
 }
 
 void de_manager_end(de_manager *const this)
