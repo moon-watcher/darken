@@ -29,16 +29,14 @@ void *culist_add(culist *const this)
     return upl->list[next];
 }
 
-void culist_iterator(culist *const this, void (*callback)())
+void culist_iterator(culist *const this, void (*iterator)())
 {
-    if (callback != 0)
-        uplist_iterator(&this->upl, callback, 1);
+    uplist_iterator(&this->upl, iterator, 1);
 }
 
-void culist_iteratorEx(culist *const this, void (*callback)(), unsigned int params)
+void culist_iteratorEx(culist *const this, void (*iterator)(), unsigned int params)
 {
-    if (callback != 0)
-        uplist_iterator(&this->upl, callback, params);
+    uplist_iterator(&this->upl, iterator, params);
 }
 
 int culist_remove(culist *const this, void *const data, void (*callback)())
