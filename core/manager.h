@@ -12,7 +12,7 @@ typedef struct de_manager
     void *data;
 } de_manager;
 
-void de_manager_init(de_manager *const, unsigned int, unsigned int);
+void de_manager_init(de_manager *const, unsigned int);
 void de_manager_end(de_manager *const);
 void de_manager_reset(de_manager *const);
 void de_manager_update(de_manager *const);
