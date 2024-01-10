@@ -5,11 +5,6 @@
 #include "entity.h"
 #include "manager.h"
 
-de_entity *de_entity_new(de_entity_def *const ref)
-{
-    return de_manager_entity_new(ref->manager, ref->xtor);
-}
-
 de_entity *de_entity_set(de_entity *const this, de_state *state)
 {
     if (state == 0)
