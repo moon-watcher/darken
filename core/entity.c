@@ -5,28 +5,21 @@
 #include "entity.h"
 #include "manager.h"
 
-de_entity *de_entity_set(de_entity *const this, de_state *state)
+__attribute__((always_inline)) inline void de_entity_set(de_entity *const this, de_state *const state)
 {
-    if (state == 0)
-        return this;
+    const de_state nullstate = {de_state_empty, de_state_empty, de_state_empty};
 
     if (this->state != 0)
         de_state_leave(this);
 
-    this->state = (de_state *)state;
-    de_entity_updateType(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
-    
-    if (this->state->enter != 0)
-        this->state->enter(this);
-
-    return this;
+    this->state = (de_state *)state ?: &nullstate;
+    de_entity_updatePolicy(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
+    de_state_enter(this);
 }
 
-__attribute__((always_inline)) inline de_entity *de_entity_update(de_entity *const this)
+__attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
 {
     this->update(this);
-
-    return this;
 }
 
 __attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const this)
@@ -34,14 +27,14 @@ __attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const
     return de_manager_entity_delete(this->manager, this);
 }
 
-void de_entity_updateType(de_entity *const this, unsigned char type)
+void de_entity_updatePolicy(de_entity *const this, unsigned char type)
 {
-    void nf(de_entity *const t) { };
-    void f0(de_entity *const t) { t->update = t->state->update ?: nf; };
-    void f1(de_entity *const t) { t->update = t->state->update ?: t->xtor ->update ?: nf; };
-    void f2(de_entity *const t) { t->update = t->xtor ->update ?: t->state->update ?: nf; };
-    void f3(de_entity *const t) { t->update = t->xtor ->update ?: nf; };
-    void (*const funcs[])() = { f0, f1, f2, f3, };
+    void f0(de_entity *const t) { t->update = t->state->update ?: de_state_empty; }
+    void f1(de_entity *const t) { t->update = t->state->update ?: t->xtor->update ?: de_state_empty; }
+    void f2(de_entity *const t) { t->update = t->xtor->update ?: t->state->update ?: de_state_empty; }
+    void f3(de_entity *const t) { t->update = t->xtor->update ?: de_state_empty; }
+    
+    void (*const funcs[])() = {f0, f1, f2, f3};
 
     funcs[type](this);
 }

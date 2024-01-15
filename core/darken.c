@@ -31,15 +31,13 @@ void darken_loop(darken *const this)
     if (scene->xtor->enter != 0)
         scene->xtor->enter(scene);
     
-    if (scene->state->enter != 0)
-        scene->state->enter(scene);
+    de_state_enter(scene);
 
     if (scene->xtor->update != 0)
         while (this->loop != 0)
             scene->xtor->update(scene);
 
-    if (scene->state != 0)
-        de_state_leave(scene);
+    de_state_leave(scene);
 
     if (scene->xtor->leave != 0 && scene->xtor->leave != scene->state->leave)
         scene->xtor->leave(scene);

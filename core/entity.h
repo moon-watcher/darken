@@ -5,10 +5,13 @@
 
 typedef struct de_manager de_manager;
 
-#define DARKEN_ENTITY_UPDATEPOLICY_STATE 0
-#define DARKEN_ENTITY_UPDATEPOLICY_STATEXTOR 1
-#define DARKEN_ENTITY_UPDATEPOLICY_XTORSTATE 2
-#define DARKEN_ENTITY_UPDATEPOLICY_XTOR 3
+enum
+{
+    DARKEN_ENTITY_UPDATEPOLICY_STATE,
+    DARKEN_ENTITY_UPDATEPOLICY_STATEXTOR,
+    DARKEN_ENTITY_UPDATEPOLICY_XTORSTATE,
+    DARKEN_ENTITY_UPDATEPOLICY_XTOR,
+};
 
 typedef struct de_entity
 {
@@ -30,7 +33,7 @@ typedef struct de_entity
 #endif
 } de_entity;
 
-de_entity *de_entity_set(de_entity *const, de_state *);
-de_entity *de_entity_update(de_entity *const);
+void de_entity_set(de_entity *const, de_state *const);
+void de_entity_update(de_entity *const);
 unsigned de_entity_delete(de_entity *const);
-void de_entity_updateType(de_entity *const, unsigned char);
+void de_entity_updatePolicy(de_entity *const, unsigned char);
