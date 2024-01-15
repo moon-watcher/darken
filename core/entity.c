@@ -27,7 +27,7 @@ __attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const
     return de_manager_entity_delete(this->manager, this);
 }
 
-void de_entity_updatePolicy(de_entity *const this, unsigned char type)
+void de_entity_updatePolicy(de_entity *const this, unsigned type)
 {
     void f0(de_entity *const t) { t->update = t->state->update ?: de_state_empty; }
     void f1(de_entity *const t) { t->update = t->state->update ?: t->xtor->update ?: de_state_empty; }

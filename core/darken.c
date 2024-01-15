@@ -3,7 +3,7 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-void darken_init(darken *const this, unsigned int size)
+void darken_init(darken *const this, unsigned size)
 {
     this->scene = malloc(sizeof(de_entity) + size);
     this->loop = 0;

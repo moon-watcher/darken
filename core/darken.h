@@ -9,7 +9,7 @@ typedef struct darken
     char loop;
 } darken;
 
-void darken_init(darken *const, unsigned int);
+void darken_init(darken *const, unsigned);
 void darken_looper(darken *const, const de_state *const);
 void darken_state(darken *const, const de_state *const);
 void darken_break(darken *const);

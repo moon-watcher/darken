@@ -4,7 +4,7 @@
 
 #include "../libs/uplist.h"
 
-void de_system_init(de_system *const this, de_system_f const updateFn, unsigned int params)
+void de_system_init(de_system *const this, de_system_f const updateFn, unsigned params)
 {
     this->updateFn = updateFn;
     this->params = params ?: 1;
@@ -15,7 +15,7 @@ void de_system_init(de_system *const this, de_system_f const updateFn, unsigned 
 
 void de_system_add(de_system *const this, ...)
 {
-    unsigned int params = this->params;
+    unsigned params = this->params;
     uplist *const upl = &this->upl;
 
     va_list ap;
@@ -32,7 +32,7 @@ void de_system_add(de_system *const this, ...)
     va_end(ap);
 }
 
-int de_system_delete(de_system *const this, void *const data)
+unsigned de_system_delete(de_system *const this, void *const data)
 {
     return uplist_removeByData(&this->upl, data, this->params);
 }

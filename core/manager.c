@@ -12,7 +12,7 @@ static void _entity_destruct(de_entity *const this)
     de_xtor_leave(this);
 }
 
-void de_manager_init(de_manager *const this, unsigned int objectSize)
+void de_manager_init(de_manager *const this, unsigned objectSize)
 {
 #if DARKEN_ENTITY_DATA == 0
     objectSize = 0;
