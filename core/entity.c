@@ -29,7 +29,7 @@ __attribute__((always_inline)) inline de_entity *de_entity_update(de_entity *con
     return this;
 }
 
-__attribute__((always_inline)) inline int de_entity_delete(de_entity *const this)
+__attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const this)
 {
     return de_manager_entity_delete(this->manager, this);
 }

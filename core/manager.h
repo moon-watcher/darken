@@ -18,4 +18,4 @@ void de_manager_reset(de_manager *const);
 void de_manager_update(de_manager *const);
 void de_manager_iterate(de_manager *const, void (*)());
 de_entity *de_manager_entity_new(de_manager *const, const de_state *const);
-int de_manager_entity_delete(de_manager *const, de_entity *const);
+unsigned de_manager_entity_delete(de_manager *const, de_entity *const);

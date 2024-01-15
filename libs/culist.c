@@ -5,7 +5,7 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-void culist_init(culist *const this, unsigned int objectSize, unsigned int size)
+void culist_init(culist *const this, unsigned objectSize, unsigned size)
 {
     uplist_init(&this->upl, size);
 
@@ -34,12 +34,12 @@ void culist_iterator(culist *const this, void (*iterator)())
     uplist_iterator(&this->upl, iterator, 1);
 }
 
-void culist_iteratorEx(culist *const this, void (*iterator)(), unsigned int params)
+void culist_iteratorEx(culist *const this, void (*iterator)(), unsigned params)
 {
     uplist_iterator(&this->upl, iterator, params);
 }
 
-int culist_remove(culist *const this, void *const data, void (*callback)())
+unsigned culist_remove(culist *const this, void *const data, void (*callback)())
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
@@ -53,7 +53,7 @@ int culist_remove(culist *const this, void *const data, void (*callback)())
     return uplist_remove(upl, index);
 }
 
-int culist_removeEx(culist *const this, void *const data, void (*callback)(), unsigned int params)
+unsigned culist_removeEx(culist *const this, void *const data, void (*callback)(), unsigned params)
 {
     uplist *const upl = &this->upl;
     int const index = uplist_find(upl, data);
@@ -74,7 +74,7 @@ void culist_end(culist *const this, void (*callback)())
     uplist *const upl = &this->upl;
     void **const list = upl->list;
 
-    for (unsigned int i = 0; i < this->allocatedObjects; i++)
+    for (unsigned i = 0; i < this->allocatedObjects; i++)
         free(list[i]);
 
     this->allocatedObjects = 0;
@@ -94,8 +94,8 @@ void culist_reset(culist *const this, void (*callback)())
 //         return;
 
 //     void **const list = this->upl.list;
-//     unsigned int *const next = &this->upl.next;
+//     unsigned *const next = &this->upl.next;
 
-//     for (unsigned int i = 0; i < *next; i++)
+//     for (unsigned i = 0; i < *next; i++)
 //         callback(list[i]);
 // }

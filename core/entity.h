@@ -32,5 +32,5 @@ typedef struct de_entity
 
 de_entity *de_entity_set(de_entity *const, de_state *);
 de_entity *de_entity_update(de_entity *const);
-int de_entity_delete(de_entity *const);
+unsigned de_entity_delete(de_entity *const);
 void de_entity_updateType(de_entity *const, unsigned char);

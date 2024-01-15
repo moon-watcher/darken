@@ -5,7 +5,7 @@
 #include "../config/free.h"
 #include "../config/malloc.h"
 
-void uplist_init(uplist *const this, unsigned int size)
+void uplist_init(uplist *const this, unsigned size)
 {
     this->size = size ?: 1;
     this->list = malloc(this->size * sizeof(void *));
@@ -15,7 +15,7 @@ void uplist_init(uplist *const this, unsigned int size)
 
 int uplist_add(uplist *const this, void *const add)
 {
-    unsigned int const next = this->next;
+    unsigned const next = this->next;
 
     if (next >= this->size && uplist_resize(this, 0) == 0)
         return -1;
@@ -26,9 +26,9 @@ int uplist_add(uplist *const this, void *const add)
     return next;
 }
 
-int uplist_resize(uplist *const this, unsigned int increment)
+int uplist_resize(uplist *const this, unsigned increment)
 {
-    unsigned int const oldSize = this->size * sizeof(void *);
+    unsigned const oldSize = this->size * sizeof(void *);
     this->size += increment ?: this->resizeBy;
 
     void *p = malloc(this->size * sizeof(void *));
@@ -44,15 +44,15 @@ int uplist_resize(uplist *const this, unsigned int increment)
     return 1;
 }
 
-void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
+void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
     if (iterator == 0)
         return;
 
     #define IT(F, ...)                                                                  \
-        void F(void **const list, unsigned int *const n, void (*it)(), unsigned int nb) \
+        void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
         {                                                                               \
-            for (unsigned int i = 0; i < *n; i += nb)                                   \
+            for (unsigned i = 0; i < *n; i += nb)                                   \
                 it(__VA_ARGS__);                                                        \
         }
 
@@ -70,14 +70,14 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItem
     funcs[nbItems](this->list, &this->next, iterator, nbItems);
 }
 
-void uplist_iteratorEx(uplist *const this, void (*iterator)(), unsigned int nbItems)
+void uplist_iteratorEx(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
     iterator(this->list, nbItems);
 }
 
-int uplist_remove(uplist *const this, unsigned int index)
+unsigned uplist_remove(uplist *const this, unsigned index)
 {
-    unsigned int *const next = &this->next;
+    unsigned *const next = &this->next;
 
     if (*next == 0)
         return 0;
@@ -98,7 +98,7 @@ void uplist_reset(uplist *const this)
     this->next = 0;
 }
 
-int uplist_removeByData(uplist *const this, void *const data, unsigned int nbItems)
+unsigned uplist_removeByData(uplist *const this, void *const data, unsigned nbItems)
 {
     int const index = uplist_find(this, data);
 
@@ -106,9 +106,9 @@ int uplist_removeByData(uplist *const this, void *const data, unsigned int nbIte
         return 0;
 
     void **const list = this->list;
-    unsigned int *const next = &this->next;
+    unsigned *const next = &this->next;
 
-    for (unsigned int j = 0; j < nbItems; j++)
+    for (unsigned j = 0; j < nbItems; j++)
         list[index + j] = list[*next - (nbItems - j)];
 
     *next -= nbItems;
@@ -119,58 +119,58 @@ int uplist_removeByData(uplist *const this, void *const data, unsigned int nbIte
 int uplist_find(uplist *const this, void *const data)
 {
     void **const list = this->list;
-    unsigned int *const next = &this->next;
+    unsigned *const next = &this->next;
 
-    for (unsigned int i = 0; i < *next; i++)
+    for (unsigned i = 0; i < *next; i++)
         if (list[i] == data)
             return i;
 
     return -1;
 }
 
-// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
+// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 // {
 //     if (iterator == 0 || nbItems == 0)
 //         return;
 
 //     void **const list = this->list;
-//     unsigned int *const next = &this->next;
+//     unsigned *const next = &this->next;
 
-//     for (unsigned int i = 0; i < *next; i += nbItems)
+//     for (unsigned i = 0; i < *next; i += nbItems)
 //         iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
 // }
 
-// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned int nbItems)
+// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 // {
 //     if (iterator == 0 || nbItems == 0)
 //         return;
 
-//     unsigned int const items = nbItems;
+//     unsigned const items = nbItems;
 
 //     void **const list = this->list;
-//     unsigned int *const next = &this->next;
+//     unsigned *const next = &this->next;
 
 //     if (items == 1)
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0]);
 
 //     else if (items == 2)
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0], list[i + 1]);
 
 //     else if (items == 3)
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0], list[i + 1], list[i + 2]);
 
 //     else if (items == 4)
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
 
 //     else if (items == 5)
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
 
 //     else
-//         for (unsigned int i = 0; i < *next; i += items)
+//         for (unsigned i = 0; i < *next; i += items)
 //             iterator(list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6], list[i + 7], list[i + 8], list[i + 9], list[i + 10]);
 // }
