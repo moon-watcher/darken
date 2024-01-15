@@ -8,13 +8,8 @@
 
 static void _entity_destruct(de_entity *const this)
 {
-    if (this->state != 0)
-        de_state_leave(this);
-
-    if (this->xtor->leave != 0 && this->xtor->leave != this->state->leave)
-        this->xtor->leave(this);
-
-    this->xtor = 0;
+    de_state_leave(this);
+    de_xtor_leave(this);
 }
 
 void de_manager_init(de_manager *const this, unsigned int objectSize)
@@ -64,7 +59,7 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
     entity->state = 0;
     entity->xtor = (de_state *)xtor;
     entity->manager = this;
-    entity->update = xtor->update ?: ({ void f() {}; f; });
+    entity->update = xtor->update ?: de_state_empty;
 
     if (xtor->enter != 0)
         xtor->enter(entity);

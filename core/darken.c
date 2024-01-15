@@ -28,9 +28,7 @@ void darken_loop(darken *const this)
     this->loop = 1;
     de_entity *const scene = this->scene;
 
-    if (scene->xtor->enter != 0)
-        scene->xtor->enter(scene);
-    
+    de_xtor_enter(scene);
     de_state_enter(scene);
 
     if (scene->xtor->update != 0)
@@ -38,11 +36,7 @@ void darken_loop(darken *const this)
             scene->xtor->update(scene);
 
     de_state_leave(scene);
-
-    if (scene->xtor->leave != 0 && scene->xtor->leave != scene->state->leave)
-        scene->xtor->leave(scene);
-
-    scene->xtor = 0;
+    de_xtor_leave(scene);
 }
 
 void darken_end(darken *const this)

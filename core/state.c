@@ -22,4 +22,18 @@ __attribute__((always_inline)) inline void de_state_leave(de_entity *const entit
 #endif
 }
 
-__attribute__((always_inline)) inline void de_state_empty(de_entity *const this) {}
+__attribute__((always_inline)) inline void de_state_empty(de_entity *const entity) {}
+
+__attribute__((always_inline)) inline void de_xtor_enter(de_entity *const entity)
+{
+    if (entity->xtor->enter != 0)
+        entity->xtor->enter(entity);
+}
+
+__attribute__((always_inline)) inline void de_xtor_leave(de_entity *const entity)
+{
+    if (entity->xtor->leave != 0 && entity->xtor->leave != entity->state->leave)
+        entity->xtor->leave(entity);
+
+    entity->xtor = 0;
+}
