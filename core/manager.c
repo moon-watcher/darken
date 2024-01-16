@@ -12,6 +12,11 @@ static void _entity_destruct(de_entity *const this)
     de_xtor_leave(this);
 }
 
+static void _entity_update(de_entity *const this)
+{
+    this->update(this);
+}
+
 void de_manager_init(de_manager *const this, unsigned objectSize)
 {
 #if DARKEN_ENTITY_DATA == 0
@@ -32,7 +37,7 @@ void de_manager_reset(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    culist_iterator(&this->cul, de_entity_update);
+    culist_iterator(&this->cul, _entity_update);
 }
 
 void de_manager_iterate(de_manager *const this, void (*iterator)())

@@ -15,11 +15,6 @@ __attribute__((always_inline)) inline void de_entity_set(de_entity *const this, 
     de_state_enter(this);
 }
 
-__attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
-{
-    this->update(this);
-}
-
 __attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const this)
 {
     return de_manager_entity_delete(this->manager, this);

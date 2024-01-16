@@ -1,5 +1,7 @@
 #include "entity.h"
 
+const de_state de_state_null = {de_state_empty, de_state_empty, de_state_empty};
+
 __attribute__((always_inline)) inline void de_state_enter(de_entity *const entity)
 {
     de_state_exec(entity, enter);
@@ -22,16 +24,10 @@ __attribute__((always_inline)) inline void de_state_leave(de_entity *const entit
 #endif
 }
 
-//
-
 __attribute__((always_inline)) inline void de_state_empty(de_entity *const entity)
 {
     // :)
 }
-
-const de_state de_state_null = {de_state_empty, de_state_empty, de_state_empty};
-
-//
 
 __attribute__((always_inline)) inline void de_xtor_enter(de_entity *const entity)
 {
