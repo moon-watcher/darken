@@ -7,12 +7,10 @@
 
 __attribute__((always_inline)) inline void de_entity_set(de_entity *const this, de_state *const state)
 {
-    const de_state nullstate = {de_state_empty, de_state_empty, de_state_empty};
-
     if (this->state != 0)
         de_state_leave(this);
 
-    this->state = (de_state *)state ?: &nullstate;
+    this->state = (de_state *)state ?: &de_state_null;
     de_entity_updatePolicy(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
     de_state_enter(this);
 }
