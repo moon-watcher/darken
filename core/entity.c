@@ -5,7 +5,7 @@
 #include "entity.h"
 #include "manager.h"
 
-__attribute__((always_inline)) inline void de_entity_set(de_entity *const this, de_state *const state)
+de_entity* de_entity_set(de_entity *const this, de_state *const state)
 {
     if (this->state != 0)
         de_state_leave(this);
@@ -13,9 +13,11 @@ __attribute__((always_inline)) inline void de_entity_set(de_entity *const this, 
     this->state = (de_state *)state ?: &de_state_empty;
     de_entity_updatePolicy(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
     de_state_enter(this);
+
+    return this;
 }
 
-__attribute__((always_inline)) inline unsigned de_entity_delete(de_entity *const this)
+unsigned de_entity_delete(de_entity *const this)
 {
     return de_manager_entity_delete(this->manager, this);
 }
