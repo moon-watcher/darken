@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../libs/culist.h"
 #include "../config/darken.h"
+#include "../libs/culist.h"
 
 typedef struct de_state de_state;
 typedef struct de_entity de_entity;
