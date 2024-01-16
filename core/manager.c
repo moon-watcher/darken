@@ -64,7 +64,7 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
     entity->state = 0;
     entity->xtor = (de_state *)xtor;
     entity->manager = this;
-    entity->update = xtor->update ?: de_state_empty;
+    entity->update = xtor->update ?: de_state_null;
 
     if (xtor->enter != 0)
         xtor->enter(entity);

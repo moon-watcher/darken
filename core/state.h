@@ -11,12 +11,16 @@ typedef struct de_state
     de_state_f leave;
 } de_state;
 
-const de_state de_state_null;
+const de_state de_state_empty;
 
-void de_state_enter(de_entity *const);
 void de_state_update(de_entity *const);
+void de_state_null(de_entity *const);
+
+//
+// Privadas
+//
+void de_state_enter(de_entity *const);
 void de_state_leave(de_entity *const);
-void de_state_empty(de_entity *const);
 void de_xtor_enter(de_entity *const);
 void de_xtor_leave(de_entity *const);
 
