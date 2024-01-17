@@ -9,7 +9,7 @@ static void VDP_drawText_wrapper(char *string, int *const x, int *const y)
 
 static void enter(de_entity *const this)
 {
-    p1 = de_manager_entity_new(&playersManager, &entity_player_state_xtor);
+    p1 = de_manager_new(&playersManager, &entity_player_state_xtor);
 
     struct player *const p1data = (struct player *const)&p1->data;
     ComponentTimer *const p1timer = (ComponentTimer *const)&p1data->timer;
@@ -33,7 +33,7 @@ static void update(de_entity *const this)
 
 static void leave(de_entity *const this)
 {
-    de_entity_delete(p1);
+    de_manager_delete(&playerManager, p1); // de_entity_delete(p1);
 }
 
 const de_state scene_screen1 = {

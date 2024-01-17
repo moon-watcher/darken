@@ -1,7 +1,6 @@
 #pragma once
 
 #include "entity.h"
-#include "state.h"
 
 typedef struct darken
 {
