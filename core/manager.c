@@ -1,7 +1,19 @@
 #include "entity.h"
 #include "manager.h"
 #include "../libs/culist.h"
-#include "../private/entity.h"
+
+static void _entity_update(de_entity *const this)
+{
+    this->update(this);
+}
+
+static void _entity_destruct(de_entity *const this)
+{
+#include "../private/xtor.h"
+#include "../private/state.h"
+    dep_state_leave(this);
+    dep_xtor_leave(this);
+}
 
 void de_manager_init(de_manager *const this, unsigned objectSize)
 {
@@ -13,17 +25,17 @@ void de_manager_init(de_manager *const this, unsigned objectSize)
 
 void de_manager_end(de_manager *const this)
 {
-    culist_end(&this->cul, dep_entity_destruct);
+    culist_end(&this->cul, _entity_destruct);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_reset(&this->cul, dep_entity_destruct);
+    culist_reset(&this->cul, _entity_destruct);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    culist_iterator(&this->cul, dep_entity_update);
+    culist_iterator(&this->cul, _entity_update);
 }
 
 void de_manager_iterate(de_manager *const this, void (*iterator)())
@@ -49,12 +61,12 @@ de_entity *de_manager_new(de_manager *const this)
 
     entity->state = (de_state *)&de_state_empty;
     entity->xtor = (de_state *)&de_state_empty;
-    entity->update = entity->xtor->update ?: de_state_null;
+    entity->update = entity->xtor->update ?: de_state_func;
 
     return entity;
 }
 
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
-    return culist_remove(&this->cul, entity, dep_entity_destruct);
+    return culist_remove(&this->cul, entity, _entity_destruct);
 }
