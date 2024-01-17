@@ -1,7 +1,8 @@
-#include "./darken.h"
-
+#include "darken.h"
 #include "../config/free.h"
 #include "../config/malloc.h"
+#include "../private/xtor.h"
+#include "../private/state.h"
 
 void darken_init(darken *const this, unsigned size)
 {

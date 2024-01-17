@@ -1,8 +1,6 @@
 #include "system.h"
-
-#include "../config/va_arg.h"
-
 #include "../libs/uplist.h"
+#include "../config/va_arg.h"
 
 void de_system_init(de_system *const this, de_system_f const updateFn, unsigned params)
 {

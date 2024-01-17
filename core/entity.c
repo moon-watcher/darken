@@ -1,10 +1,8 @@
-#include "../config/darken.h"
-
-#include "state.h"
 #include "entity.h"
 #include "manager.h"
+#include "../private/state.h"
 
-de_entity* de_entity_set(de_entity *const this, de_state *const state)
+de_entity *de_entity_set(de_entity *const this, de_state *const state)
 {
     if (this->state != 0)
         de_state_leave(this);

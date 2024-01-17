@@ -1,10 +1,8 @@
-#include "state.h"
 #include "entity.h"
 #include "manager.h"
-
-#include "../config/darken.h"
-
 #include "../libs/culist.h"
+#include "../private/xtor.h"
+#include "../private/state.h"
 
 static void _entity_destruct(de_entity *const this)
 {
