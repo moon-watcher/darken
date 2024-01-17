@@ -3,17 +3,7 @@
 #include "../libs/culist.h"
 #include "../private/xtor.h"
 #include "../private/state.h"
-
-static void _entity_destruct(de_entity *const this)
-{
-    de_state_leave(this);
-    de_xtor_leave(this);
-}
-
-static void _entity_update(de_entity *const this)
-{
-    this->update(this);
-}
+#include "../private/entity.h"
 
 void de_manager_init(de_manager *const this, unsigned objectSize)
 {
@@ -25,17 +15,17 @@ void de_manager_init(de_manager *const this, unsigned objectSize)
 
 void de_manager_end(de_manager *const this)
 {
-    culist_end(&this->cul, _entity_destruct);
+    culist_end(&this->cul, dep_entity_destruct);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_reset(&this->cul, _entity_destruct);
+    culist_reset(&this->cul, dep_entity_destruct);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    culist_iterator(&this->cul, _entity_update);
+    culist_iterator(&this->cul, dep_entity_update);
 }
 
 void de_manager_iterate(de_manager *const this, void (*iterator)())
@@ -68,9 +58,4 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
         xtor->enter(entity);
 
     return entity;
-}
-
-unsigned de_manager_entity_delete(de_manager *const this, de_entity *const entity)
-{
-    return culist_remove(&this->cul, entity, _entity_destruct);
 }

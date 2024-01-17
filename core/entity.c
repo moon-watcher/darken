@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "manager.h"
 #include "../private/state.h"
+#include "../private/entity.h"
 
 de_entity *de_entity_set(de_entity *const this, de_state *const state)
 {
@@ -16,7 +17,8 @@ de_entity *de_entity_set(de_entity *const this, de_state *const state)
 
 unsigned de_entity_delete(de_entity *const this)
 {
-    return de_manager_entity_delete(this->manager, this);
+    // return de_manager_entity_delete(this->manager, this);
+    return culist_remove(&this->manager->cul, this, dep_entity_destruct);
 }
 
 void de_entity_updatePolicy(de_entity *const this, unsigned type)
