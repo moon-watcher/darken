@@ -2,12 +2,12 @@
 #include "manager.h"
 #include "../libs/culist.h"
 
-static void _entity_update(de_entity *const this)
+__attribute__((always_inline)) inline static void _entity_update(de_entity *const this)
 {
     this->update(this);
 }
 
-static void _entity_destruct(de_entity *const this)
+__attribute__((always_inline)) inline static void _entity_destruct(de_entity *const this)
 {
 #include "../private/xtor.h"
 #include "../private/state.h"
