@@ -1,8 +1,6 @@
 #include "entity.h"
 #include "manager.h"
 #include "../libs/culist.h"
-#include "../private/xtor.h"
-#include "../private/state.h"
 #include "../private/entity.h"
 
 void de_manager_init(de_manager *const this, unsigned objectSize)
@@ -33,7 +31,7 @@ void de_manager_iterate(de_manager *const this, void (*iterator)())
     culist_iterator(&this->cul, iterator);
 }
 
-de_entity *de_manager_entity_new(de_manager *const this, const de_state *const xtor)
+de_entity *de_manager_new(de_manager *const this)
 {
     de_entity *entity = culist_add(&this->cul);
 
@@ -49,17 +47,14 @@ de_entity *de_manager_entity_new(de_manager *const this, const de_state *const x
     memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
 #endif
 
-    entity->state = 0;
-    entity->xtor = (de_state *)xtor;
-    entity->update = xtor->update ?: de_state_null;
-
-    if (xtor->enter != 0)
-        xtor->enter(entity);
+    entity->state = (de_state *)&de_state_empty;
+    entity->xtor = (de_state *)&de_state_empty;
+    entity->update = entity->xtor->update ?: de_state_null;
 
     return entity;
 }
 
-unsigned de_manager_entity_delete(de_manager *const this, de_entity *const entity)
+unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
     return culist_remove(&this->cul, entity, dep_entity_destruct);
 }
