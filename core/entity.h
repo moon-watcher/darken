@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config/darken.h"
+#include "../config.h"
 #include "state.h"
 
 enum

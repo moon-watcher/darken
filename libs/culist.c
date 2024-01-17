@@ -2,8 +2,8 @@
 
 #include "culist.h"
 
-#include "../config/free.h"
-#include "../config/malloc.h"
+#include "../services/free.h"
+#include "../services/malloc.h"
 
 void culist_init(culist *const this, unsigned objectSize, unsigned size)
 {

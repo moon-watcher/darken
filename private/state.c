@@ -13,9 +13,9 @@ __attribute__((always_inline)) inline void dep_state_leave(de_entity *const enti
 
     entity->state = 0;
 
-#include "../config/darken.h"
+#include "../config.h"
 #if DARKEN_ENTITY_TEMPDATA
-#include "../config/free.h"
+#include "../services/free.h"
     free(entity->tempdata);
     entity->tempdata = 0;
 #endif

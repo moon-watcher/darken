@@ -1,6 +1,6 @@
 #include "darken.h"
-#include "../config/free.h"
-#include "../config/malloc.h"
+#include "../services/free.h"
+#include "../services/malloc.h"
 #include "../private/xtor.h"
 #include "../private/state.h"
 

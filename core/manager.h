@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config/darken.h"
+#include "../config.h"
 #include "../libs/culist.h"
 
 typedef struct de_entity de_entity;

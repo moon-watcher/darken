@@ -2,8 +2,8 @@
 
 #include "uplist.h"
 
-#include "../config/free.h"
-#include "../config/malloc.h"
+#include "../services/free.h"
+#include "../services/malloc.h"
 
 void uplist_init(uplist *const this, unsigned size)
 {

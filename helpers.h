@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/darken.h"
+#include "config.h"
 
 #if DARKEN_ENTITY_DATA
 #define deh_data(ENTITY, TYPE, DATA) \
