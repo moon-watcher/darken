@@ -2,7 +2,7 @@
 #include "../private/state.h"
 #include "../private/xtor.h"
 
-de_entity *de_entity_ini(de_entity *const this, const de_state *const xtor)
+de_entity *de_entity_init(de_entity *const this, const de_state *const xtor)
 {
     this->state = (de_state *)&de_state_empty;
     this->xtor = (de_state *)xtor;
