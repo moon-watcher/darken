@@ -49,11 +49,11 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
     if (iterator == 0)
         return;
 
-    #define IT(F, ...)                                                                  \
+    #define IT(F, ...)                                                          \
         void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
-        {                                                                               \
-            for (unsigned i = 0; i < *n; i += nb)                                   \
-                it(__VA_ARGS__);                                                        \
+        {                                                                       \
+            for (unsigned i = 0; i < *n; i += nb)                               \
+                it(__VA_ARGS__);                                                \
         }
 
     IT(f0, );
