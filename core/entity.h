@@ -13,6 +13,10 @@ enum
 
 typedef struct de_entity
 {
+    de_state_f update;
+    de_state *state;
+    de_state *xtor;
+
 #if DARKEN_ENTITY_FIXEDDATA > 0
     unsigned char fixeddata[DARKEN_ENTITY_FIXEDDATA];
 #endif
@@ -21,15 +25,11 @@ typedef struct de_entity
     void *tempdata;
 #endif
 
-    de_state *state;
-    de_state *xtor;
-    de_state_f update;
-
 #if DARKEN_ENTITY_DATA
     unsigned char data[]; // Bytes for casting data & components
 #endif
 } de_entity;
 
-de_entity *de_entity_init(de_entity *const, const de_state *const);
-de_entity *de_entity_set(de_entity *const, de_state *const);
+de_entity *de_entity_init(de_entity *const, de_state *);
+de_entity *de_entity_set(de_entity *const, de_state *);
 void de_entity_updatePolicy(de_entity *const, unsigned);

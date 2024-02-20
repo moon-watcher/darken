@@ -47,6 +47,10 @@ de_entity *de_manager_new(de_manager *const this)
 {
     de_entity *entity = culist_add(&this->cul);
 
+    entity->update = &de_state_func;
+    entity->state = &de_state_empty;
+    entity->xtor = &de_state_empty;
+
 #if DARKEN_ENTITY_FIXEDDATA
     memset(entity->fixeddata, 0, DARKEN_ENTITY_FIXEDDATA);
 #endif
@@ -58,10 +62,6 @@ de_entity *de_manager_new(de_manager *const this)
 #if DARKEN_ENTITY_DATA
     memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
 #endif
-
-    entity->state = (de_state *)&de_state_empty;
-    entity->xtor = (de_state *)&de_state_empty;
-    entity->update = entity->xtor->update ?: de_state_func;
 
     return entity;
 }

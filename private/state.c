@@ -1,17 +1,17 @@
 #include "state.h"
 
-__attribute__((always_inline)) inline void dep_state_enter(de_entity *const entity)
+void dep_state_enter(de_entity *entity)
 {
-    if (entity->state->enter != 0)
+    if (entity != 0 && entity->state != 0 && entity->state->enter != 0)
         entity->state->enter(entity);
 }
 
-__attribute__((always_inline)) inline void dep_state_leave(de_entity *const entity)
+void dep_state_leave(de_entity *entity)
 {
-    if (entity->state->leave != 0)
+    if (entity != 0 && entity->state != 0 && entity->state->leave != 0)
         entity->state->leave(entity);
 
-    entity->state = 0;
+    entity->state = &de_state_empty;
 
 #include "../config.h"
 #if DARKEN_ENTITY_TEMPDATA

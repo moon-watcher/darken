@@ -1,15 +1,15 @@
 #include "xtor.h"
 
-__attribute__((always_inline)) inline void dep_xtor_enter(de_entity *const entity)
+void dep_xtor_enter(de_entity *entity)
 {
-    if (entity->xtor->enter != 0)
+    if (entity != 0 && entity->xtor != 0 && entity->xtor->enter != 0)
         entity->xtor->enter(entity);
 }
 
-__attribute__((always_inline)) inline void dep_xtor_leave(de_entity *const entity)
+void dep_xtor_leave(de_entity *entity)
 {
-    if (entity->xtor->leave != 0 /* && entity->xtor->leave != entity->state->leave*/)
+    if (entity != 0 && entity->xtor != 0 && entity->xtor->leave != 0)
         entity->xtor->leave(entity);
 
-    entity->xtor = 0;
+    entity->xtor = &de_state_empty;
 }
