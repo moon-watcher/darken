@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "manager.h"
 #include "../libs/culist.h"
+#include "../libs/upiterator.h"
 
 __attribute__((always_inline)) inline static void _entity_update(de_entity *const this)
 {
@@ -35,12 +36,7 @@ void de_manager_reset(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    culist_iterator(&this->cul, _entity_update);
-}
-
-void de_manager_iterate(de_manager *const this, void (*iterator)())
-{
-    culist_iterator(&this->cul, iterator);
+    upiterator(this->cul.upl.items, &this->cul.upl.count, _entity_update, 1);
 }
 
 de_entity *de_manager_new(de_manager *const this)
@@ -60,7 +56,7 @@ de_entity *de_manager_new(de_manager *const this)
 #endif
 
 #if DARKEN_ENTITY_DATA
-    memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
+    memset(entity->data, 0, this->cul.itemSize - sizeof(de_entity));
 #endif
 
     return entity;
