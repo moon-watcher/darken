@@ -1,26 +1,43 @@
 // Unordered list of pointers
 
 #include "uplist.h"
-#include "upiterator.h"
 
 #include "../services/free.h"
 #include "../services/malloc.h"
 
-void uplist_init(uplist *const this, unsigned capacity)
+void uplist_init(uplist *const this, unsigned itemSize, unsigned capacity)
 {
+    free(this->items);
+
     this->count = 0;
     this->capacity = capacity ?: 1;
     this->items = malloc(this->capacity * sizeof(void *));
+    this->allocations = 0;
+    this->item_size = itemSize;
 }
 
-int uplist_add(uplist *const this, void *const add)
+void *uplist_add(uplist *const this, void *const add)
 {
-    if (this->count >= this->capacity && uplist_resize(this, 1) == 0)
-        return -1;
+    int count = this->count;
 
-    this->items[this->count++] = add;
+    if (count < (int)this->allocations)
+        ++this->count;
 
-    return this->count - 1;
+    else
+    {
+        if (this->count < this->capacity || uplist_resize(this, 1) != 0)
+        {
+            this->items[this->count] = malloc(this->itemSize);
+            ++this->count;
+
+            if (this->count - 1 < 0)
+                return 0;
+        }
+    }
+
+    ++this->allocations;
+
+    return this->items[count];
 }
 
 void *uplist_resize(uplist *const this, unsigned increment)
@@ -49,6 +66,12 @@ int uplist_find(uplist *const this, void *const data)
 
     return -1;
 }
+
+void uplist_iterator(uplist *const this, void (*callback)(), unsigned params)
+{
+    upiterator(this->items, &this->count, callback, params);
+}
+
 
 unsigned uplist_remove(uplist *const this, unsigned index)
 {

@@ -26,17 +26,19 @@ void de_manager_init(de_manager *const this, unsigned objectSize)
 
 void de_manager_end(de_manager *const this)
 {
-    culist_end(&this->cul, _entity_destruct);
+    de_manager_reset(this);
+    culist_end(&this->cul);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_reset(&this->cul, _entity_destruct);
+    culist_iterator(&this->cul, _entity_destruct, 1);
+    culist_reset(&this->cul);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    upiterator(this->cul.upl.items, &this->cul.upl.count, _entity_update, 1);
+    culist_iterator(&this->cul, _entity_update, 1);
 }
 
 de_entity *de_manager_new(de_manager *const this)
@@ -64,5 +66,12 @@ de_entity *de_manager_new(de_manager *const this)
 
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
-    return culist_remove(&this->cul, entity, _entity_destruct);
+    int index = culist_find(&this->cul, entity);
+
+    if (index < 0)
+        return -1;
+
+    _entity_destruct(culist_get(&this->cul, index));
+
+    return culist_remove(&this->cul, index);
 }

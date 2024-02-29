@@ -14,7 +14,7 @@ void culist_init(culist *const this, unsigned itemSize, unsigned size)
     this->allocatedItems = 0;
 }
 
-void *culist_add(culist *const this)
+void *culist_alloc(culist *const this)
 {
     int count = this->upl.count;
 
@@ -29,28 +29,34 @@ void *culist_add(culist *const this)
     return this->upl.items[count];
 }
 
-int culist_remove(culist *const this, void *const data, void (*callback)())
+int culist_find(culist *const this, void *const data)
 {
-    int index = uplist_find(&this->upl, data);
+    return uplist_find(&this->upl, data);
+}
 
-    if (index < 0)
-        return -1;
+void culist_iterator(culist *const this, void (*callback)(), unsigned params)
+{
+    uplist_iterator(&this->upl, callback, params);
+}
 
-    if (callback != 0)
-        callback(this->upl.items[index]);
+void *culist_get(culist *const this, unsigned index)
+{
+    return this->upl.items[index];
+}
 
+unsigned culist_remove(culist *const this, unsigned index)
+{
     return uplist_remove(&this->upl, index);
 }
 
-void culist_reset(culist *const this, void (*callback)())
+void culist_reset(culist *const this)
 {
-    upiterator(this->upl.items, &this->upl.count, callback, 1);
     uplist_reset(&this->upl);
 }
 
-void culist_end(culist *const this, void (*callback)())
+void culist_end(culist *const this)
 {
-    culist_reset(this, callback);
+    uplist_reset(&this->upl);
 
     for (unsigned i = 0; i < this->allocatedItems; i++)
         free(&this->upl.items[i]);
