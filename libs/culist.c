@@ -16,17 +16,17 @@ void culist_init(culist *const this, unsigned objectSize, unsigned size)
 void *culist_add(culist *const this)
 {
     uplist *const upl = &this->upl;
-    int next = upl->next;
+    int next = upl->count;
 
     if (next < (int)this->allocatedObjects)
-        ++upl->next;
+        ++upl->count;
 
     else if ((next = uplist_add(upl, malloc(this->objectSize))) < 0)
         return 0;
 
     ++this->allocatedObjects;
 
-    return upl->list[next];
+    return upl->items[next];
 }
 
 void culist_iterator(culist *const this, void (*iterator)())
@@ -48,7 +48,7 @@ unsigned culist_remove(culist *const this, void *const data, void (*callback)())
         return 0;
 
     if (callback != 0)
-        callback(upl->list[index]);
+        callback(upl->items[index]);
 
     return uplist_remove(upl, index);
 }
@@ -62,7 +62,7 @@ unsigned culist_removeEx(culist *const this, void *const data, void (*callback)(
         return 0;
 
     if (callback != 0)
-        callback(upl->list[index]);
+        callback(upl->items[index]);
 
     return uplist_removeByData(upl, data, params);
 }
@@ -72,7 +72,7 @@ void culist_end(culist *const this, void (*callback)())
     culist_reset(this, callback);
 
     uplist *const upl = &this->upl;
-    void **const list = upl->list;
+    void **const list = upl->items;
 
     for (unsigned i = 0; i < this->allocatedObjects; i++)
         free(list[i]);

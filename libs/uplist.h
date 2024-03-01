@@ -2,9 +2,9 @@
 
 typedef struct uplist
 {
-    void **list;
-    unsigned next;
-    unsigned size;
+    void **items;
+    unsigned count;
+    unsigned capacity;
     unsigned char resizeBy;
 } uplist;
 
