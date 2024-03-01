@@ -1,6 +1,7 @@
 // Unordered list of pointers
 
 #include "uplist.h"
+#include "upiterator.h"
 
 #include "../services/free.h"
 #include "../services/malloc.h"
@@ -19,7 +20,7 @@ int uplist_add(uplist *const this, void *const add)
         return -1;
 
     this->items[this->count++] = add;
-    
+
     return this->count - 1;
 }
 
@@ -43,33 +44,7 @@ int uplist_resize(uplist *const this, unsigned increment)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
-    if (iterator == 0)
-        return;
-
-    #define IT(F, ...)                                                          \
-        void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
-        {                                                                       \
-            for (unsigned i = 0; i < *n; i += nb)                               \
-                it(__VA_ARGS__);                                                \
-        }
-
-    IT(f0, );
-    IT(f1, list[i + 0]);
-    IT(f2, list[i + 0], list[i + 1]);
-    IT(f3, list[i + 0], list[i + 1], list[i + 2]);
-    IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-    IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-    IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-    IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
-
-    void (*const funcs[])() = { f0, f1, f2, f3, f4, f5, f6, f7, };
-
-    funcs[nbItems](this->items, &this->count, iterator, nbItems);
-}
-
-void uplist_iteratorEx(uplist *const this, void (*iterator)(), unsigned nbItems)
-{
-    iterator(this->items, nbItems);
+    upiterator(this->items, &this->count, iterator, nbItems);
 }
 
 unsigned uplist_remove(uplist *const this, unsigned index)
