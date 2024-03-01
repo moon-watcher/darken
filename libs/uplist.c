@@ -11,12 +11,11 @@ void uplist_init(uplist *const this, unsigned capacity)
     this->capacity = capacity ?: 1;
     this->items = malloc(this->capacity * sizeof(void *));
     this->count = 0;
-    this->resizeBy = this->capacity;
 }
 
 int uplist_add(uplist *const this, void *const add)
 {
-    if (this->count >= this->capacity && uplist_resize(this, 0) == 0)
+    if (this->count >= this->capacity && uplist_resize(this, 1) == 0)
         return -1;
 
     this->items[this->count++] = add;
@@ -26,8 +25,11 @@ int uplist_add(uplist *const this, void *const add)
 
 int uplist_resize(uplist *const this, unsigned increment)
 {
+    if (increment == 0)
+        return 0;
+
     unsigned capacity = this->capacity * sizeof(void *);
-    this->capacity += increment ?: this->resizeBy;
+    this->capacity += increment;
 
     void *ptr = malloc(this->capacity * sizeof(void *));
 
@@ -40,6 +42,15 @@ int uplist_resize(uplist *const this, unsigned increment)
     this->items = ptr;
 
     return 1;
+}
+
+int uplist_find(uplist *const this, void *const data)
+{
+    for (unsigned i = 0; i < this->count; i++)
+        if (this->items[i] == data)
+            return i;
+
+    return -1;
 }
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
@@ -57,16 +68,6 @@ unsigned uplist_remove(uplist *const this, unsigned index)
     return 1;
 }
 
-void uplist_end(uplist *const this)
-{
-    free(this->items);
-}
-
-void uplist_reset(uplist *const this)
-{
-    this->count = 0;
-}
-
 unsigned uplist_removeByData(uplist *const this, void *const data, unsigned nbItems)
 {
     int index = uplist_find(this, data);
@@ -82,11 +83,12 @@ unsigned uplist_removeByData(uplist *const this, void *const data, unsigned nbIt
     return 1;
 }
 
-int uplist_find(uplist *const this, void *const data)
+void uplist_reset(uplist *const this)
 {
-    for (unsigned i = 0; i < this->count; i++)
-        if (this->items[i] == data)
-            return i;
+    this->count = 0;
+}
 
-    return -1;
+void uplist_end(uplist *const this)
+{
+    free(this->items);
 }
