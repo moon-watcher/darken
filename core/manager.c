@@ -24,18 +24,12 @@ void de_manager_init(de_manager *const this, unsigned entityBytes)
     entityBytes = 0;
 #endif
 
-    this->entityBytes = entityBytes + sizeof(de_entity);
-    culist_init(&this->cul);
+    culist_init(&this->cul, entityBytes + sizeof(de_entity));
 }
 
 de_entity *de_manager_new(de_manager *const this)
 {
-    return de_manager_newEx(this, this->entityBytes);
-}
-
-de_entity *de_manager_newEx(de_manager *const this, unsigned size)
-{
-    de_entity *entity = culist_add(&this->cul, size);
+    de_entity *entity = culist_add(&this->cul);
 
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
@@ -50,7 +44,7 @@ de_entity *de_manager_newEx(de_manager *const this, unsigned size)
 #endif
 
 #if DARKEN_ENTITY_DATA
-    memset(entity->data, 0, this->entityBytes - sizeof(de_entity));
+    memset(entity->data, 0, this->cul.itemSize - sizeof(de_entity));
 #endif
 
     return entity;

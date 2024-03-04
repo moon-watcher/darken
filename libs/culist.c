@@ -5,14 +5,15 @@
 #include "../services/free.h"
 #include "../services/malloc.h"
 
-void culist_init(culist *const this)
+void culist_init(culist *const this, unsigned itemSize)
 {
     this->items = 0;
     this->count = 0;
     this->capacity = 0;
+    this->itemSize = itemSize;
 }
 
-void *culist_add(culist *const this, unsigned size)
+void *culist_add(culist *const this)
 {
     if (this->count < this->capacity)
         return this->items[this->count++];
@@ -28,7 +29,7 @@ void *culist_add(culist *const this, unsigned size)
     free(this->items);
     this->items = ptr;
 
-    if ((ptr = malloc(size)) == 0)
+    if ((ptr = malloc(this->itemSize)) == 0)
         return 0;
 
     ++this->capacity;
@@ -86,5 +87,5 @@ void culist_end(culist *const this)
         free(this->items[i]);
 
     free(this->items);
-    culist_init(this);
+    culist_init(this, this->itemSize);
 }
