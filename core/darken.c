@@ -4,27 +4,27 @@
 #include "../private/xtor.h"
 #include "../private/state.h"
 
-void darken_init(darken *const this, unsigned size)
+void darken_init(darken *this, unsigned size)
 {
     this->scene = malloc(sizeof(de_entity) + size);
     this->loop = 0;
 }
-void darken_looper(darken *const this, const de_state *const xtor)
+void darken_looper(darken *this, de_state *xtor)
 {
-    this->scene->xtor = (de_state *)xtor;
+    this->scene->xtor = xtor;
 }
 
-void darken_state(darken *const this, const de_state *const state)
+void darken_state(darken *this, de_state *state)
 {
-    this->scene->state = (de_state *)state;
+    this->scene->state = state;
 }
 
-void darken_break(darken *const this)
+void darken_break(darken *this)
 {
     this->loop = 0;
 }
 
-void darken_loop(darken *const this)
+void darken_loop(darken *this)
 {
     this->loop = 1;
     de_entity *const scene = this->scene;
@@ -40,7 +40,7 @@ void darken_loop(darken *const this)
     dep_xtor_leave(scene);
 }
 
-void darken_end(darken *const this)
+void darken_end(darken *this)
 {
     free(this->scene);
     this->loop = 0;
