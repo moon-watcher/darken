@@ -20,7 +20,7 @@ void upiterator(void **const list, unsigned *const max, void (*iterator)(), unsi
 {
     static void (*const funcs[])() = {f0, f1, f2, f3, f4, f5, f6, f7};
 
-    if (iterator && nbItems)
+    if (iterator != 0 && nbItems != 0)
         funcs[nbItems](list, max, iterator, nbItems);
 }
 
