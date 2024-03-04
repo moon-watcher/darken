@@ -1,6 +1,9 @@
-#include "entity.h"
 #include "manager.h"
+
 #include "../libs/culist.h"
+
+#include "../private/xtor.h"
+#include "../private/state.h"
 
 __attribute__((always_inline)) inline static void _entity_update(de_entity *const this)
 {
@@ -9,43 +12,30 @@ __attribute__((always_inline)) inline static void _entity_update(de_entity *cons
 
 __attribute__((always_inline)) inline static void _entity_destruct(de_entity *const this)
 {
-#include "../private/xtor.h"
-#include "../private/state.h"
     dep_state_leave(this);
     dep_xtor_leave(this);
 }
 
-void de_manager_init(de_manager *const this, unsigned objectSize)
+//
+
+void de_manager_init(de_manager *const this, unsigned entityBytes)
 {
 #if DARKEN_ENTITY_DATA == 0
-    objectSize = 0;
+    entityBytes = 0;
 #endif
-    culist_init(&this->cul, objectSize + sizeof(de_entity), 1);
-}
 
-void de_manager_end(de_manager *const this)
-{
-    culist_end(&this->cul, _entity_destruct);
-}
-
-void de_manager_reset(de_manager *const this)
-{
-    culist_reset(&this->cul, _entity_destruct);
-}
-
-void de_manager_update(de_manager *const this)
-{
-    culist_iterator(&this->cul, _entity_update);
-}
-
-void de_manager_iterate(de_manager *const this, void (*iterator)())
-{
-    culist_iterator(&this->cul, iterator);
+    this->entityBytes = entityBytes + sizeof(de_entity);
+    culist_init(&this->cul);
 }
 
 de_entity *de_manager_new(de_manager *const this)
 {
-    de_entity *entity = culist_add(&this->cul);
+    return de_manager_newEx(this, this->entityBytes);
+}
+
+de_entity *de_manager_newEx(de_manager *const this, unsigned size)
+{
+    de_entity *entity = culist_add(&this->cul, size);
 
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
@@ -60,13 +50,37 @@ de_entity *de_manager_new(de_manager *const this)
 #endif
 
 #if DARKEN_ENTITY_DATA
-    memset(entity->data, 0, this->cul.objectSize - sizeof(de_entity));
+    memset(entity->data, 0, this->entityBytes - sizeof(de_entity));
 #endif
 
     return entity;
 }
 
+void de_manager_update(de_manager *const this)
+{
+    upiterator_culist(&this->cul, _entity_update, 1);
+}
+
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
-    return culist_remove(&this->cul, entity, _entity_destruct);
+    int index = culist_find(&this->cul, entity);
+
+    if (index < 0)
+        return 0;
+
+    _entity_destruct(this->cul.items[index]);
+
+    return culist_removeById(&this->cul, index);
+}
+
+void de_manager_reset(de_manager *const this)
+{
+    upiterator_culist(&this->cul, _entity_destruct, 1);
+    culist_reset(&this->cul);
+}
+
+void de_manager_end(de_manager *const this)
+{
+    upiterator_culist(&this->cul, _entity_destruct, 1);
+    culist_end(&this->cul);
 }

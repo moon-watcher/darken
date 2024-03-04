@@ -1,5 +1,6 @@
 #include "system.h"
-#include "../libs/uplist.h"
+#include "../libs/uplist.h" 
+#include "../libs/upiterator.h"
 #include "../services/va_arg.h"
 
 void de_system_init(de_system *const this, de_system_f const updateFn, unsigned params)
@@ -8,7 +9,7 @@ void de_system_init(de_system *const this, de_system_f const updateFn, unsigned 
     this->params = params ?: 1;
     this->errorHandler = 0;
 
-    uplist_init(&this->upl, this->params);
+    uplist_init(&this->upl);
 }
 
 void de_system_add(de_system *const this, ...)
@@ -32,12 +33,12 @@ void de_system_add(de_system *const this, ...)
 
 unsigned de_system_delete(de_system *const this, void *const data)
 {
-    return uplist_removeByData(&this->upl, data, this->params);
+    return uplist_removeEx(&this->upl, data, this->params);
 }
 
 void de_system_update(de_system *const this)
 {
-    uplist_iterator(&this->upl, this->updateFn, this->params);
+    upiterator_uplist(&this->upl, this->updateFn, this->params);
 }
 
 void de_system_end(de_system *const this)

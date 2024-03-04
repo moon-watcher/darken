@@ -1,44 +1,37 @@
 // Unordered list of pointers
 
 #include "uplist.h"
-#include "upiterator.h"
 
 #include "../services/free.h"
 #include "../services/malloc.h"
 
-void uplist_init(uplist *const this, unsigned capacity)
+void uplist_init(uplist *const this)
 {
-    this->capacity = capacity ?: 1;
-    this->items = malloc(this->capacity * sizeof(void *));
+    this->items = 0;
     this->count = 0;
+    this->capacity = 0;
+    this->resizeBy = 1;
 }
 
-int uplist_add(uplist *const this, void *const add)
+void *uplist_add(uplist *const this, void *const add)
 {
-    if (this->count >= this->capacity && uplist_resize(this, 1) == 0)
-        return -1;
-
-    this->items[this->count++] = add;
-
-    return this->count - 1;
-}
-
-int uplist_resize(uplist *const this, unsigned increment)
-{
-    if (increment == 0)
+    if (this->count >= this->capacity && uplist_resize(this, this->resizeBy) == 0)
         return 0;
 
-    unsigned capacity = this->capacity * sizeof(void *);
-    this->capacity += increment;
+    return this->items[this->count++] = add;
+}
 
+unsigned uplist_resize(uplist *const this, unsigned increment)
+{
+    unsigned size = this->capacity * sizeof(void *);
+    this->capacity += increment ?: this->resizeBy ?: 1;
     void *ptr = malloc(this->capacity * sizeof(void *));
 
     if (ptr == 0)
         return 0;
 
-    memcpy(ptr, this->items, capacity);
+    memcpy(ptr, this->items, size);
     free(this->items);
-
     this->items = ptr;
 
     return 1;
@@ -53,22 +46,12 @@ int uplist_find(uplist *const this, void *const data)
     return -1;
 }
 
-void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
+unsigned uplist_remove(uplist *const this, void *const data)
 {
-    upiterator(this->items, &this->count, iterator, nbItems);
+    return uplist_removeEx(this, data, 1);
 }
 
-unsigned uplist_remove(uplist *const this, unsigned index)
-{
-    if (this->count == 0)
-        return 0;
-
-    this->items[index] = this->items[--this->count];
-
-    return 1;
-}
-
-unsigned uplist_removeByData(uplist *const this, void *const data, unsigned nbItems)
+unsigned uplist_removeEx(uplist *const this, void *const data, unsigned nbItems)
 {
     int index = uplist_find(this, data);
 
@@ -83,6 +66,16 @@ unsigned uplist_removeByData(uplist *const this, void *const data, unsigned nbIt
     return 1;
 }
 
+unsigned uplist_removeById(uplist *const this, unsigned index)
+{
+    if (this->count == 0)
+        return 0;
+
+    this->items[index] = this->items[--this->count];
+
+    return 1;
+}
+
 void uplist_reset(uplist *const this)
 {
     this->count = 0;
@@ -91,4 +84,5 @@ void uplist_reset(uplist *const this)
 void uplist_end(uplist *const this)
 {
     free(this->items);
+    uplist_init(this);
 }
