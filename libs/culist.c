@@ -48,22 +48,12 @@ int culist_find(culist *const this, void *const data)
 
 unsigned culist_remove(culist *const this, void *const data)
 {
-    return culist_removeEx(this, data, 1);
-}
-
-unsigned culist_removeEx(culist *const this, void *const data, unsigned nbItems)
-{
     int index = culist_find(this, data);
 
     if (index < 0)
         return 0;
 
-    for (unsigned j = 0; j < nbItems; j++)
-        this->items[index + j] = this->items[this->count - nbItems - j];
-
-    this->count -= nbItems;
-
-    return 1;
+    return culist_removeById(this, index); 
 }
 
 unsigned culist_removeById(culist *const this, unsigned index)
