@@ -3,7 +3,7 @@
 #include "../libs/upiterator.h"
 #include "../services/va_arg.h"
 
-void de_system_init(de_system *const this, de_system_f const updateFn, unsigned params)
+void de_system_init(de_system *const this, de_system_f updateFn, unsigned params)
 {
     this->updateFn = updateFn;
     this->params = params ?: 1;
@@ -14,26 +14,29 @@ void de_system_init(de_system *const this, de_system_f const updateFn, unsigned 
 
 void de_system_add(de_system *const this, ...)
 {
-    unsigned params = this->params;
-    uplist *const upl = &this->upl;
-
     va_list ap;
     va_start(ap, this);
 
+    unsigned params = this->params;
+    
     if (this->errorHandler == 0)
         while (params--)
-            uplist_add(upl, va_arg(ap, void *const));
+            uplist_add(&this->upl, va_arg(ap, void *const));
     else
         while (params--)
-            if (uplist_add(upl, va_arg(ap, void *const)) == -1)
+            if (uplist_add(&this->upl, va_arg(ap, void *const)) == -1)
                 this->errorHandler(this);
-
-    va_end(ap);
 }
 
-unsigned de_system_delete(de_system *const this, void *const data)
+void de_system_delete(de_system *const this, ...)
 {
-    return uplist_removeEx(&this->upl, data, this->params);
+    va_list ap;
+    va_start(ap, this);
+
+    unsigned params = this->params;
+
+    while (params--)
+        uplist_remove(&this->upl, va_arg(ap, void *const));
 }
 
 void de_system_update(de_system *const this)
