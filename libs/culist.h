@@ -1,17 +1,19 @@
 #pragma once
 
+#include "uplist.h"
+
 typedef struct culist
 {
-    void **items;
-    unsigned count;
-    unsigned capacity;
+    uplist upl;
     unsigned itemSize;
 } culist;
 
 void culist_init(culist *const, unsigned);
 void *culist_add(culist *const);
-int culist_find(culist *const, void *const);
-unsigned culist_remove(culist *const, void *const);
-unsigned culist_removeById(culist *const, unsigned);
-void culist_reset(culist *const);
 void culist_end(culist *const);
+
+#define culist_find(this, data) uplist_find(this.upl, data)
+#define culist_iterator(this, iterator, nbItems) uplist_iterator(this.upl, iterator, nbItems)
+#define culist_remove(this, data) uplist_remove(this.upl, data)
+#define culist_removeById(this, index) uplist_removeById(this.upl, index)
+#define culist_reset(this) uplist_reset(this.upl)

@@ -52,7 +52,7 @@ de_entity *de_manager_new(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    upiterator_culist(&this->cul, _entity_update, 1);
+    culist_iterator(&this->cul, _entity_update, 1);
 }
 
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
@@ -62,19 +62,19 @@ unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
     if (index < 0)
         return 0;
 
-    _entity_destruct(this->cul.items[index]);
+    _entity_destruct(this->cul.upl.items[index]);
 
     return culist_removeById(&this->cul, index);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    upiterator_culist(&this->cul, _entity_destruct, 1);
+    culist_iterator(&this->cul, _entity_destruct, 1);
     culist_reset(&this->cul);
 }
 
 void de_manager_end(de_manager *const this)
 {
-    upiterator_culist(&this->cul, _entity_destruct, 1);
+    de_manager_reset(this);
     culist_end(&this->cul);
 }

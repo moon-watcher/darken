@@ -1,5 +1,3 @@
-#include "upiterator.h"
-
 #define IT(F, ...)                                                                 \
     static void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
     {                                                                              \
@@ -22,14 +20,4 @@ void upiterator(void **const list, unsigned *const max, void (*iterator)(), unsi
 
     if (iterator != 0 && nbItems != 0)
         funcs[nbItems](list, max, iterator, nbItems);
-}
-
-void upiterator_uplist(uplist *const this, void (*iterator)(), unsigned nbItems)
-{
-    upiterator(this->items, &this->count, iterator, nbItems);
-}
-
-void upiterator_culist(culist *const this, void (*iterator)(), unsigned nbItems)
-{
-    upiterator(this->items, &this->count, iterator, nbItems);
 }

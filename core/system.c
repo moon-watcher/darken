@@ -41,7 +41,7 @@ void de_system_delete(de_system *const this, ...)
 
 void de_system_update(de_system *const this)
 {
-    upiterator_uplist(&this->upl, this->updateFn, this->params);
+    uplist_iterator(&this->upl, this->updateFn, this->params);
 }
 
 void de_system_end(de_system *const this)
