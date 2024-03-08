@@ -1,6 +1,6 @@
 #include "manager.h"
 
-#include "../libs/culist.h"
+#include "../libs/uplist.h"
 
 #include "../private/xtor.h"
 #include "../private/state.h"
@@ -24,12 +24,12 @@ void de_manager_init(de_manager *const this, unsigned entityBytes)
     entityBytes = 0;
 #endif
 
-    culist_init(&this->cul, entityBytes + sizeof(de_entity));
+    uplist_init(&this->cul, entityBytes + sizeof(de_entity));
 }
 
 de_entity *de_manager_new(de_manager *const this)
 {
-    de_entity *entity = culist_add(&this->cul);
+    de_entity *entity = uplist_alloc(&this->cul);
 
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
@@ -52,29 +52,29 @@ de_entity *de_manager_new(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    culist_iterator(&this->cul, _entity_update, 1);
+    uplist_iterator(&this->cul, _entity_update, 1);
 }
 
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
-    int index = culist_find(&this->cul, entity);
+    int index = uplist_find(&this->cul, entity);
 
     if (index < 0)
         return 0;
 
-    _entity_destruct(this->cul.upl.items[index]);
+    _entity_destruct(this->cul.items[index]);
 
-    return culist_removeById(&this->cul, index);
+    return uplist_remove(&this->cul, entity);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    culist_iterator(&this->cul, _entity_destruct, 1);
-    culist_reset(&this->cul);
+    uplist_iterator(&this->cul, _entity_destruct, 1);
+    uplist_reset(&this->cul);
 }
 
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    culist_end(&this->cul);
+    uplist_end(&this->cul);
 }

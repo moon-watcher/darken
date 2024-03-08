@@ -1,13 +1,13 @@
 #pragma once
 
 #include "../config.h"
-#include "../libs/culist.h"
+#include "../libs/uplist.h"
 
 typedef struct de_entity de_entity;
 
 typedef struct de_manager
 {
-    culist cul;
+    uplist cul;
     void *data;
 } de_manager;
 
