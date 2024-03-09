@@ -9,17 +9,15 @@ static void *_assign(uplist *const this, void *const add)
 {
     if (this->count >= this->capacity)
     {
-        unsigned size0 = (this->capacity + 0) * sizeof(void *);
-        unsigned size1 = (this->capacity + 1) * sizeof(void *);
-        void *ptr = malloc(size1);
+        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
         if (ptr == 0)
             return 0;
 
-        ++this->capacity;
-        memcpy(ptr, this->items, size0);
+        memcpy(ptr, this->items, this->capacity * sizeof(void *));
         free(this->items);
         this->items = ptr;
+        ++this->capacity;
     }
 
     return this->items[this->count++] = add;
