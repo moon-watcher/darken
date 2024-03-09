@@ -7,16 +7,13 @@
 
 void uplist_init(uplist *const this)
 {
-    this->items = 0;
-    this->count = 0;
-    this->capacity = 0;
-    this->itemSize = 0;
+    this->items = this->count = this->capacity = this->itemSize = 0;
 }
 
 void uplist_initAlloc(uplist *const this, unsigned itemSize)
 {
     uplist_init(this);
-    this->itemSize = itemSize ?: 1;
+    this->itemSize = itemSize;
 }
 
 void *uplist_alloc(uplist *const this)
@@ -56,26 +53,24 @@ int uplist_find(uplist *const this, void *const data)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
-    #define IT(F, ...)                                                          \
-        void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
-        {                                                                       \
-            for (unsigned i = 0; i < *n; i += nb)                               \
-                it(__VA_ARGS__);                                                \
-        }
+    if (iterator == 0 || nbItems == 0)
+        return;
 
-    IT(f0, );
+    #define IT(F, ...)                                                            \
+        void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) { \
+            for (unsigned i = 0; i < *n; i += nb)                                 \
+                it(__VA_ARGS__); }
+
     IT(f1, list[i + 0]);
     IT(f2, list[i + 0], list[i + 1]);
     IT(f3, list[i + 0], list[i + 1], list[i + 2]);
     IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
     IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
     IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-    IT(f7, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5], list[i + 6]);
 
-    void (*const funcs[])() = {f0, f1, f2, f3, f4, f5, f6, f7};
+    void (*const funcs[])() = {0, f1, f2, f3, f4, f5, f6};
 
-    if (iterator != 0 && nbItems != 0)
-        funcs[nbItems](this->items, &this->count, iterator, nbItems);
+    funcs[nbItems](this->items, &this->count, iterator, nbItems);
 }
 
 unsigned uplist_remove(uplist *const this, void *const data)
@@ -102,9 +97,5 @@ void uplist_end(uplist *const this)
             free(this->items[i]);
 
     free(this->items);
-
-    if (this->itemSize)
-        uplist_initAlloc(this, this->itemSize);
-    else
-        uplist_init(this);
+    uplist_initAlloc(this, this->itemSize);
 }
