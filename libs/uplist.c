@@ -5,26 +5,6 @@
 #include "../services/free.h"
 #include "../services/malloc.h"
 
-static void *_assign(uplist *const this, void *const add)
-{
-    if (this->count >= this->capacity)
-    {
-        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
-
-        if (ptr == 0)
-            return 0;
-
-        memcpy(ptr, this->items, this->capacity * sizeof(void *));
-        free(this->items);
-        this->items = ptr;
-        ++this->capacity;
-    }
-
-    return this->items[this->count++] = add;
-}
-
-//
-
 void uplist_init(uplist *const this)
 {
     this->items = 0;
@@ -41,21 +21,28 @@ void uplist_initAlloc(uplist *const this, unsigned itemSize)
 
 void *uplist_alloc(uplist *const this)
 {
-    if (this->itemSize == 0)
-        return 0;
-
     if (this->count < this->capacity)
         return this->items[this->count++];
 
-    return _assign(this, malloc(this->itemSize));
+    return uplist_add(this, malloc(this->itemSize));
 }
 
 void *uplist_add(uplist *const this, void *const add)
 {
-    if (this->itemSize != 0)
-        return 0;
+    if (this->count >= this->capacity)
+    {
+        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-    return _assign(this, add);
+        if (ptr == 0)
+            return 0;
+
+        memcpy(ptr, this->items, this->capacity * sizeof(void *));
+        free(this->items);
+        this->items = ptr;
+        ++this->capacity;
+    }
+
+    return this->items[this->count++] = add;
 }
 
 int uplist_find(uplist *const this, void *const data)
@@ -115,7 +102,7 @@ void uplist_end(uplist *const this)
             free(this->items[i]);
 
     free(this->items);
-    
+
     if (this->itemSize)
         uplist_initAlloc(this, this->itemSize);
     else
