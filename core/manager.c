@@ -24,12 +24,12 @@ void de_manager_init(de_manager *const this, unsigned entityBytes)
     entityBytes = 0;
 #endif
 
-    uplist_init(&this->cul, entityBytes + sizeof(de_entity));
+    uplist_init(&this->list, entityBytes + sizeof(de_entity));
 }
 
 de_entity *de_manager_new(de_manager *const this)
 {
-    de_entity *entity = uplist_alloc(&this->cul);
+    de_entity *entity = uplist_alloc(&this->list);
 
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
@@ -44,7 +44,7 @@ de_entity *de_manager_new(de_manager *const this)
 #endif
 
 #if DARKEN_ENTITY_DATA
-    memset(entity->data, 0, this->cul.itemSize - sizeof(de_entity));
+    memset(entity->data, 0, this->list.itemSize - sizeof(de_entity));
 #endif
 
     return entity;
@@ -52,29 +52,29 @@ de_entity *de_manager_new(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    uplist_iterator(&this->cul, _entity_update, 1);
+    uplist_iterator(&this->list, _entity_update, 1);
 }
 
 unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
 {
-    int index = uplist_find(&this->cul, entity);
+    int index = uplist_find(&this->list, entity);
 
     if (index < 0)
         return 0;
 
-    _entity_destruct(this->cul.items[index]);
+    _entity_destruct(this->list.items[index]);
 
-    return uplist_remove(&this->cul, entity);
+    return uplist_remove(&this->list, entity);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uplist_iterator(&this->cul, _entity_destruct, 1);
-    uplist_reset(&this->cul);
+    uplist_iterator(&this->list, _entity_destruct, 1);
+    uplist_reset(&this->list);
 }
 
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    uplist_end(&this->cul);
+    uplist_end(&this->list);
 }
