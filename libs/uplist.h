@@ -10,7 +10,8 @@ typedef struct uplist
     unsigned itemSize;
 } uplist;
 
-void uplist_init(uplist *const, unsigned);
+void uplist_init(uplist *const this);
+void uplist_initAlloc(uplist *const, unsigned);
 void *uplist_alloc(uplist *const);
 void *uplist_add(uplist *const, void *const);
 int uplist_find(uplist *const, void *const);

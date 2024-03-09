@@ -25,12 +25,18 @@ static void *_assign(uplist *const this, void *const add)
 
 //
 
-void uplist_init(uplist *const this, unsigned itemSize)
+void uplist_init(uplist *const this)
 {
     this->items = 0;
     this->count = 0;
     this->capacity = 0;
-    this->itemSize = itemSize;
+    this->itemSize = 0;
+}
+
+void uplist_initAlloc(uplist *const this, unsigned itemSize)
+{
+    uplist_init(this);
+    this->itemSize = itemSize ?: 1;
 }
 
 void *uplist_alloc(uplist *const this)
@@ -109,5 +115,9 @@ void uplist_end(uplist *const this)
             free(this->items[i]);
 
     free(this->items);
-    uplist_init(this, this->itemSize);
+    
+    if (this->itemSize)
+        uplist_initAlloc(this, this->itemSize);
+    else
+        uplist_init(this);
 }

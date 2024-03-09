@@ -7,7 +7,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     this->update = update;
     this->params = params ?: 1;
 
-    uplist_init(&this->list, 0);
+    uplist_init(&this->list);
 }
 
 void de_system_add(de_system *const this, ...)

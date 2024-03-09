@@ -24,7 +24,7 @@ void de_manager_init(de_manager *const this, unsigned entityBytes)
     entityBytes = 0;
 #endif
 
-    uplist_init(&this->list, entityBytes + sizeof(de_entity));
+    uplist_initAlloc(&this->list, entityBytes + sizeof(de_entity));
 }
 
 de_entity *de_manager_new(de_manager *const this)
