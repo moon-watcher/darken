@@ -2,15 +2,13 @@
 
 #include "../libs/uplist.h"
 
-typedef struct de_system de_system;
 typedef void (*de_system_f)();
 
 typedef struct de_system
 {
-    de_system_f updateFn;
+    de_system_f update;
     unsigned params;
-    uplist upl;
-    void (*errorHandler)(de_system *);
+    uplist list;
 } de_system;
 
 void de_system_init(de_system *const, de_system_f, unsigned);
