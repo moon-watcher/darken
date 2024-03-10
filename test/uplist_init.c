@@ -71,5 +71,9 @@ void test_uplist_init ()
      draw(ADD,    &u, &e1, "");
      draw(ADD,    &u, &e2, "");
      draw(REMOVE, &u, &e3, "not found");
+     draw(REMOVE, &u, &e1, "");
+     draw(REMOVE, &u, &e2, "");
+     draw(ADD,    &u, &e2, "");
+     draw(ADD,    &u, &e2, "");
      draw(END,    &u,   0, "");   
 }
