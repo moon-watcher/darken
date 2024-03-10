@@ -13,7 +13,7 @@ void dep_state_leave(de_entity *entity)
 
     entity->state = &de_state_empty;
 
-#include "../config.h"
+#include "../config/entity.h"
 #if DARKEN_ENTITY_TEMPDATA
 #include "../services/free.h"
     free(entity->tempdata);

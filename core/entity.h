@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../config.h"
+#include "../config/entity.h"
 #include "state.h"
 
 enum
