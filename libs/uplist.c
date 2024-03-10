@@ -21,7 +21,12 @@ void *uplist_alloc(uplist *const this)
     if (this->count < this->capacity)
         return this->items[this->count++];
 
-    return uplist_add(this, malloc(this->itemSize));
+    void *ptr = malloc(this->itemSize);
+
+    if (ptr == 0)
+        return 0;
+
+    return uplist_add(this, ptr);
 }
 
 void *uplist_add(uplist *const this, void *const add)
