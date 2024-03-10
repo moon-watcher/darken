@@ -15,9 +15,7 @@ void de_system_add(de_system *const this, ...)
     va_list ap;
     va_start(ap, this);
 
-    unsigned params = this->params;
-
-    while (params--)
+    for (int i = 0; i < this->params; i++)
         uplist_add(&this->list, va_arg(ap, void *const));
 }
 
@@ -26,9 +24,7 @@ void de_system_delete(de_system *const this, ...)
     va_list ap;
     va_start(ap, this);
 
-    unsigned params = this->params;
-
-    while (params--)
+    for (int i = 0; i < this->params; i++)
         uplist_remove(&this->list, va_arg(ap, void *const));
 }
 
