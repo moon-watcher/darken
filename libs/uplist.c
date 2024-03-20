@@ -7,7 +7,8 @@
 
 void uplist_init(uplist *const this)
 {
-    this->items = this->count = this->capacity = this->itemSize = 0;
+    this->items = 0;
+    this->count = this->capacity = this->itemSize = 0;
 }
 
 void uplist_initAlloc(uplist *const this, unsigned itemSize)

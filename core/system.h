@@ -8,7 +8,6 @@ typedef struct de_system
 {
     de_system_f update;
     unsigned params;
-    // unsigned paused;
     uplist list;
 } de_system;
 
