@@ -27,7 +27,12 @@ void *uplist_alloc(uplist *const this)
     if (ptr == 0)
         return 0;
 
-    return uplist_add(this, ptr);
+    void *added = uplist_add(this, ptr);
+
+    if(added == 0)
+        free(ptr);
+
+    return added;
 }
 
 void *uplist_add(uplist *const this, void *const add)
