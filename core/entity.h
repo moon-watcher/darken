@@ -17,10 +17,6 @@ typedef struct de_entity
     de_state *state;
     de_state *xtor;
 
-#if DARKEN_ENTITY_FIXEDDATA > 0
-    unsigned char fixeddata[DARKEN_ENTITY_FIXEDDATA];
-#endif
-
 #if DARKEN_ENTITY_TEMPDATA
     void *tempdata;
 #endif
