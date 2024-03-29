@@ -16,7 +16,7 @@ de_entity *de_entity_set(de_entity *const this, de_state *state)
 {
     dep_state_leave(this);
     this->state = state ?: &de_state_empty;
-    de_entity_updatePolicy(this, DARKEN_ENTITY_UPDATEPOLICY_DEFAULT);
+    de_entity_updatePolicy(this, DARKEN_UPDATEPOLICY);
     dep_state_enter(this);
 
     return this;
