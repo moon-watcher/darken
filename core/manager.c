@@ -30,8 +30,7 @@ de_entity *de_manager_new(de_manager *const this)
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
     entity->xtor = &de_state_empty;
-    entity->tempdata = 0;
-
+    
     return entity;
 }
 
