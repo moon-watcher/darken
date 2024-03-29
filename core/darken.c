@@ -34,7 +34,7 @@ void darken_loop(darken *this)
 
     if (scene->xtor->update != 0)
         while (this->loop != 0)
-            scene->xtor->update(scene);
+            scene->xtor->update(scene, scene->data);
 
     dep_state_leave(scene);
     dep_xtor_leave(scene);

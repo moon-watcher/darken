@@ -7,7 +7,7 @@
 
 __attribute__((always_inline)) inline static void _entity_update(de_entity *const this)
 {
-    this->update(this);
+    this->update(this, this->data);
 }
 
 __attribute__((always_inline)) inline static void _entity_destruct(de_entity *const this)
