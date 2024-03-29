@@ -20,10 +20,6 @@ __attribute__((always_inline)) inline static void _entity_destruct(de_entity *co
 
 void de_manager_init(de_manager *const this, unsigned entityBytes)
 {
-#if DARKEN_ENTITY_DATA == 0
-    entityBytes = 0;
-#endif
-
     uplist_initAlloc(&this->list, entityBytes + sizeof(de_entity));
 }
 
@@ -34,10 +30,7 @@ de_entity *de_manager_new(de_manager *const this)
     entity->update = &de_state_func;
     entity->state = &de_state_empty;
     entity->xtor = &de_state_empty;
-
-#if DARKEN_ENTITY_TEMPDATA
     entity->tempdata = 0;
-#endif
 
     return entity;
 }
