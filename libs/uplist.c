@@ -20,12 +20,19 @@ void uplist_initAlloc(uplist *const this, unsigned itemSize)
 void *uplist_alloc(uplist *const this)
 {
     if (this->count < this->capacity)
-        return this->items[this->count++];
+    {
+        unsigned count = this->count++;
+        memset(this->items[count], 0, this->itemSize);
+        
+        return this->items[count];
+    }
 
     void *ptr = malloc(this->itemSize);
 
     if (ptr == 0)
         return 0;
+
+    memset(ptr, 0, this->itemSize);
 
     void *added = uplist_add(this, ptr);
 

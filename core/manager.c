@@ -43,10 +43,6 @@ de_entity *de_manager_new(de_manager *const this)
     entity->tempdata = 0;
 #endif
 
-#if DARKEN_ENTITY_DATA
-    memset(entity->data, 0, this->list.itemSize - sizeof(de_entity));
-#endif
-
     return entity;
 }
 
