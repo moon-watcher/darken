@@ -8,7 +8,7 @@ __attribute__((always_inline)) inline void de_state_update(de_entity *const enti
         entity->state->update(entity, entity->data);
 }
 
-__attribute__((always_inline)) inline void de_state_func(de_entity *const entity)
+__attribute__((always_inline)) inline void de_state_func(de_entity *const entity, void *const data)
 {
     // :)
 }

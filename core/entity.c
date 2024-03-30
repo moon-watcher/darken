@@ -1,6 +1,7 @@
 #include "entity.h"
 #include "../private/state.h"
 #include "../private/xtor.h"
+#include "../config.h"
 
 de_entity *de_entity_init(de_entity *const this, de_state *xtor)
 {
@@ -22,14 +23,13 @@ de_entity *de_entity_set(de_entity *const this, de_state *state)
     return this;
 }
 
+static de_state_f f0(de_entity *const e) { return e->state->update;                     }
+static de_state_f f1(de_entity *const e) { return e->state->update ?: e->xtor ->update; }
+static de_state_f f2(de_entity *const e) { return e->xtor ->update ?: e->state->update; }
+static de_state_f f3(de_entity *const e) { return e->xtor ->update;                     }
+static de_state_f (*const updatePolicy[])() = {f0, f1, f2, f3};
+
 void de_entity_updatePolicy(de_entity *const this, unsigned type)
 {
-    void f0(de_entity *const e) { e->update = e->state->update ?: de_state_func;                     }
-    void f1(de_entity *const e) { e->update = e->state->update ?: e->xtor ->update ?: de_state_func; }
-    void f2(de_entity *const e) { e->update = e->xtor ->update ?: e->state->update ?: de_state_func; }
-    void f3(de_entity *const e) { e->update = e->xtor ->update ?: de_state_func;                     }
-
-    void (*const funcs[])() = {f0, f1, f2, f3};
-
-    funcs[type](this);
+    this->update = updatePolicy[type](this) ?: de_state_func;
 }

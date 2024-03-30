@@ -2,7 +2,7 @@
 
 typedef struct de_entity de_entity;
 
-typedef void (*de_state_f)(de_entity *, ...);
+typedef void (*de_state_f)(de_entity *, void *const);
 
 typedef struct de_state
 {
@@ -14,4 +14,4 @@ typedef struct de_state
 const de_state de_state_empty;
 
 void de_state_update(de_entity *const);
-void de_state_func(de_entity *const);
+void de_state_func(de_entity *const, void *const);
