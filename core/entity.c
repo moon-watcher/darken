@@ -23,18 +23,18 @@ de_entity *de_entity_set(de_entity *const this, de_state *state)
     return this;
 }
 
-static de_state_f f0(de_entity *const e) { return e->state->update;                     }
-static de_state_f f1(de_entity *const e) { return e->state->update ?: e->xtor ->update; }
-static de_state_f f2(de_entity *const e) { return e->xtor ->update ?: e->state->update; }
-static de_state_f f3(de_entity *const e) { return e->xtor ->update;                     }
-static de_state_f (*const updatePolicy[])() = {f0, f1, f2, f3};
-
 void de_entity_updatePolicy(de_entity *const this, unsigned type)
 {
-    this->update = updatePolicy[type](this) ?: de_state_func;
+    de_state_f f0(de_entity *const e) { return e->state->update;                     }
+    de_state_f f1(de_entity *const e) { return e->state->update ?: e->xtor ->update; }
+    de_state_f f2(de_entity *const e) { return e->xtor ->update ?: e->state->update; }
+    de_state_f f3(de_entity *const e) { return e->xtor ->update;                     }
+    de_state_f (*const funcs[])() = {f0, f1, f2, f3};
+
+    this->update = funcs[type](this) ?: de_state_func;
 }
 
-void de_entity_update(de_entity *const this)
+__attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
 {
     this->update(this, this->data);
 }
