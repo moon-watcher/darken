@@ -1,64 +1,46 @@
 #include "manager.h"
+#include "entity.h"
 
 #include "../libs/uplist.h"
 
-#include "../private/xtor.h"
-#include "../private/state.h"
-
-__attribute__((always_inline)) inline static void _entity_update(de_entity *const this)
+void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    this->update(this, this->data);
+    uplist_initAlloc(&this->list, bytes);
+    this->destroy = de_entity_destroy;
+    this->update = de_entity_update;
 }
 
-__attribute__((always_inline)) inline static void _entity_destruct(de_entity *const this)
+void *de_manager_new(de_manager *const this)
 {
-    dep_state_leave(this);
-    dep_xtor_leave(this);
-}
-
-//
-
-void de_manager_init(de_manager *const this, unsigned entityBytes)
-{
-    uplist_initAlloc(&this->list, entityBytes + sizeof(de_entity));
-}
-
-de_entity *de_manager_new(de_manager *const this)
-{
-    de_entity *entity = uplist_alloc(&this->list);
-
-    entity->update = &de_state_func;
-    entity->state = &de_state_empty;
-    entity->xtor = &de_state_empty;
-    
-    return entity;
+    return uplist_alloc(&this->list);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    uplist_iterator(&this->list, _entity_update, 1);
+    uplist_iterator(&this->list, this->update, 1);
 }
 
-unsigned de_manager_delete(de_manager *const this, de_entity *const entity)
+unsigned de_manager_delete(de_manager *const this, void *const item)
 {
-    int index = uplist_find(&this->list, entity);
+    int index = uplist_find(&this->list, item);
 
     if (index < 0)
         return 0;
 
-    _entity_destruct(this->list.items[index]);
+    this->destroy(this->list.items[index]);
 
-    return uplist_remove(&this->list, entity);
+    return uplist_remove(&this->list, item);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uplist_iterator(&this->list, _entity_destruct, 1);
+    uplist_iterator(&this->list, this->destroy, 1);
     uplist_reset(&this->list);
 }
 
 void de_manager_end(de_manager *const this)
 {
-    de_manager_reset(this);
+    uplist_iterator(&this->list, this->destroy, 1);
+    uplist_reset(&this->list);
     uplist_end(&this->list);
 }
