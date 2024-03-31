@@ -5,7 +5,7 @@ static void enter(de_entity *const this)
     struct player *const data = (struct player *const)&this->data;
     ComponentTimer *const timer = (ComponentTimer *const)&data->timer;
 
-    de_system_add(&sys_timer, timer);
+    go_system_add(timerGoSystem, timer);
 }
 
 static void update(de_entity *const this)
@@ -24,7 +24,7 @@ static void leave(de_entity *const this)
     struct player *const data = (struct player *const)&this->data;
     ComponentTimer *const timer = (ComponentTimer *const)&data->timer;
 
-    de_system_delete(&sys_timer, timer);
+    go_system_delete(timerGoSystem, timer);
 }
 
 const de_state entity_player_state_xtor = {

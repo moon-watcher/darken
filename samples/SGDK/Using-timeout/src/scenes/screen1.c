@@ -33,7 +33,7 @@ static void update(de_entity *const this)
 
 static void leave(de_entity *const this)
 {
-    de_manager_delete(&playerManager, p1); // de_entity_delete(p1);
+    de_manager_delete(&playerGoManager, p1); // de_entity_delete(p1);
 }
 
 const de_state scene_screen1 = {

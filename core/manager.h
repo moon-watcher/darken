@@ -7,7 +7,6 @@ typedef struct de_entity de_entity;
 typedef struct de_manager
 {
     uplist list;
-    void *data;
 } de_manager;
 
 void de_manager_init(de_manager *const, unsigned);
