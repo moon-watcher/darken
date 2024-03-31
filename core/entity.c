@@ -33,3 +33,14 @@ void de_entity_updatePolicy(de_entity *const this, unsigned type)
 {
     this->update = updatePolicy[type](this) ?: de_state_func;
 }
+
+void de_entity_update(de_entity *const this)
+{
+    this->update(this, this->data);
+}
+
+void de_entity_destroy(de_entity *const this)
+{
+    dep_state_leave(this);
+    dep_xtor_leave(this);
+}
