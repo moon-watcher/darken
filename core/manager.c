@@ -1,13 +1,9 @@
 #include "manager.h"
-#include "entity.h"
-
-#include "../libs/uplist.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uplist_initAlloc(&this->list, bytes);
-    this->destroy = de_entity_destroy;
-    this->update = de_entity_update;
+    this->update = this->destroy = ({void f() { }; f;});
 }
 
 void *de_manager_new(de_manager *const this)
@@ -40,7 +36,6 @@ void de_manager_reset(de_manager *const this)
 
 void de_manager_end(de_manager *const this)
 {
-    uplist_iterator(&this->list, this->destroy, 1);
-    uplist_reset(&this->list);
+    de_manager_reset(this);
     uplist_end(&this->list);
 }
