@@ -3,7 +3,7 @@
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uplist_initAlloc(&this->list, bytes);
-    this->update = this->destroy = ({void f() { }; f;});
+    this->updateItem = this->destroyItem = ({void f() { }; f;});
 }
 
 void *de_manager_new(de_manager *const this)
@@ -13,7 +13,7 @@ void *de_manager_new(de_manager *const this)
 
 void de_manager_update(de_manager *const this)
 {
-    uplist_iterator(&this->list, this->update, 1);
+    uplist_iterator(&this->list, this->updateItem, 1);
 }
 
 unsigned de_manager_delete(de_manager *const this, void *const item)
@@ -23,14 +23,14 @@ unsigned de_manager_delete(de_manager *const this, void *const item)
     if (index < 0)
         return 0;
 
-    this->destroy(this->list.items[index]);
+    this->destroyItem(this->list.items[index]);
 
     return uplist_remove(&this->list, item);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uplist_iterator(&this->list, this->destroy, 1);
+    uplist_iterator(&this->list, this->destroyItem, 1);
     uplist_reset(&this->list);
 }
 

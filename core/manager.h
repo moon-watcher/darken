@@ -5,8 +5,8 @@
 typedef struct de_manager
 {
     uplist list;
-    void (*update)();
-    void (*destroy)();
+    void (*updateItem)();
+    void (*destroyItem)();
 } de_manager;
 
 void de_manager_init(de_manager *const, unsigned);
