@@ -25,4 +25,4 @@ void de_entity_updatePolicy(de_entity *const, unsigned);
 void de_entity_update(de_entity *const);
 void de_entity_destroy(de_entity *const);
 
-#define DE_ENTITY_SIZEOF sizeof(de_entity)
+#define DE_ENTITY_SIZE sizeof(de_entity)

@@ -9,6 +9,7 @@ void darken_init(darken *this, unsigned size)
     this->scene = malloc(sizeof(de_entity) + size);
     this->loop = 0;
 }
+
 void darken_looper(darken *this, de_state *xtor)
 {
     this->scene->xtor = xtor;
