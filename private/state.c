@@ -15,6 +15,6 @@ __attribute__((always_inline)) inline void dep_state_leave(de_entity *const enti
 
     entity->state = &de_state_empty;
 
-    free(entity->tempdata);
-    entity->tempdata = 0;
+    free(entity->statedata);
+    entity->statedata = 0;
 }

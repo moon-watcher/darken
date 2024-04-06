@@ -3,10 +3,10 @@
 #define deh_data(ENTITY, TYPE, DATA) \
     TYPE *const DATA = (TYPE *const)&ENTITY->data
 
-#define deh_tempdata(ENTITY, TYPE, TEMPDATA)     \
-    if (ENTITY->tempdata == 0)                   \
-        ENTITY->tempdata = malloc(sizeof(TYPE)); \
-    TYPE *const TEMPDATA = (TYPE *const)ENTITY->tempdata;
+#define deh_statedata(ENTITY, TYPE, STATEDATA)     \
+    if (ENTITY->statedata == 0)                   \
+        ENTITY->statedata = malloc(sizeof(TYPE)); \
+    TYPE *const STATEDATA = (TYPE *const)ENTITY->statedata;
 
 #define deh_cast(DATA, TYPE, VAR) \
     TYPE *const VAR = (TYPE *const)&DATA->VAR

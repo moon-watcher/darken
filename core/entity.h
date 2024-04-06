@@ -15,7 +15,7 @@ typedef struct de_entity
     de_state_f update;
     de_state *state;
     de_state *xtor;
-    void *tempdata;
+    void *statedata;
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
 
