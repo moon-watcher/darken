@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/darken.h"
+#include "core/main.h"
 #include "core/entity.h"
 #include "core/state.h"
 #include "core/manager.h"
