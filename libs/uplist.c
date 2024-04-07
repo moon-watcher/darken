@@ -23,7 +23,7 @@ void *uplist_alloc(uplist *const this)
     {
         unsigned count = this->count++;
         memset(this->items[count], 0, this->itemSize);
-        
+
         return this->items[count];
     }
 
@@ -36,7 +36,7 @@ void *uplist_alloc(uplist *const this)
 
     void *added = uplist_add(this, ptr);
 
-    if(added == 0)
+    if (added == 0)
         free(ptr);
 
     return added;
@@ -74,10 +74,12 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
     if (iterator == 0 || nbItems == 0)
         return;
 
-    #define IT(F, ...)                                                            \
-        void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) { \
-            for (unsigned i = 0; i < *n; i += nb)                                 \
-                it(__VA_ARGS__); }
+#define IT(F, ...)                                                          \
+    void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
+    {                                                                       \
+        for (unsigned i = 0; i < *n; i += nb)                               \
+            it(__VA_ARGS__);                                                \
+    }
 
     IT(f1, list[i + 0]);
     IT(f2, list[i + 0], list[i + 1]);

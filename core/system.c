@@ -25,9 +25,9 @@ void de_system_delete(de_system *const this, void *const data)
 
     if (index < 0)
         return;
-    
+
     this->list.count -= this->params;
-    memcpy(this->list.items[index], this->list.items[this->list.count], sizeof(void*)*this->params);
+    memcpy(this->list.items[index], this->list.items[this->list.count], sizeof(void *) * this->params);
 }
 
 void de_system_update(de_system *const this)

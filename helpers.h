@@ -3,7 +3,7 @@
 #define deh_data(ENTITY, TYPE, DATA) \
     TYPE *const DATA = (TYPE *const)&ENTITY->data
 
-#define deh_statedata(ENTITY, TYPE, STATEDATA)     \
+#define deh_statedata(ENTITY, TYPE, STATEDATA)    \
     if (ENTITY->statedata == 0)                   \
         ENTITY->statedata = malloc(sizeof(TYPE)); \
     TYPE *const STATEDATA = (TYPE *const)ENTITY->statedata;

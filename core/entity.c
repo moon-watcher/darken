@@ -25,10 +25,10 @@ de_entity *de_entity_set(de_entity *const this, de_state *state)
 
 void de_entity_updatePolicy(de_entity *const this, unsigned type)
 {
-    de_state_f f0(de_entity *const e) { return e->state->update;                     }
-    de_state_f f1(de_entity *const e) { return e->state->update ?: e->xtor ->update; }
-    de_state_f f2(de_entity *const e) { return e->xtor ->update ?: e->state->update; }
-    de_state_f f3(de_entity *const e) { return e->xtor ->update;                     }
+    de_state_f f0(de_entity *const e) { return e->state->update; }
+    de_state_f f1(de_entity *const e) { return e->state->update ?: e->xtor->update; }
+    de_state_f f2(de_entity *const e) { return e->xtor->update ?: e->state->update; }
+    de_state_f f3(de_entity *const e) { return e->xtor->update; }
     de_state_f (*const funcs[])() = {f0, f1, f2, f3};
 
     this->update = funcs[type](this) ?: de_state_func;

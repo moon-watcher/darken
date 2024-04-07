@@ -9,7 +9,7 @@ typedef struct de_manager
     void (*destroy)();
 } de_manager;
 
-void de_manager_initEx(de_manager *const, unsigned, void(*), void (*));
+void de_manager_initEx(de_manager *const, unsigned, void(*), void(*));
 void *de_manager_new(de_manager *const);
 void de_manager_update(de_manager *const);
 unsigned de_manager_delete(de_manager *const, void *const);

@@ -1,6 +1,6 @@
 #include "manager.h"
 
-void de_manager_initEx(de_manager *const this, unsigned bytes, void(*update), void (*destroy))
+void de_manager_initEx(de_manager *const this, unsigned bytes, void(*update), void(*destroy))
 {
     uplist_initAlloc(&this->list, bytes);
     this->update = update;
