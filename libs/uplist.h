@@ -1,7 +1,5 @@
 #pragma once
 
-// #include "uplist.h"
-
 typedef struct uplist
 {
     void **items;
