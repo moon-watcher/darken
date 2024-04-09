@@ -2,7 +2,8 @@
 
 typedef struct de_entity de_entity;
 
-typedef void (*de_state_f)(de_entity *, void *const);
+//typedef void (*de_state_f)(de_entity *, void *const, void *const);
+typedef void (*de_state_f)();
 
 typedef struct de_state
 {

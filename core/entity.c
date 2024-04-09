@@ -36,7 +36,7 @@ void de_entity_updatePolicy(de_entity *const this, unsigned type)
 
 __attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
 {
-    this->update(this, this->data);
+    this->update(this, this->data, this->statedata);
 }
 
 void de_entity_destroy(de_entity *const this)
