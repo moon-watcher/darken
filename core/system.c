@@ -10,7 +10,17 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     uplist_init(&this->list);
 }
 
-void de_system_add(de_system *const this, ...)
+void *de_system_add(de_system *const this, void *const data)
+{
+    return uplist_add(&this->list, data);
+}
+
+unsigned de_system_delete(de_system *const this, void *const data)
+{
+    return uplist_remove(&this->list, data);
+}
+
+void de_system_addEx(de_system *const this, ...)
 {
     va_list ap;
     va_start(ap, this);
@@ -19,7 +29,7 @@ void de_system_add(de_system *const this, ...)
         uplist_add(&this->list, va_arg(ap, void *const));
 }
 
-void de_system_delete(de_system *const this, void *const data)
+void de_system_deleteEx(de_system *const this, void *const data)
 {
     int index = uplist_find(&this->list, data);
 
