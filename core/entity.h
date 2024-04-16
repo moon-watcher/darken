@@ -19,8 +19,8 @@ typedef struct de_entity
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
 
-de_entity *de_entity_init(de_entity *const, de_state *);
-de_entity *de_entity_set(de_entity *const, de_state *);
+de_entity *de_entity_init(de_entity *const, de_state *const);
+de_entity *de_entity_set(de_entity *const, de_state *const);
 void de_entity_updatePolicy(de_entity *const, unsigned);
 void de_entity_update(de_entity *const);
 void de_entity_destroy(de_entity *const);

@@ -3,20 +3,20 @@
 #include "../private/xtor.h"
 #include "../config.h"
 
-de_entity *de_entity_init(de_entity *const this, de_state *xtor)
+de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
     this->state = &de_state_empty;
-    this->xtor = xtor ?: &de_state_empty;
+    this->xtor = xtor; // ?: &de_state_empty;
     this->update = this->xtor->update ?: de_state_func;
     dep_xtor_enter(this);
 
     return this;
 }
 
-de_entity *de_entity_set(de_entity *const this, de_state *state)
+de_entity *de_entity_set(de_entity *const this, de_state *const state)
 {
     dep_state_leave(this);
-    this->state = state ?: &de_state_empty;
+    this->state = state; // ?: &de_state_empty;
     de_entity_updatePolicy(this, DARKEN_UPDATEPOLICY);
     dep_state_enter(this);
 
