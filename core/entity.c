@@ -1,6 +1,4 @@
 #include "entity.h"
-#include "../private/state.h"
-#include "../private/xtor.h"
 #include "../config.h"
 
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
@@ -8,17 +6,17 @@ de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
     this->state = &de_state_empty;
     this->xtor = xtor;
     this->update = this->xtor->update ?: de_state_func;
-    dep_xtor_enter(this);
+    de_state_enter(this->xtor, this);
 
     return this;
 }
 
 de_entity *de_entity_set(de_entity *const this, de_state *const state)
 {
-    dep_state_leave(this);
+    de_state_leave(this->state, this);
     this->state = state;
     de_entity_updatePolicy(this, DARKEN_UPDATEPOLICY);
-    dep_state_enter(this);
+    de_state_enter(this->state, this);
 
     return this;
 }
@@ -41,6 +39,6 @@ __attribute__((always_inline)) inline void de_entity_update(de_entity *const thi
 
 void de_entity_destroy(de_entity *const this)
 {
-    dep_state_leave(this);
-    dep_xtor_leave(this);
+    de_state_leave(this->state, this);
+    de_state_leave(this->xtor, this);
 }

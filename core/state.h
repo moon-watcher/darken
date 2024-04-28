@@ -10,11 +10,13 @@ typedef struct de_state
     de_state_f enter;
     de_state_f update;
     de_state_f leave;
-    
+
     unsigned dm_size; // dynamic memory size
 } de_state;
 
 const de_state de_state_empty;
 
-void de_state_update(de_entity *const);
-void de_state_func(de_entity *const, void *const);
+void de_state_func();
+void de_state_enter(de_state *const, de_entity *const);
+void de_state_update(de_state *const, de_entity *const);
+void de_state_leave(de_state *const, de_entity *const);
