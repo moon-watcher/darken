@@ -2,13 +2,6 @@
 #include "../services/free.h"
 #include "../services/malloc.h"
 
-const de_state de_state_empty = {de_state_func, de_state_func, de_state_func};
-
-__attribute__((always_inline)) inline void de_state_func()
-{
-    // :)
-}
-
 __attribute__((always_inline)) inline void de_state_enter(de_state *const this, de_entity *const entity)
 {
     if (this->dm_size != 0)

@@ -1,11 +1,13 @@
 #include "entity.h"
 #include "../config.h"
 
+static void nullf() { }
+
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
-    this->state = &de_state_empty;
+    this->state = &(de_state){nullf, nullf, nullf};
     this->xtor = xtor;
-    this->update = this->xtor->update ?: de_state_func;
+    this->update = this->xtor->update ?: nullf;
     de_state_enter(this->xtor, this);
 
     return this;
@@ -29,7 +31,7 @@ void de_entity_updatePolicy(de_entity *const this, unsigned type)
     de_state_f f3(de_entity *const e) { return e->xtor->update; }
     de_state_f (*const funcs[])() = {f0, f1, f2, f3};
 
-    this->update = funcs[type](this) ?: de_state_func;
+    this->update = funcs[type](this) ?: nullf;
 }
 
 __attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
