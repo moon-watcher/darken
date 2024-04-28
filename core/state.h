@@ -10,6 +10,8 @@ typedef struct de_state
     de_state_f enter;
     de_state_f update;
     de_state_f leave;
+    
+    unsigned dm_size; // dynamic memory size
 } de_state;
 
 const de_state de_state_empty;

@@ -6,7 +6,7 @@
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
     this->state = &de_state_empty;
-    this->xtor = xtor; // ?: &de_state_empty;
+    this->xtor = xtor;
     this->update = this->xtor->update ?: de_state_func;
     dep_xtor_enter(this);
 
@@ -16,7 +16,7 @@ de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 de_entity *de_entity_set(de_entity *const this, de_state *const state)
 {
     dep_state_leave(this);
-    this->state = state; // ?: &de_state_empty;
+    this->state = state;
     de_entity_updatePolicy(this, DARKEN_UPDATEPOLICY);
     dep_state_enter(this);
 
