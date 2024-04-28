@@ -2,7 +2,7 @@
 
 #include "entity.h"
 
-typedef struct darken
+typedef struct
 {
     de_entity *scene;
     char loop;

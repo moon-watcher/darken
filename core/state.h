@@ -2,7 +2,7 @@
 
 typedef struct de_entity de_entity;
 
-typedef struct de_state
+typedef struct
 {
     void (*enter)();
     void (*update)();

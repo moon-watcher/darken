@@ -2,7 +2,7 @@
 
 #include "../libs/uplist.h"
 
-typedef struct de_manager
+typedef struct
 {
     uplist list;
     void (*update)();
