@@ -13,3 +13,13 @@
 
 #define deh_castas(DATA, TYPE, VAR, AS) \
     TYPE *const AS = (TYPE *const)&DATA->VAR
+
+#define deh_state_enter(ENTITY) \
+    de_state_enter(ENTITY->state, ENTITY)
+
+#define deh_state_update(ENTITY) \
+    de_state_update(ENTITY->state, ENTITY)
+
+#define deh_state_leave(ENTITY) \
+    de_state_leave(ENTITY->state, ENTITY)
+    

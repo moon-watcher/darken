@@ -1,5 +1,4 @@
 #include "entity.h"
-
 #include "../services/free.h"
 #include "../services/malloc.h"
 

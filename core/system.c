@@ -1,5 +1,4 @@
 #include "system.h"
-
 #include "../services/va_arg.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params)
