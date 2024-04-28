@@ -12,7 +12,7 @@ enum
 
 typedef struct de_entity
 {
-    de_state_f update;
+    void (*update)();
     de_state *state;
     de_state *xtor;
     void *statedata;

@@ -2,13 +2,11 @@
 
 typedef struct de_entity de_entity;
 
-typedef void (*de_state_f)();
-
 typedef struct de_state
 {
-    de_state_f enter;
-    de_state_f update;
-    de_state_f leave;
+    void (*enter)();
+    void (*update)();
+    void (*leave)();
 
     unsigned dm_size; // dynamic memory size
 } de_state;
