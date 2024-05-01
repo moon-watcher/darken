@@ -5,7 +5,7 @@ static void nullf() { }
 
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
-    this->state = &(de_state){nullf, nullf, nullf};
+    this->state = &(de_state){nullf, nullf, nullf, 0};
     this->xtor = xtor;
     this->update = this->xtor->update ?: nullf;
     de_state_enter(this->xtor, this);
