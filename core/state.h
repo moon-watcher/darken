@@ -7,8 +7,6 @@ typedef struct
     void (*enter)();
     void (*update)();
     void (*leave)();
-
-    unsigned dm_size; // dynamic memory size
 } de_state;
 
 void de_state_enter(de_state *const, de_entity *const);
