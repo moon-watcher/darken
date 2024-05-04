@@ -5,10 +5,10 @@ static void nullf() { }
 
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
+    this->update = xtor->update ?: nullf;
     this->state = &(de_state){nullf, nullf, nullf, 0};
     this->xtor = xtor;
-    this->update = this->xtor->update ?: nullf;
-    de_state_enter(this->xtor, this);
+    de_state_enter(xtor, this);
 
     return this;
 }
@@ -36,7 +36,7 @@ void de_entity_updatePolicy(de_entity *const this, unsigned type)
 
 __attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
 {
-    this->update(this, this->data, this->statedata);
+    this->update(this, this->data);
 }
 
 void de_entity_destroy(de_entity *const this)
