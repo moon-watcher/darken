@@ -69,26 +69,29 @@ int uplist_find(uplist *const this, void *const data)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
-    if (iterator == 0 || nbItems == 0)
-        return;
+    unsigned i = 0;
+    unsigned const count = this->count;
 
-#define IT(F, ...)                                                          \
-    void F(void **const list, unsigned *const n, void (*it)(), unsigned nb) \
-    {                                                                       \
-        for (unsigned i = 0; i < *n; i += nb)                               \
-            it(__VA_ARGS__);                                                \
-    }
-
-    IT(f1, list[i + 0]);
-    IT(f2, list[i + 0], list[i + 1]);
-    IT(f3, list[i + 0], list[i + 1], list[i + 2]);
-    IT(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-    IT(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-    IT(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-
-    void (*const funcs[])() = {0, f1, f2, f3, f4, f5, f6};
-
-    funcs[nbItems](this->items, &this->count, iterator, nbItems);
+    if (nbItems == 0 || iterator == 0 || count == 0)
+        ;
+    else if (nbItems == 1)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0]);
+    else if (nbItems == 2)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0], this->items[i + 1]);
+    else if (nbItems == 3)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2]);
+    else if (nbItems == 4)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3]);
+    else if (nbItems == 5)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4]);
+    else if (nbItems == 6)
+        for (; i < count; i += nbItems)
+            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4], this->items[i + 5]);
 }
 
 unsigned uplist_remove(uplist *const this, void *const data)
