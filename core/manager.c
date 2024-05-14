@@ -1,15 +1,23 @@
 #include "manager.h"
 
-void de_manager_initEx(de_manager *const this, unsigned bytes, void(*update), void(*destroy))
+static void nullf() { }
+
+void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uplist_initAlloc(&this->list, bytes);
-    this->update = update;
-    this->destroy = destroy;
+    uplist_initAlloc(&this->list, sizeof(de_entity) + bytes);
+    this->update = &de_entity_update;
+    this->destroy = &de_entity_destroy;
 }
 
-void *de_manager_new(de_manager *const this)
+de_entity *de_manager_new(de_manager *const this)
 {
-    return uplist_alloc(&this->list);
+    de_entity *entity = uplist_alloc(&this->list);
+
+    entity->update = nullf;
+    entity->state = &(de_state){nullf, nullf, nullf};
+    entity->xtor = &(de_state){nullf, nullf, nullf};
+
+    return entity;
 }
 
 void de_manager_update(de_manager *const this)
