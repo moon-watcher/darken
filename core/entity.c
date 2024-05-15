@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "../config.h"
 
-static void nullf() { }
+static void nullf();
 
 de_entity *de_entity_init(de_entity *const this, de_state *const xtor)
 {
@@ -34,13 +34,9 @@ void de_entity_updatePolicy(de_entity *const this, unsigned type)
     this->update = funcs[type](this) ?: nullf;
 }
 
-__attribute__((always_inline)) inline void de_entity_update(de_entity *const this)
-{
-    this->update(this, this->data);
-}
+//
 
-void de_entity_destroy(de_entity *const this)
+__attribute__((always_inline)) static inline void nullf()
 {
-    de_state_leave(this->state, this);
-    de_state_leave(this->xtor, this);
+    //
 }
