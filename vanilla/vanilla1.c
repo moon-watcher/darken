@@ -1,23 +1,23 @@
-#include "vanilla.h"
+#include "vanilla1.h"
 
-void vanilla_init(vanilla *const this, unsigned bytes, void(*update), void(*destroy))
+void vanilla1_init(vanilla1 *const this, unsigned bytes, void(*update), void(*destroy))
 {
     uplist_initAlloc(&this->list, bytes);
     this->update = update;
     this->destroy = destroy;
 }
 
-void *vanilla_new(vanilla *const this)
+void *vanilla1_new(vanilla1 *const this)
 {
     return uplist_alloc(&this->list);
 }
 
-void vanilla_update(vanilla *const this)
+void vanilla1_update(vanilla1 *const this)
 {
     uplist_iterator(&this->list, this->update, 1);
 }
 
-unsigned vanilla_delete(vanilla *const this, void *const item)
+unsigned vanilla1_delete(vanilla1 *const this, void *const item)
 {
     int index = uplist_find(&this->list, item);
 
@@ -29,14 +29,14 @@ unsigned vanilla_delete(vanilla *const this, void *const item)
     return uplist_remove(&this->list, item);
 }
 
-void vanilla_reset(vanilla *const this)
+void vanilla1_reset(vanilla1 *const this)
 {
     uplist_iterator(&this->list, this->destroy, 1);
     uplist_reset(&this->list);
 }
 
-void vanilla_end(vanilla *const this)
+void vanilla1_end(vanilla1 *const this)
 {
-    vanilla_reset(this);
+    vanilla1_reset(this);
     uplist_end(&this->list);
 }
