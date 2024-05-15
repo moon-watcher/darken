@@ -1,6 +1,5 @@
 #include "manager.h"
 
-static void nullf();
 static void update(de_entity *const);
 static void destroy(de_entity *const);
 
@@ -11,13 +10,14 @@ void de_manager_init(de_manager *const this, unsigned bytes)
     this->destroy = &destroy;
 }
 
-de_entity *de_manager_new(de_manager *const this)
+de_entity *de_manager_new(de_manager *const this, de_state *const xtor)
 {
     de_entity *entity = uplist_alloc(&this->list);
 
-    entity->update = nullf;
-    entity->state = &(de_state){nullf, nullf, nullf};
-    entity->xtor = &(de_state){nullf, nullf, nullf};
+    entity->update = xtor->update;
+    entity->xtor = xtor;
+
+    de_state_enter(xtor, entity);
 
     return entity;
 }
@@ -52,11 +52,6 @@ void de_manager_end(de_manager *const this)
 }
 
 //
-
-__attribute__((always_inline)) static inline void nullf()
-{
-    //
-}
 
 __attribute__((always_inline)) static inline void update(de_entity *const this)
 {
