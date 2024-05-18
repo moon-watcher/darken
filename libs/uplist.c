@@ -69,28 +69,27 @@ int uplist_find(uplist *const this, void *const data)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
-    unsigned i = 0;
     unsigned const count = this->count;
 
     if (nbItems == 0 || iterator == 0 || count == 0)
         ;
     else if (nbItems == 1)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0]);
     else if (nbItems == 2)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0], this->items[i + 1]);
     else if (nbItems == 3)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2]);
     else if (nbItems == 4)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3]);
     else if (nbItems == 5)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4]);
     else if (nbItems == 6)
-        for (; i < count; i += nbItems)
+        for (unsigned i = 0; i < count; i += nbItems)
             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4], this->items[i + 5]);
 }
 
