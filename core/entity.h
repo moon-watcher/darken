@@ -1,7 +1,5 @@
 #pragma once
 
-#include "state.h"
-
 enum
 {
     DARKEN_UPDATEPOLICY_STATE,
@@ -10,9 +8,18 @@ enum
     DARKEN_UPDATEPOLICY_XTOR,
 };
 
+typedef struct de_entity de_entity;
+
+typedef struct de_state
+{
+    void (*enter)(de_entity *const, void *const);
+    void (*update)(de_entity *const, void *const);
+    void (*leave)(de_entity *const, void *const);
+} de_state;
+
 typedef struct de_entity
 {
-    void (*update)();
+    void (*update)(de_entity *const, void *const);
     de_state *state;
     de_state *xtor;
     unsigned char data[]; // Bytes for casting data & components
@@ -21,3 +28,4 @@ typedef struct de_entity
 de_entity *de_entity_init(de_entity *const, de_state *const);
 de_entity *de_entity_set(de_entity *const, de_state *const);
 void de_entity_policy(de_entity *const, unsigned);
+void de_entity_updateState(de_entity *const);

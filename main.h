@@ -1,6 +1,6 @@
 #pragma once
 
-#include "entity.h"
+#include "core/entity.h"
 
 typedef struct
 {

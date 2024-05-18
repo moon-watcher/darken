@@ -1,6 +1,6 @@
 #include "main.h"
-#include "../services/free.h"
-#include "../services/malloc.h"
+#include "services/free.h"
+#include "services/malloc.h"
 
 void de_main_init(darken *this, unsigned size)
 {
@@ -28,15 +28,21 @@ void de_main_loop(darken *this)
     this->loop = 1;
     de_entity *const scene = this->scene;
 
-    de_state_enter(scene->xtor, scene);
-    de_state_enter(scene->state, scene);
+    if (scene->xtor != 0 && scene->xtor->enter != 0)
+        scene->xtor->enter(scene, scene->data);
+
+    if (scene->state != 0 && scene->state->enter != 0)
+        scene->state->enter(scene, scene->data);
 
     if (scene->xtor->update != 0)
         while (this->loop != 0)
             scene->xtor->update(scene, scene->data);
 
-    de_state_leave(scene->state, scene);
-    de_state_leave(scene->xtor, scene);
+    if (scene->state != 0 && scene->state->leave != 0)
+        scene->state->leave(scene, scene->data);
+
+    if (scene->xtor != 0 && scene->xtor->leave != 0)
+        scene->xtor->leave(scene, scene->data);
 }
 
 void de_main_end(darken *this)
