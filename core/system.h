@@ -12,7 +12,8 @@ typedef struct
 void de_system_init(de_system *const, void (*)(), unsigned);
 void *de_system_add(de_system *const, void *const);
 unsigned de_system_delete(de_system *const, void *const);
-void de_system_addEx(de_system *const, ...);
-void de_system_deleteEx(de_system *const, void *const);
 void de_system_update(de_system *const);
 void de_system_end(de_system *const);
+
+// void de_system_addEx(de_system *const, ...);
+// void de_system_deleteEx(de_system *const, void *const);
