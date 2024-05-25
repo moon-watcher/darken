@@ -1,12 +1,15 @@
 #include "manager.h"
 
-static void _nullf(){}
+static void _nullf() {}
 static const de_state _emptystate = {_nullf, _nullf, _nullf};
 
 static void _destroy(de_entity *const this)
 {
-    this->state->leave(this, this->data);
-    this->xtor->leave(this, this->data);
+    if (this->state->leave != 0)
+        this->state->leave(this, this->data);
+        
+    if (this->xtor->leave != 0)
+        this->xtor->leave(this, this->data);
 }
 
 static void _update(de_entity *const this)
@@ -31,7 +34,8 @@ de_entity *de_manager_createEntity(de_manager *const this, de_state *const xtor)
         entity->state = &_emptystate;
         entity->xtor = xtor;
 
-        entity->xtor->enter(entity, entity->data);
+        if (entity->xtor->enter != 0)
+            entity->xtor->enter(entity, entity->data);
     }
 
     return entity;
