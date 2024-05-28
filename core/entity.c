@@ -7,7 +7,7 @@ de_entity *de_entity_set(de_entity *const this, de_state *const state)
         this->state->leave(this, this->data);
 
     this->state = state;
-    de_entity_policy(this, DARKEN_UPDATEPOLICY);
+    de_entity_setPolicy(this, DARKEN_UPDATEPOLICY);
 
     if (this->state->enter != 0)
         this->state->enter(this, this->data);
@@ -15,7 +15,7 @@ de_entity *de_entity_set(de_entity *const this, de_state *const state)
     return this;
 }
 
-void de_entity_policy(de_entity *const this, unsigned type)
+void de_entity_setPolicy(de_entity *const this, unsigned type)
 {
     void nullf() {}
     void *f0(de_entity *const e) { return e->state->update; }
