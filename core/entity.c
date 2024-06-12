@@ -1,12 +1,15 @@
 #include "entity.h"
 #include "../config.h"
 
-de_entity *de_entity_set(de_entity *const this, de_state *const state)
+static void _nullf() {}
+static const de_state _emptystate = {_nullf, _nullf, _nullf};
+
+de_entity *de_entity_set(de_entity *const this, de_state *state)
 {
     if (this->state->leave != 0)
         this->state->leave(this, this->data);
 
-    this->state = state;
+    this->state = state ?: (de_state *)&_emptystate;
     de_entity_setPolicy(this, DARKEN_UPDATEPOLICY);
 
     if (this->state->enter != 0)
