@@ -1,8 +1,7 @@
 // Unordered list of pointers
 
 #include "uplist.h"
-#include "../services/free.h"
-#include "../services/malloc.h"
+#include "config.h"
 
 void uplist_init(uplist *const this)
 {

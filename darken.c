@@ -1,5 +1,5 @@
 #include "darken.h"
-#include "services/malloc.h"
+#include "config.h"
 
 void darken_infiniteLoop(unsigned size, de_state *const xtor, de_state *const state)
 {
