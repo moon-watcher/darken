@@ -1,6 +1,6 @@
 #include "main.h"
-#include "services/free.h"
-#include "services/malloc.h"
+#include "../services/free.h"
+#include "../services/malloc.h"
 
 void de_main_init(darken *this, unsigned size)
 {
