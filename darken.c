@@ -1,7 +1,7 @@
 #include "darken.h"
 #include "services/malloc.h"
 
-void darken_loop(unsigned size, de_state *const xtor, de_state *const state)
+void darken_infiniteLoop(unsigned size, de_state *const xtor, de_state *const state)
 {
     de_entity *const e = malloc(sizeof(de_entity) + size);
 
