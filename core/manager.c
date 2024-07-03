@@ -1,20 +1,17 @@
 #include "manager.h"
 
-static void _nullf() {}
-static const de_state _emptystate = {_nullf, _nullf, _nullf};
-
 static void _destroy(de_entity *const this)
 {
     if (this->state->leave != 0)
         this->state->leave(this, this->data);
 
-    if (this->xtor->leave != 0)
-        this->xtor->leave(this, this->data);
+    if (this->destroy != 0)
+        this->destroy(this, this->data);
 }
 
 static void _update(de_entity *const this)
 {
-    this->update(this, this->data);
+    this->state->update(this, this->data);
 }
 
 //
@@ -24,18 +21,20 @@ void de_manager_init(de_manager *const this, unsigned bytes)
     uplist_initAlloc(this, sizeof(de_entity) + bytes);
 }
 
-de_entity *de_manager_createEntity(de_manager *const this, de_state *xtor)
+de_entity *de_manager_createEntity(de_manager *const this, de_state_f contructor, de_state_f desctructor)
 {
+    void _nullf() {};
+    const de_state _emptystate = {_nullf, _nullf, _nullf};
+
     de_entity *entity = uplist_alloc(this);
 
     if (entity != 0)
     {
-        entity->update = xtor->update;
         entity->state = (de_state *)&_emptystate;
-        entity->xtor = xtor ?: (de_state *)&_emptystate;
+        entity->destroy = desctructor;
 
-        if (entity->xtor->enter != 0)
-            entity->xtor->enter(entity, entity->data);
+        if (contructor != 0)
+            contructor(entity, entity->data);
     }
 
     return entity;
