@@ -5,3 +5,4 @@
 #include "core/system.h"
 
 void darken_loop(unsigned, de_state *const);
+void darken_break();

@@ -1,18 +1,30 @@
 #include "darken.h"
 #include "config.h"
 
+static int loop;
+
 void darken_loop(unsigned size, de_state *const state)
 {
-    de_entity *entity = malloc(sizeof(de_entity) + size);
-    entity->newState = entity->state = state;
+    loop = 1;
+    size += sizeof(de_entity);
+    de_entity *entity = malloc(size);
+    memset(entity, 0, size);
 
-    while (entity)
-    {
-        de_state_enter(entity);
+    entity->delay = 0;
+    entity->state = state;
+    entity->newState = 0;
 
-        while (entity->newState == entity->state)
-            de_state_update(entity);
+    de_state_enter(entity);
 
-        de_state_leave(entity);
-    }
+    while (loop == 1)
+        de_entity_update(entity);
+
+    de_state_leave(entity);
+
+    free(entity);
+}
+
+void darken_break()
+{
+    loop = 0;
 }
