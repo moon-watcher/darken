@@ -104,6 +104,11 @@ unsigned uplist_remove(uplist *const this, void *const data)
     return 1;
 }
 
+void uplist_removeByIndex(uplist *const this, unsigned index)
+{
+    this->items[index] = this->items[--this->count];
+}
+
 void uplist_reset(uplist *const this)
 {
     this->count = 0;

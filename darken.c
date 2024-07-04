@@ -1,5 +1,6 @@
 #include "darken.h"
 #include "config.h"
+#include "common/include.h"
 
 static int loop;
 
@@ -17,7 +18,7 @@ void darken_loop(unsigned size, de_state *const state)
     de_state_enter(entity);
 
     while (loop == 1)
-        de_entity_update(entity);
+        de_noAPI_entity_update(entity);
 
     de_state_leave(entity);
 
