@@ -1,12 +1,12 @@
 #include "manager.h"
-#include "../common/include.h"
+#include "../NOAPI/include.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uplist_initAlloc(this, sizeof(de_entity) + bytes);
 }
 
-de_entity *de_manager_new(de_manager *const this, de_state_f desctructor)
+de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
 {
     de_entity *entity = uplist_alloc(this);
 
@@ -25,12 +25,12 @@ de_entity *de_manager_new(de_manager *const this, de_state_f desctructor)
 
 void de_manager_update(de_manager *const this)
 {
-    uplist_iterator(this, de_noAPI_entity_update, 1);
+    uplist_iterator(this, de_NOAPI_entity_update, 1);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uplist_iterator(this, de_noAPI_entity_destroy, 1);
+    uplist_iterator(this, de_NOAPI_entity_destroy, 1);
     uplist_reset(this);
 }
 
