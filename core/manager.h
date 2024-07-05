@@ -3,8 +3,7 @@
 #include "../libs/uplist.h"
 
 typedef uplist de_manager;
-
-#include "entity.h"
+typedef struct de_entity de_entity;
 
 void de_manager_init(de_manager *const, unsigned);
 de_entity *de_manager_new(de_manager *const, void (*)());

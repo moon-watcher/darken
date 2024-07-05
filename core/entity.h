@@ -1,15 +1,7 @@
 #pragma once
 
-typedef struct de_state
-{
-    void (*enter)();
-    void (*update)();
-    void (*leave)();
-} de_state;
-
-#include "../libs/uplist.h"
-
-typedef uplist de_manager;
+#include "state.h"
+#include "manager.h"
 
 typedef struct de_entity
 {

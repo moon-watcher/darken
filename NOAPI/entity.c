@@ -25,7 +25,7 @@ void de_NOAPI_entity_update(de_entity *const this)
         return;
     }
 
-    if (this->state != 0)
+    if (this->ctrl == 3)
     {
         this->leave(this, this->data);
 
@@ -34,8 +34,6 @@ void de_NOAPI_entity_update(de_entity *const this)
 
         this->update = this->state->update ?: de_NOAPI_state_nullf;
         this->leave = this->state->leave ?: de_NOAPI_state_nullf;
-
-        this->state = 0;
     }
 
     if (this->ctrl == 0)
