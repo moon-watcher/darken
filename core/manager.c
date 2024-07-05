@@ -1,5 +1,6 @@
 #include "manager.h"
-#include "../NOAPI/include.h"
+#include "../NOAPI/entity.h"
+#include "../NOAPI/state.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
@@ -13,11 +14,9 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     if (entity == 0)
         return 0;
 
-    void _nullf() {}
-    const de_state _emptystate = {_nullf, _nullf, _nullf};
-
-    entity->state = (de_state *)&_emptystate;
-    entity->destructor = desctructor;
+    entity->update = de_NOAPI_state_nullf;
+    entity->leave = de_NOAPI_state_nullf;
+    entity->destructor = desctructor ?: de_NOAPI_state_nullf;
     entity->manager = this;
 
     return entity;

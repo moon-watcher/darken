@@ -1,9 +1,10 @@
-#include "include.h"
+#include "entity.h"
+#include "../NOAPI/state.h"
 
 void de_NOAPI_entity_destroy(de_entity *const this)
 {
-    if (this->state->leave != 0)
-        this->state->leave(this, this->data);
+    if (this->leave != 0)
+        this->leave(this, this->data);
 
     if (this->destructor != 0)
         this->destructor(this, this->data);
@@ -26,20 +27,19 @@ void de_NOAPI_entity_update(de_entity *const this)
 
     if (this->newState != 0)
     {
-        de_NOAPI_state_leave(this);
+        this->leave(this, this->data);
 
-        this->state = this->newState;
+        if (this->newState->enter != 0)
+            this->newState->enter(this, this->data);
+
+        this->update = this->newState->update ?: de_NOAPI_state_nullf;
+        this->leave = this->newState->leave ?: de_NOAPI_state_nullf;
+
         this->newState = 0;
-
-        de_NOAPI_state_enter(this);
     }
 
     if (this->ctrl == 0)
-    {
-        de_NOAPI_state_update(this);
-    }
+        this->update(this, this->data);
     else
-    {
         this->ctrl = 0;
-    }
 }
