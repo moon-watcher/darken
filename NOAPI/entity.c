@@ -25,17 +25,17 @@ void de_NOAPI_entity_update(de_entity *const this)
         return;
     }
 
-    if (this->newState != 0)
+    if (this->state != 0)
     {
         this->leave(this, this->data);
 
-        if (this->newState->enter != 0)
-            this->newState->enter(this, this->data);
+        if (this->state->enter != 0)
+            this->state->enter(this, this->data);
 
-        this->update = this->newState->update ?: de_NOAPI_state_nullf;
-        this->leave = this->newState->leave ?: de_NOAPI_state_nullf;
+        this->update = this->state->update ?: de_NOAPI_state_nullf;
+        this->leave = this->state->leave ?: de_NOAPI_state_nullf;
 
-        this->newState = 0;
+        this->state = 0;
     }
 
     if (this->ctrl == 0)

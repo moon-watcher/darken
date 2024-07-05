@@ -1,8 +1,8 @@
 #include "entity.h"
 
-void de_entity_set(de_entity *const this, de_state *const newState)
+void de_entity_set(de_entity *const this, de_state *const state)
 {
-    this->newState = newState;
+    this->state = state;
 }
 
 void de_entity_delay(de_entity *const this)
