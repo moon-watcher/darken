@@ -15,12 +15,12 @@ void darken_loop(unsigned size, de_state *const state)
     entity->state = state;
     entity->newState = 0;
 
-    de_state_enter(entity);
+    de_NOAPI_state_enter(entity);
 
     while (loop == 1)
         de_NOAPI_entity_update(entity);
 
-    de_state_leave(entity);
+    de_NOAPI_state_leave(entity);
 
     free(entity);
 }
