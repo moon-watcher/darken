@@ -4,5 +4,5 @@
 #include "core/manager.h"
 #include "core/system.h"
 
-void darken_loop(unsigned, de_state *const);
+void darken_loop(unsigned, de_state *);
 void darken_break();

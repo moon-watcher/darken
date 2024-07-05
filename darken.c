@@ -5,13 +5,14 @@
 
 static int loop;
 
-void darken_loop(unsigned size, de_state *const state)
+void darken_loop(unsigned size, de_state *state)
 {
     loop = 1;
     size += sizeof(de_entity);
     de_entity *entity = malloc(size);
     memset(entity, 0, size);
 
+    state = state ?: &de_NOAPI_state_empty;
     entity->update = state->update ?: de_NOAPI_state_nullf;
     entity->leave = state->leave ?: de_NOAPI_state_nullf;
 
