@@ -36,6 +36,5 @@ void de_manager_reset(de_manager *const this)
 void de_manager_end(de_manager *const this)
 {
     uplist_iterator(&this->list, de_NOAPI_entity_destroy, 1);
-    uplist_reset(&this->list);
     uplist_end(&this->list);
 }

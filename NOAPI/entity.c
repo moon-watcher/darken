@@ -38,23 +38,27 @@ static void _entity_delay(de_entity *const entity)
 
 static void _entity_delete(de_entity *const entity)
 {
-    int index = uplist_find(&entity->manager->list, entity);
+    uplist *const list = &entity->manager->list;
+
+    int index = uplist_find(list, entity);
 
     if (index < 0)
         return;
 
-    de_NOAPI_entity_destroy(entity->manager->list.items[index]);
-    uplist_removeByIndex(&entity->manager->list, index);
+    de_NOAPI_entity_destroy(list->items[index]);
+    uplist_removeByIndex(list, index);
 }
 
 static void _entity_set(de_entity *const entity)
 {
     entity->leave(entity, entity->data);
 
-    if (entity->state->enter != 0)
-        entity->state->enter(entity, entity->data);
+    de_state *const state = entity->state;
 
-    entity->update = entity->state->update ?: de_NOAPI_state_nullf;
-    entity->leave = entity->state->leave ?: de_NOAPI_state_nullf;
+    if (state->enter != 0)
+        state->enter(entity, entity->data);
+
+    entity->update = state->update ?: de_NOAPI_state_nullf;
+    entity->leave = state->leave ?: de_NOAPI_state_nullf;
     entity->ctrl = 0;
 }
