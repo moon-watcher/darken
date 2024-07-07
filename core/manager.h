@@ -2,7 +2,11 @@
 
 #include "../libs/uplist.h"
 
-typedef uplist de_manager;
+typedef struct de_manager
+{
+    uplist list;
+} de_manager;
+
 typedef struct de_entity de_entity;
 
 void de_manager_init(de_manager *const, unsigned);
