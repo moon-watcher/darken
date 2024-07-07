@@ -10,7 +10,7 @@ void uplist_init(uplist *const this)
 
 void uplist_initAlloc(uplist *const this, unsigned itemSize)
 {
-    uplist_init(this);
+    memset(this, 0, sizeof(uplist));
     this->itemSize = itemSize;
 }
 
@@ -121,5 +121,4 @@ void uplist_end(uplist *const this)
             free(this->items[i]);
 
     free(this->items);
-    uplist_initAlloc(this, this->itemSize);
 }
