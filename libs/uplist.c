@@ -3,6 +3,46 @@
 #include "uplist.h"
 #include "config.h"
 
+static void _exec_1(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0]);
+}
+
+static void _exec_2(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0], items[i + 1]);
+}
+
+static void _exec_3(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0], items[i + 1], items[i + 2]);
+}
+
+static void _exec_4(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0], items[i + 1], items[i + 2], items[i + 3]);
+}
+
+static void _exec_5(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4]);
+}
+
+static void _exec_6(void *items[], void (*it)(), unsigned count, unsigned nbItems)
+{
+    for (unsigned i = 0; i < count; i += nbItems)
+        it(items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
+}
+
+static void (*const _exec_functions[])() = {0, _exec_1, _exec_2, _exec_3, _exec_4, _exec_5, _exec_6};
+
+//
+
 void uplist_init(uplist *const this)
 {
     memset(this, 0, sizeof(uplist));
@@ -68,28 +108,10 @@ int uplist_find(uplist *const this, void *const data)
 
 void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
 {
-    unsigned const count = this->count;
+    if (nbItems == 0 || iterator == 0 || this->count == 0)
+        return;
 
-    if (nbItems == 0 || iterator == 0 || count == 0)
-        ;
-    else if (nbItems == 1)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0]);
-    else if (nbItems == 2)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0], this->items[i + 1]);
-    else if (nbItems == 3)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2]);
-    else if (nbItems == 4)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3]);
-    else if (nbItems == 5)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4]);
-    else if (nbItems == 6)
-        for (unsigned i = 0; i < count; i += nbItems)
-            iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4], this->items[i + 5]);
+    _exec_functions[nbItems](this->items, iterator, this->count, nbItems);
 }
 
 unsigned uplist_remove(uplist *const this, void *const data, void (*exec)())
@@ -121,3 +143,29 @@ void uplist_end(uplist *const this)
     free(this->items);
     uplist_initAlloc(this, this->itemSize);
 }
+
+// void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
+// {
+//     unsigned const count = this->count;
+
+//     if (nbItems == 0 || iterator == 0 || count == 0)
+//         return;
+//     else if (nbItems == 1)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0]);
+//     else if (nbItems == 2)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0], this->items[i + 1]);
+//     else if (nbItems == 3)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2]);
+//     else if (nbItems == 4)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3]);
+//     else if (nbItems == 5)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4]);
+//     else if (nbItems == 6)
+//         for (unsigned i = 0; i < count; i += nbItems)
+//             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4], this->items[i + 5]);
+// }
