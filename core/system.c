@@ -15,7 +15,7 @@ void *de_system_add(de_system *const this, void *const data)
 
 unsigned de_system_delete(de_system *const this, void *const data)
 {
-    return uplist_remove(&this->list, data);
+    return uplist_remove(&this->list, data, 0);
 }
 
 void de_system_update(de_system *const this)

@@ -14,7 +14,6 @@ void *uplist_alloc(uplist *const);
 void *uplist_add(uplist *const, void *const);
 int uplist_find(uplist *const, void *const);
 void uplist_iterator(uplist *const, void (*)(), unsigned);
-unsigned uplist_remove(uplist *const, void *const);
-void uplist_removeByIndex(uplist *const, unsigned);
+unsigned uplist_remove(uplist *const, void *const, void (*exec)());
 void uplist_reset(uplist *const);
 void uplist_end(uplist *const);

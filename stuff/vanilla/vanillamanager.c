@@ -26,7 +26,7 @@ unsigned vanillamanager_delete(vanillamanager *const this, void *const item)
 
     this->destroy(this->list.items[index]);
 
-    return uplist_remove(&this->list, item);
+    return uplist_remove(&this->list, item, 0);
 }
 
 void vanillamanager_reset(vanillamanager *const this)

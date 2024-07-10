@@ -92,21 +92,19 @@ void uplist_iterator(uplist *const this, void (*iterator)(), unsigned nbItems)
             iterator(this->items[i + 0], this->items[i + 1], this->items[i + 2], this->items[i + 3], this->items[i + 4], this->items[i + 5]);
 }
 
-unsigned uplist_remove(uplist *const this, void *const data)
+unsigned uplist_remove(uplist *const this, void *const data, void (*exec)())
 {
     int index = uplist_find(this, data);
 
     if (index < 0 || this->count == 0)
         return 0;
 
+    if (exec != 0)
+        exec(this->items[index]);
+
     this->items[index] = this->items[--this->count];
 
     return 1;
-}
-
-void uplist_removeByIndex(uplist *const this, unsigned index)
-{
-    this->items[index] = this->items[--this->count];
 }
 
 void uplist_reset(uplist *const this)

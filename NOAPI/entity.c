@@ -13,15 +13,7 @@ static void delay(de_entity *const entity)
 
 static void delete(de_entity *const entity)
 {
-    uplist *const list = &entity->manager->list;
-
-    int index = uplist_find(list, entity);
-
-    if (index < 0)
-        return;
-
-    de_NOAPI_entity_destroy(list->items[index]);
-    uplist_removeByIndex(list, index);
+    uplist_remove(&entity->manager->list, entity, de_NOAPI_entity_destroy);
 }
 
 static void set(de_entity *const entity)
