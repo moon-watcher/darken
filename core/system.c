@@ -40,27 +40,3 @@ void de_system_end(de_system *const this)
 {
     uplist_end(&this->list);
 }
-
-
-// void *de_system_add(de_system *const this, void *const data)
-// {
-//     return uplist_add(&this->list, data);
-// }
-
-// unsigned de_system_delete(de_system *const this, void *const data)
-// {
-//     return uplist_remove(&this->list, data);
-// }
-
-// void de_system_delete(de_system *const this, ...)
-// {
-//     va_list ap;
-//     va_start(ap, this);
-//     int index = uplist_find(&this->list, va_arg(ap, void *const));
-
-//     if (index > -1)
-//     {
-//         this->list.count -= this->params;
-//         memcpy(this->list.items[index], this->list.items[this->list.count], sizeof(void *) * this->params);
-//     }
-// }

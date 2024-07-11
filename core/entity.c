@@ -1,9 +1,13 @@
 #include "entity.h"
-#include "../NOAPI/state.h"
+
+static void _nullf();
+static const de_state _empty_state = {_nullf, _nullf, _nullf};
+
+//
 
 void de_entity_set(de_entity *const this, de_state *const state)
 {
-    this->state = state ?: &de_NOAPI_state_empty;
+    this->state = state ?: &_empty_state;
     this->ctrl = 3;
 }
 
@@ -15,4 +19,11 @@ void de_entity_delay(de_entity *const this)
 void de_entity_delete(de_entity *const this)
 {
     this->ctrl = 2;
+}
+
+//
+
+static void _nullf()
+{
+    //
 }
