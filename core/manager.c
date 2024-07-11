@@ -63,33 +63,33 @@ void de_manager_end(de_manager *const this)
 
 //
 
-static void _update(de_entity *const entity)
+static void _update(de_entity *const this)
 {
-    entity->update(entity, entity->data);
+    this->update(this, this->data);
 }
 
-static void _delay(de_entity *const entity)
+static void _delay(de_entity *const this)
 {
     // dalay
 }
 
-static void _delete(de_entity *const entity)
+static void _delete(de_entity *const this)
 {
-    uplist_remove(&entity->manager->list, entity, _destroy);
+    uplist_remove(&this->manager->list, this, _destroy);
 }
 
-static void _set(de_entity *const entity)
+static void _set(de_entity *const this)
 {
-    entity->leave(entity, entity->data);
+    this->leave(this, this->data);
 
-    de_state *const state = entity->state;
+    de_state *const state = this->state;
 
     if (state->enter != 0)
-        state->enter(entity, entity->data);
+        state->enter(this, this->data);
 
-    entity->update = state->update ?: _nullf;
-    entity->leave = state->leave ?: _nullf;
-    entity->ctrl = 0;
+    this->update = state->update ?: _nullf;
+    this->leave = state->leave ?: _nullf;
+    this->ctrl = 0;
 }
 
 static void _destroy(de_entity *const this)
