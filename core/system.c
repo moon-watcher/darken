@@ -31,7 +31,7 @@ void de_system_delete(de_system *const this, ...)
 
     for (unsigned i = 0; i < params; i++)
         uplist_remove(list, va_arg(ap, void *const), 0);
-        
+
     va_end(ap);
 }
 
