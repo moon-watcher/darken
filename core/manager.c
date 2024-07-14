@@ -1,5 +1,6 @@
 #include "manager.h"
 #include "entity.h"
+#include "../config.h"
 #include "../NOAPI/state.h"
 #include "../NOAPI/entity.h"
 
