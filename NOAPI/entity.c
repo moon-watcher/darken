@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "state.h"
+#include "../config.h"
 
 static void _update(de_entity *const);
 static void _delay(de_entity *const);
@@ -33,7 +34,10 @@ static void _delay(de_entity *const this)
 
 static void _delete(de_entity *const this)
 {
-    uplist_remove(&this->manager->list, this, de_NOAPI_entity_destroy);
+    // uplist_remove(&this->manager->list, this, de_NOAPI_entity_destroy);
+    
+    if (uplist_remove(&this->manager->list, this, de_NOAPI_entity_destroy) == 0)
+        LOG("WARNING: Not found or count is 0");
 }
 
 static void _set(de_entity *const this)

@@ -10,9 +10,13 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
 
     this->data = 0;
 
-    if (datasize > 0 && (this->data = malloc(datasize)) == 0)
+    if (datasize == 0)
     {
-        // LOG Error malloc()
+        LOG("NOTICE: datasize is 0");
+    }
+    else if((this->data = malloc(datasize)) == 0)
+    {
+        LOG("ERROR: malloc() returns null");
     }
 }
 

@@ -9,9 +9,13 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
     uplist_initAlloc(&this->list, sizeof(de_entity) + bytes);
     this->data = 0;
 
-    if (datasize > 0 && (this->data = malloc(datasize)) == 0)
+    if (datasize == 0)
     {
-        // LOG Error malloc()
+        LOG("NOTICE: datasize is 0");
+    }
+    else if((this->data = malloc(datasize)) == 0)
+    {
+        LOG("ERROR: malloc() returns null");
     }
 }
 
@@ -19,16 +23,16 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
 {
     de_entity *entity = uplist_alloc(&this->list);
 
-    if (entity != 0)
+    if (entity == 0)
+    {
+        LOG("ERROR: uplist_alloc() returns null entity");
+    }
+    else
     {
         entity->update = de_NOAPI_state_nullf;
         entity->leave = de_NOAPI_state_nullf;
         entity->destructor = desctructor ?: de_NOAPI_state_nullf;
-        entity->manager = this;
-    }
-    else
-    {
-        // LOG Error uplist_alloc()
+        entity->manager = this;        
     }
 
     return entity;
