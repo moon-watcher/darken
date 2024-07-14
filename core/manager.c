@@ -11,7 +11,7 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 
     if (datasize == 0)
     {
-        LOG("NOTICE: datasize is 0");
+        // LOG("NOTICE: datasize is 0");
     }
     else if((this->data = malloc(datasize)) == 0)
     {
