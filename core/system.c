@@ -14,7 +14,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     {
         LOG("NOTICE: datasize is 0");
     }
-    else if((this->data = malloc(datasize)) == 0)
+    else if ((this->data = malloc(datasize)) == 0)
     {
         LOG("ERROR: malloc() returns null");
     }
@@ -28,7 +28,8 @@ void de_system_add(de_system *const this, ...)
     uplist *const list = &this->list;
 
     for (unsigned i = 0; i < params; i++)
-        uplist_add(list, va_arg(ap, void *const));
+        if (uplist_add(list, va_arg(ap, void *const)) == 0)
+            LOG("ERROR: Add reference to system");
 
     va_end(ap);
 }
@@ -41,7 +42,8 @@ void de_system_delete(de_system *const this, ...)
     uplist *const list = &this->list;
 
     for (unsigned i = 0; i < params; i++)
-        uplist_remove(list, va_arg(ap, void *const), 0);
+        if (uplist_remove(list, va_arg(ap, void *const), 0) == 0)
+            LOG("ERROR: Remove reference from system");
 
     va_end(ap);
 }
