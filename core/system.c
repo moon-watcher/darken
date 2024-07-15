@@ -12,7 +12,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
 
     if (datasize == 0)
     {
-        LOG("NOTICE: datasize is 0");
+        // LOG("NOTICE: datasize is 0");
     }
     else if ((this->data = malloc(datasize)) == 0)
     {
