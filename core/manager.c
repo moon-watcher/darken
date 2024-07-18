@@ -1,7 +1,70 @@
 #include "manager.h"
 #include "entity.h"
-#include "NOAPI.h"
 #include "../config.h"
+
+static void _destroy(de_entity *const this)
+{
+    if (this->leave != 0)
+        this->leave(this, this->data);
+
+    if (this->destructor != 0)
+        this->destructor(this, this->data);
+}
+
+static void _update(de_entity *const this)
+{
+    this->update(this, this->data);
+}
+
+static void _delay(de_entity *const this)
+{
+    // dalay
+}
+
+static void _delete(de_entity *const this)
+{
+    if (uplist_remove(&this->manager->list, this, _destroy) == 0)
+        LOG("WARNING: Not found or count is 0");
+}
+
+static void _set(de_entity *const this)
+{
+    this->leave(this, this->data);
+
+    de_state *const state = this->state;
+
+    if (state->enter != 0)
+        state->enter(this, this->data);
+
+    this->update = state->update ?: de_state_nullf;
+    this->leave = state->leave ?: de_state_nullf;
+    this->ctrl = 0;
+}
+
+const static void (*const _array[])(de_entity *const) = {_update, _delay, _delete, _set};
+
+//
+
+void de_manager_loop(unsigned *const loop, de_state *state, unsigned size)
+{
+    size += sizeof(de_entity);
+    de_entity *entity = malloc(size);
+    memset(entity, 0, size);
+
+    state = state ?: &de_state_empty;
+    entity->update = state->update ?: de_state_nullf;
+    entity->leave = state->leave ?: de_state_nullf;
+
+    if (state->enter != 0)
+        state->enter(entity, entity->data);
+
+    while (*loop == 1)
+        _array[entity->ctrl](entity);
+
+    entity->leave(entity, entity->data);
+
+    free(entity);
+}
 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 {
@@ -45,7 +108,7 @@ void de_manager_update(de_manager *const this)
     for (unsigned i = 0; i < count; i++)
     {
         de_entity *const entity = list->items[i];
-        NOAPI_entity_array[entity->ctrl](entity);
+        _array[entity->ctrl](entity);
     }
 }
 
@@ -55,7 +118,7 @@ void de_manager_reset(de_manager *const this)
     unsigned const count = list->count;
 
     for (unsigned i = 0; i < count; i++)
-        NOAPI_entity_destroy(list->items[i]);
+        _destroy(list->items[i]);
 
     uplist_reset(list);
 }
