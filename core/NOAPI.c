@@ -1,5 +1,4 @@
-#include "entity.h"
-#include "state.h"
+#include "NOAPI.h"
 #include "../config.h"
 
 static void _update(de_entity *const);
@@ -9,9 +8,9 @@ static void _set(de_entity *const);
 
 //
 
-const void (*const de_NOAPI_entity_array[])(de_entity *const) = {_update, _delay, _delete, _set};
+const void (*const NOAPI_entity_array[])(de_entity *const) = {_update, _delay, _delete, _set};
 
-void de_NOAPI_entity_destroy(de_entity *const this)
+void NOAPI_entity_destroy(de_entity *const this)
 {
     if (this->leave != 0)
         this->leave(this, this->data);
@@ -34,9 +33,7 @@ static void _delay(de_entity *const this)
 
 static void _delete(de_entity *const this)
 {
-    // uplist_remove(&this->manager->list, this, de_NOAPI_entity_destroy);
-    
-    if (uplist_remove(&this->manager->list, this, de_NOAPI_entity_destroy) == 0)
+    if (uplist_remove(&this->manager->list, this, NOAPI_entity_destroy) == 0)
         LOG("WARNING: Not found or count is 0");
 }
 
@@ -49,7 +46,7 @@ static void _set(de_entity *const this)
     if (state->enter != 0)
         state->enter(this, this->data);
 
-    this->update = state->update ?: de_NOAPI_state_nullf;
-    this->leave = state->leave ?: de_NOAPI_state_nullf;
+    this->update = state->update ?: de_state_nullf;
+    this->leave = state->leave ?: de_state_nullf;
     this->ctrl = 0;
 }

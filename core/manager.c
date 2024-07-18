@@ -1,8 +1,7 @@
 #include "manager.h"
 #include "entity.h"
+#include "NOAPI.h"
 #include "../config.h"
-#include "../NOAPI/state.h"
-#include "../NOAPI/entity.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 {
@@ -13,7 +12,7 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
     {
         // LOG("NOTICE: datasize is 0");
     }
-    else if((this->data = malloc(datasize)) == 0)
+    else if ((this->data = malloc(datasize)) == 0)
     {
         LOG("ERROR: malloc() returns null");
     }
@@ -29,10 +28,10 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     }
     else
     {
-        entity->update = de_NOAPI_state_nullf;
-        entity->leave = de_NOAPI_state_nullf;
-        entity->destructor = desctructor ?: de_NOAPI_state_nullf;
-        entity->manager = this;        
+        entity->update = de_state_nullf;
+        entity->leave = de_state_nullf;
+        entity->destructor = desctructor ?: de_state_nullf;
+        entity->manager = this;
     }
 
     return entity;
@@ -46,7 +45,7 @@ void de_manager_update(de_manager *const this)
     for (unsigned i = 0; i < count; i++)
     {
         de_entity *const entity = list->items[i];
-        de_NOAPI_entity_array[entity->ctrl](entity);
+        NOAPI_entity_array[entity->ctrl](entity);
     }
 }
 
@@ -56,7 +55,7 @@ void de_manager_reset(de_manager *const this)
     unsigned const count = list->count;
 
     for (unsigned i = 0; i < count; i++)
-        de_NOAPI_entity_destroy(list->items[i]);
+        NOAPI_entity_destroy(list->items[i]);
 
     uplist_reset(list);
 }
