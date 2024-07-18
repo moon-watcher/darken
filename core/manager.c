@@ -41,7 +41,7 @@ static void _set(de_entity *const this)
     this->ctrl = 0;
 }
 
-const static void (*const _array[])(de_entity *const) = {_update, _delay, _delete, _set};
+static const void (*const _array[])(de_entity *const) = {_update, _delay, _delete, _set};
 
 //
 
