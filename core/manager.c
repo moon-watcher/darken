@@ -45,13 +45,13 @@ static const void (*const _array[])(de_entity *const) = {_update, _delay, _delet
 
 //
 
-void de_manager_loop(unsigned *const loop, de_state *state, unsigned size)
+void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned size)
 {
     size += sizeof(de_entity);
     de_entity *entity = malloc(size);
     memset(entity, 0, size);
 
-    state = state ?: &de_state_empty;
+    de_state *state = loop_state ?: &de_state_empty;
     entity->update = state->update ?: de_state_nullf;
     entity->leave = state->leave ?: de_state_nullf;
 
