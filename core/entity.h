@@ -1,23 +1,19 @@
 #pragma once
 
-typedef struct deManager_t deManager_t;
-typedef struct deState_t   deState_t;
+#include "state.h"
+#include "manager.h"
 
-typedef struct deEntity_t
+typedef struct de_entity
 {
-    deState_f updateFn;
+    void (*update)();
+    void (*leave)();
+    void (*destructor)();
+    de_state *state;
+    de_manager *manager;
+    int ctrl;
+    unsigned char data[]; // Bytes for casting data & components
+} de_entity;
 
-    deState_t *state;
-    deState_t *xtor;       // constructor, entity executor, destructor
-    
-    deManager_t *manager;
-    unsigned index;        // Index of entities in deManager_t's entities array
-    unsigned char data[];  // Bytes for casting data & components
-} deEntity_t;
-
-deEntity_t *deEntity_newLess ( const deState_t *const );
-deEntity_t *deEntity_new     ( const deState_t *const, deManager_t *const );
-void        deEntity_update  ( deEntity_t *const );
-void        deEntity_change  ( deEntity_t *const, const deState_t *const );
-void        deEntity_set     ( deEntity_t *const, const deState_t *const );
-void        deEntity_delete  ( deEntity_t *const );
+void de_entity_set(de_entity *const, de_state *const);
+void de_entity_delay(de_entity *const);
+void de_entity_delete(de_entity *const);

@@ -1,30 +1,21 @@
 #pragma once
 
-typedef struct deEntity_t deEntity_t;
+#include "../libs/uplist.h"
 
-typedef struct deManager_t
+typedef struct de_manager
 {
-    deEntity_t **entityList;
+    uplist list;
+    void *data;
+} de_manager;
 
-    // Next free position in entities array
-    unsigned int free_pos;
+#include "state.h"
+typedef struct de_entity de_entity;
 
-    // Number of allocated entities
-    unsigned int allocated_entities;
-
-    unsigned int maxEntities;
-    unsigned int maxBytes;
-
-    int pause;
-} deManager_t;
-
-void deManager_init    ( deManager_t *const, unsigned int maxEntities, unsigned int maxBytes );
-void deManager_end     ( deManager_t *const );
-void deManager_reset   ( deManager_t *const );
-void deManager_update  ( deManager_t *const );
-void deManager_timeout ( deManager_t *const, unsigned int );
-void deManager_pause   ( deManager_t *const );
-void deManager_resume  ( deManager_t *const );
-
-deEntity_t *deManager_newEntity ( deManager_t *const, const deState_t *const );
-deEntity_t *deManager_getEntity ( deManager_t *const, unsigned int );
+void de_manager_loop(unsigned *const, de_state *const, unsigned);
+void de_manager_init(de_manager *const, unsigned, unsigned);
+de_entity *de_manager_new(de_manager *const, void (*)());
+void de_manager_update(de_manager *const);
+void de_manager_reset(de_manager *const);
+unsigned de_manager_count(de_manager *const);
+unsigned de_manager_capacity(de_manager *const);
+void de_manager_end(de_manager *const);

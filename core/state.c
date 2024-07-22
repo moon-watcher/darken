@@ -1,22 +1,8 @@
-#include "../darken.h"
+#include "state.h"
 
-inline void deState_exec(deEntity_t *const e, deState_f func)
-{
-    if (func != NULL)
-        func(e);
-}
+const de_state de_state_empty = {de_state_nullf, de_state_nullf, de_state_nullf};
 
-inline void deState_enter(deEntity_t *const e)
+void de_state_nullf()
 {
-    deState_exec(e, e->state->enter);
-}
-
-inline void deState_update(deEntity_t *const e)
-{
-    deState_exec(e, e->state->update);
-}
-
-inline void deState_leave(deEntity_t *const e)
-{
-    deState_exec(e, e->state->leave);
+    //
 }

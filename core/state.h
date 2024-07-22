@@ -1,17 +1,12 @@
 #pragma once
 
-typedef struct deEntity_t deEntity_t;
-
-typedef void (*deState_f) (deEntity_t *);
-
-typedef struct deState_t
+typedef struct de_state
 {
-    deState_f enter;
-    deState_f update;
-    deState_f leave;
-} deState_t;
+    void (*enter)();
+    void (*update)();
+    void (*leave)();
+} de_state;
 
-void deState_exec   ( deEntity_t *const, deState_f );
-void deState_enter  ( deEntity_t *const );
-void deState_update ( deEntity_t *const );
-void deState_leave  ( deEntity_t *const );
+const de_state de_state_empty;
+
+void de_state_nullf();

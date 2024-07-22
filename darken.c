@@ -1,23 +1,14 @@
 #include "darken.h"
 
-static int exit = 0;
+static unsigned loop;
 
-int darken(const deState_t *const s)
+void darken_loop(de_state *const state, unsigned size)
 {
-    exit = 0;
-    int *exitCode = &exit;
-
-    deEntity_t *const e = deEntity_newLess(s); 
-
-    while (!*exitCode)
-        deEntity_update(e);
-
-    deEntity_delete(e);
-
-    return *exitCode;
+    loop = 1;
+    de_manager_loop(&loop, state, size);
 }
 
-void darken_end(int exitCode)
+void darken_break()
 {
-    exit = exitCode;
+    loop = 0;
 }

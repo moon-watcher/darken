@@ -1,50 +1,20 @@
 #pragma once
 
-// typedef struct deSystem_t deSystem_t;
-// typedef void (*deSystem_f) (deSystem_t *const);
+#include "../libs/uplist.h"
 
-// typedef struct deSystem_t
-// {
-//     void **list;
-//     unsigned length;
-//     deSystem_f updateFn;
-//     unsigned maxItems;
-//     unsigned params;
-// } deSystem_t;
-
-// void deSystem_init   ( deSystem_t *const, deSystem_f const, unsigned, unsigned);
-// void deSystem_update ( deSystem_t *const );
-// void deSystem_end    ( deSystem_t *const );
-// void deSystem_info   ( deSystem_t *const );
-// void deSystem_add    ( deSystem_t *const, void *const[] );
-
-// define deSystem_function(FUNC, CODE) 
-//     void FUNC(deSystem_t *const s)    
-//     {                                 
-//         int i = 0;                    
-//         int len = s->length;          
-//         while (i < len)               
-//             CODE                      
-//     }
-
-// # define deSystem_get(T, V) 
-//     T *const V = (T *const)s->list[i++]
-
-#include "../libs/upl.h"
-
-typedef struct deSystem_t deSystem_t;
-typedef void (*deSystem_f) ();
-
-typedef struct deSystem_t
+typedef struct
 {
-    deSystem_f updateFn;
-    unsigned maxItems;
+    void (*update)();
     unsigned params;
-    upl_t upl;
-} deSystem_t;
+    void *data;
+    uplist list;
+} de_system;
 
-void deSystem_init(deSystem_t *const this, deSystem_f const updateFn, unsigned params, unsigned maxItems);
-void deSystem_add(deSystem_t *const this, ...);
-void deSystem_delete(deSystem_t *const this, void *const data);
-void deSystem_update(deSystem_t *const this);
-void deSystem_end(deSystem_t *const this);
+void de_system_init(de_system *const, void (*)(), unsigned, unsigned);
+void de_system_add(de_system *const, ...);
+void de_system_delete(de_system *const, ...);
+void de_system_update(de_system *const);
+void de_system_reset(de_system *const);
+unsigned de_system_count(de_system *const);
+unsigned de_system_capacity(de_system *const);
+void de_system_end(de_system *const);
