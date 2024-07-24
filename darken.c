@@ -1,19 +1,14 @@
 #include "darken.h"
-#include "config.h"
 
-void darken_infiniteLoop(unsigned size, de_state *const xtor, de_state *const state)
+static unsigned loop;
+
+void darken_loop(de_state *const state, unsigned size)
 {
-    de_entity *const e = malloc(sizeof(de_entity) + size);
+    loop = 1;
+    de_manager_loop(&loop, state, size);
+}
 
-    e->xtor = xtor;
-    e->state = state;
-
-    if (xtor->enter != 0)
-        xtor->enter(e, e->data);
-
-    if (state->enter != 0)
-        state->enter(e, e->data);
-
-    while (1)
-        xtor->update(e, e->data);
+void darken_break()
+{
+    loop = 0;
 }
