@@ -23,7 +23,7 @@ static void _delay(de_entity *const this)
 
 static void _delete(de_entity *const this)
 {
-    if (uplist_remove(&this->manager->list, this, _destroy) == 0)
+    if (uclist_remove(&this->manager->list, this, _destroy) == 0)
         LOG("WARNING: Not found or count is 0");
 }
 
@@ -68,7 +68,7 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 {
-    uplist_initAlloc(&this->list, sizeof(de_entity) + bytes);
+    uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
     this->data = 0;
 
     if (datasize == 0)
@@ -83,11 +83,11 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 
 de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
 {
-    de_entity *entity = uplist_alloc(&this->list);
+    de_entity *entity = uclist_alloc(&this->list);
 
     if (entity == 0)
     {
-        LOG("ERROR: uplist_alloc() returns null entity");
+        LOG("ERROR: uclist_alloc() returns null entity");
     }
     else
     {
@@ -102,7 +102,7 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
 
 void de_manager_update(de_manager *const this)
 {
-    uplist *const list = &this->list;
+    uclist *const list = &this->list;
     unsigned const count = list->count;
 
     for (unsigned i = 0; i < count; i++)
@@ -114,13 +114,13 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    uplist *const list = &this->list;
+    uclist *const list = &this->list;
     unsigned const count = list->count;
 
     for (unsigned i = 0; i < count; i++)
         _destroy(list->items[i]);
 
-    uplist_reset(list);
+    uclist_reset(list);
 }
 
 unsigned de_manager_count(de_manager *const this)
@@ -136,7 +136,7 @@ unsigned de_manager_capacity(de_manager *const this)
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    uplist_end(&this->list);
+    uclist_end(&this->list);
 
     if (this->data != 0)
         free(this->data);

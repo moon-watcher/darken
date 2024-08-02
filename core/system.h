@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../libs/uplist.h"
+#include "../libs/uclist.h"
 
 typedef struct
 {
     void (*update)();
     unsigned params;
     void *data;
-    uplist list;
+    uclist list;
 } de_system;
 
 void de_system_init(de_system *const, void (*)(), unsigned, unsigned);

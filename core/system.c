@@ -6,7 +6,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     this->update = update;
     this->params = params ?: 1;
 
-    uplist_init(&this->list);
+    uclist_init(&this->list);
 
     this->data = 0;
 
@@ -25,10 +25,10 @@ void de_system_add(de_system *const this, ...)
     va_list ap;
     va_start(ap, this);
     unsigned const params = this->params;
-    uplist *const list = &this->list;
+    uclist *const list = &this->list;
 
     for (unsigned i = 0; i < params; i++)
-        if (uplist_add(list, va_arg(ap, void *const)) == 0)
+        if (uclist_add(list, va_arg(ap, void *const)) == 0)
             LOG("ERROR: Add reference to system");
 
     va_end(ap);
@@ -39,10 +39,10 @@ void de_system_delete(de_system *const this, ...)
     va_list ap;
     va_start(ap, this);
     unsigned const params = this->params;
-    uplist *const list = &this->list;
+    uclist *const list = &this->list;
 
     for (unsigned i = 0; i < params; i++)
-        if (uplist_remove(list, va_arg(ap, void *const), 0) == 0)
+        if (uclist_remove(list, va_arg(ap, void *const), 0) == 0)
             LOG("ERROR: Remove reference from system");
 
     va_end(ap);
@@ -50,12 +50,12 @@ void de_system_delete(de_system *const this, ...)
 
 void de_system_update(de_system *const this)
 {
-    uplist_iterator(&this->list, this->update, this->params);
+    uclist_iterator(&this->list, this->update, this->params);
 }
 
 void de_system_reset(de_system *const this)
 {
-    uplist_reset(&this->list);
+    uclist_reset(&this->list);
 }
 
 unsigned de_system_count(de_system *const this)
@@ -70,7 +70,7 @@ unsigned de_system_capacity(de_system *const this)
 
 void de_system_end(de_system *const this)
 {
-    uplist_end(&this->list);
+    uclist_end(&this->list);
 
     if (this->data != 0)
         free(this->data);

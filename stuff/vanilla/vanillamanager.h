@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../../libs/uplist.h"
+#include "../../libs/uclist.h"
 
 typedef struct
 {
-    uplist list;
+    uclist list;
     void (*update)();
     void (*destroy)();
 } vanillamanager;

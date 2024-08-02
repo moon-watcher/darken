@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../libs/uplist.h"
+#include "../libs/uclist.h"
 
 typedef struct de_manager
 {
-    uplist list;
+    uclist list;
     void *data;
 } de_manager;
 
