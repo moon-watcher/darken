@@ -1,6 +1,8 @@
 #pragma once
 
-#include <genesis.h>
+#define DARKEN_INFO(MESSAGE)
+#define DARKEN_ERROR(MESSAGE)
+#define DARKEN_NOTICE(MESSAGE)
+#define DARKEN_WARNING(MESSAGE)
 
-//#define LOG(MESSAGE)
-#define LOG(MESSAGE) kprintf("%s:%d %s", __FILE__, __LINE__, MESSAGE);
+#include "implement/SGDK.h"
