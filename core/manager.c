@@ -5,10 +5,14 @@
 static void _destroy(de_entity *const this)
 {
     if (this->leave != 0)
+    {
         this->leave(this, this->data);
+    }
 
     if (this->destructor != 0)
+    {
         this->destructor(this, this->data);
+    }
 }
 
 static void _update(de_entity *const this)
@@ -24,7 +28,9 @@ static void _delay(de_entity *const this)
 static void _delete(de_entity *const this)
 {
     if (uclist_remove(&this->manager->list, this, _destroy) == 0)
+    {
         DARKEN_WARNING("manager not found or count is 0");
+    }
 }
 
 static void _set(de_entity *const this)
@@ -34,7 +40,9 @@ static void _set(de_entity *const this)
     de_state *const state = this->state;
 
     if (state->enter != 0)
+    {
         state->enter(this, this->data);
+    }
 
     this->update = state->update ?: de_state_nullf;
     this->leave = state->leave ?: de_state_nullf;
@@ -56,10 +64,14 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
     entity->leave = state->leave ?: de_state_nullf;
 
     if (state->enter != 0)
+    {
         state->enter(entity, entity->data);
+    }
 
     while (*loop == 1)
+    {
         _array[entity->ctrl](entity);
+    }
 
     entity->leave(entity, entity->data);
 
@@ -71,13 +83,18 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
     uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
     this->data = 0;
 
-
     if (datasize == 0)
+    {
         DARKEN_NOTICE("manager datasize is 0");
+    }
     else if ((this->data = malloc(datasize)) == 0)
+    {
         DARKEN_ERROR("manager malloc() is null");
+    }
     else
+    {
         DARKEN_INFO("manager init");
+    }
 }
 
 de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
@@ -85,7 +102,9 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     de_entity *entity = uclist_alloc(&this->list);
 
     if (entity == 0)
+    {
         DARKEN_ERROR("manager uclist_alloc() is null");
+    }
     else
     {
         entity->update = de_state_nullf;
@@ -119,7 +138,9 @@ void de_manager_reset(de_manager *const this)
     DARKEN_INFO("manager reset");
 
     for (unsigned i = 0; i < count; i++)
+    {
         _destroy(list->items[i]);
+    }
 
     uclist_reset(list);
 }
@@ -140,7 +161,9 @@ void de_manager_end(de_manager *const this)
     uclist_end(&this->list);
 
     if (this->data != 0)
+    {
         free(this->data);
+    }
 
     memset(this, 0, sizeof(de_manager));
 

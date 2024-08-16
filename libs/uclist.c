@@ -7,7 +7,9 @@
     static void NAME(void *items[], void (*it)(), unsigned count, unsigned nbItems) \
     {                                                                               \
         for (unsigned i = 0; i < count; i += nbItems)                               \
+        {                                                                           \
             it(__VA_ARGS__);                                                        \
+        }                                                                           \
     }
 
 FUNC(f1, items[i + 0]);
@@ -45,14 +47,18 @@ void *uclist_alloc(uclist *const this)
     void *ptr = malloc(this->itemSize);
 
     if (ptr == 0)
+    {
         return 0;
+    }
 
     memset(ptr, 0, this->itemSize);
 
     void *added = uclist_add(this, ptr);
 
     if (added == 0)
+    {
         free(ptr);
+    }
 
     return added;
 }
@@ -64,7 +70,9 @@ void *uclist_add(uclist *const this, void *const add)
         void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
         if (ptr == 0)
+        {
             return 0;
+        }
 
         memcpy(ptr, this->items, this->capacity * sizeof(void *));
         free(this->items);
@@ -78,8 +86,12 @@ void *uclist_add(uclist *const this, void *const add)
 int uclist_find(uclist *const this, void *const data)
 {
     for (unsigned i = 0; i < this->count; i++)
+    {
         if (this->items[i] == data)
+        {
             return i;
+        }
+    }
 
     return -1;
 }
@@ -87,7 +99,9 @@ int uclist_find(uclist *const this, void *const data)
 void uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
     if (nbItems == 0 || iterator == 0 || this->count == 0)
+    {
         return;
+    }
 
     _exec[nbItems](this->items, iterator, this->count, nbItems);
 }
@@ -97,10 +111,14 @@ unsigned uclist_remove(uclist *const this, void *const data, void (*exec)())
     int index = uclist_find(this, data);
 
     if (index < 0 || this->count == 0)
+    {
         return 0;
+    }
 
     if (exec != 0)
+    {
         exec(this->items[index]);
+    }
 
     this->items[index] = this->items[--this->count];
 
@@ -115,8 +133,12 @@ void uclist_reset(uclist *const this)
 void uclist_end(uclist *const this)
 {
     if (this->itemSize)
+    {
         for (unsigned i = 0; i < this->capacity; i++)
+        {
             free(this->items[i]);
+        }
+    }
 
     free(this->items);
     uclist_initAlloc(this, this->itemSize);
