@@ -96,33 +96,46 @@ int uclist_find(uclist *const this, void *const data)
     return -1;
 }
 
-void uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
+int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
-    if (nbItems == 0 || iterator == 0 || this->count == 0)
+    if (nbItems == 0)
     {
-        return;
+        return -4;
+    }
+    else if (iterator == 0)
+    {
+        return -3;
+    }
+    else if (this->count == 0)
+    {
+        return -2;
     }
 
     _exec[nbItems](this->items, iterator, this->count, nbItems);
-}
-
-unsigned uclist_remove(uclist *const this, void *const data, void (*exec)())
-{
-    int index = uclist_find(this, data);
-
-    if (index < 0 || this->count == 0)
-    {
-        return 0;
-    }
-
-    if (exec != 0)
-    {
-        exec(this->items[index]);
-    }
-
-    this->items[index] = this->items[--this->count];
 
     return 1;
+}
+
+int uclist_remove(uclist *const this, void *const data, void (*exec)())
+{
+    if (this->count == 0)
+    {
+        return -2;
+    }
+
+    int index = uclist_find(this, data);
+
+    if (index >= 0)
+    {
+        if (exec != 0)
+        {
+            exec(this->items[index]);
+        }
+
+        this->items[index] = this->items[--this->count];
+    }
+
+    return index;
 }
 
 void uclist_reset(uclist *const this)
