@@ -2,6 +2,11 @@
 
 #include <genesis.h>
 
+#ifdef DARKEN_DEBUG
+#undef DARKEN_DEBUG
+#define DARKEN_DEBUG 1
+#endif
+
 /*
 #ifdef DARKEN_INFO
 #undef DARKEN_INFO

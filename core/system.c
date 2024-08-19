@@ -55,22 +55,53 @@ void de_system_delete(de_system *const this, ...)
 
     for (unsigned i = 0; i < params; i++)
     {
-        if (uclist_remove(list, va_arg(ap, void *const), 0) == 0)
+        int ret = uclist_remove(list, va_arg(ap, void *const), 0);
+
+#if DARKEN_DEBUG
+        switch (ret)
         {
-            DARKEN_ERROR("system removing from system");
+        case -1:
+            DARKEN_WARNING("system, ref not found");
+            break;
+        case -2:
+            DARKEN_WARNING("system, this->count");
+            break;
+        default:
+            DARKEN_INFO("system _destoy");
+            break;
         }
-        else
-        {
-            DARKEN_INFO("system removed");
-        }
+#endif
     }
 
     va_end(ap);
 }
 
-void de_system_update(de_system *const this)
+int de_system_update(de_system *const this)
 {
-    uclist_iterator(&this->list, this->update, this->params);
+    int ret = uclist_iterator(&this->list, this->update, this->params);
+
+#if DARKEN_DEBUG
+    switch (ret)
+    {
+    case 1:
+        DARKEN_INFO("system, update");
+        break;
+    case -4:
+        DARKEN_WARNING("system, this->params");
+        break;
+    case -3:
+        DARKEN_WARNING("system, this->update");
+        break;
+    case -2:
+        DARKEN_WARNING("system, this->count");
+        break;
+    default:
+        DARKEN_ERROR("system, WTF?! #2");
+        break;
+    }
+#endif
+
+    return ret;
 }
 
 void de_system_reset(de_system *const this)

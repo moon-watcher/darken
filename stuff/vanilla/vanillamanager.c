@@ -17,7 +17,7 @@ void vanillamanager_update(vanillamanager *const this)
     uclist_iterator(&this->list, this->update, 1);
 }
 
-unsigned vanillamanager_delete(vanillamanager *const this, void *const item)
+int vanillamanager_delete(vanillamanager *const this, void *const item)
 {
     int index = uclist_find(&this->list, item);
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#define DARKEN_DEBUG 0
+
 #define DARKEN_INFO(MESSAGE)
 #define DARKEN_ERROR(MESSAGE)
 #define DARKEN_NOTICE(MESSAGE)

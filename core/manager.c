@@ -27,10 +27,22 @@ static void _delay(de_entity *const this)
 
 static void _delete(de_entity *const this)
 {
-    if (uclist_remove(&this->manager->list, this, _destroy) == 0)
+    int ret = uclist_remove(&this->manager->list, this, _destroy);
+
+#if DARKEN_DEBUG
+    switch (ret)
     {
-        DARKEN_WARNING("manager not found or count is 0");
+    case -1:
+        DARKEN_WARNING("manager, entity not found");
+        break;
+    case -2:
+        DARKEN_WARNING("manager, this->count");
+        break;
+    default:
+        DARKEN_INFO("manager _delete");
+        break;
     }
+#endif
 }
 
 static void _set(de_entity *const this)
