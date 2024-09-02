@@ -1,5 +1,7 @@
 #include "manager.h"
 #include "entity.h"
+#include "../private/entity.h"
+#include "../private/state.h"
 #include "../config.h"
 
 static void _destroy(de_entity *const this)
@@ -20,9 +22,9 @@ static void _update(de_entity *const this)
     this->update(this, this->data);
 }
 
-static void _delay(de_entity *const this)
+static void _skip(de_entity *const this)
 {
-    // dalay
+    this->status = _DE_ENTITY_STATUS_UPDATE;
 }
 
 static void _delete(de_entity *const this)
@@ -56,12 +58,16 @@ static void _set(de_entity *const this)
         state->enter(this, this->data);
     }
 
-    this->update = state->update ?: de_state_nullf;
-    this->leave = state->leave ?: de_state_nullf;
-    this->ctrl = 0;
+    this->update = state->update ?: _de_state_nullf;
+    this->leave = state->leave ?: _de_state_nullf;
+    this->status = _DE_ENTITY_STATUS_UPDATE;
 }
 
-static const void (*const _array[])(de_entity *const) = {_update, _delay, _delete, _set};
+static const void (*const _array[_DE_ENTITY_STATUS_MAX])(de_entity *const) = {
+    [_DE_ENTITY_STATUS_UPDATE] = _update,
+    [_DE_ENTITY_STATUS_SKIP] = _skip,
+    [_DE_ENTITY_STATUS_DELETE] = _delete,
+    [_DE_ENTITY_STATUS_SET] = _set};
 
 //
 
@@ -71,9 +77,9 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
     de_entity *entity = malloc(size);
     memset(entity, 0, size);
 
-    de_state *state = loop_state ?: &de_state_empty;
-    entity->update = state->update ?: de_state_nullf;
-    entity->leave = state->leave ?: de_state_nullf;
+    de_state *state = loop_state ?: &_de_state_empty;
+    entity->update = state->update ?: _de_state_nullf;
+    entity->leave = state->leave ?: _de_state_nullf;
 
     if (state->enter != 0)
     {
@@ -82,7 +88,7 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
 
     while (*loop == 1)
     {
-        _array[entity->ctrl](entity);
+        _array[entity->status](entity);
     }
 
     entity->leave(entity, entity->data);
@@ -119,9 +125,9 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     }
     else
     {
-        entity->update = de_state_nullf;
-        entity->leave = de_state_nullf;
-        entity->destructor = desctructor ?: de_state_nullf;
+        entity->update = _de_state_nullf;
+        entity->leave = _de_state_nullf;
+        entity->destructor = desctructor ?: _de_state_nullf;
         entity->manager = this;
 
         DARKEN_INFO("manager added entity");
@@ -138,7 +144,7 @@ void de_manager_update(de_manager *const this)
     for (unsigned i = 0; i < count; i++)
     {
         de_entity *const entity = list->items[i];
-        _array[entity->ctrl](entity);
+        _array[entity->status](entity);
     }
 }
 
