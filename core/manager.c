@@ -49,7 +49,10 @@ static void _delete(de_entity *const this)
 
 static void _set(de_entity *const this)
 {
-    this->leave(this, this->data);
+    if (this->leave != 0)
+    {
+        this->leave(this, this->data);
+    }
 
     de_state *const state = this->state;
 
@@ -91,9 +94,13 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
         _array[entity->status](entity);
     }
 
-    entity->leave(entity, entity->data);
+    if (entity->leave != 0)
+    {
+        entity->leave(entity, entity->data);
+    }
 
     free(entity);
+    entity = 0;
 }
 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
@@ -178,10 +185,8 @@ void de_manager_end(de_manager *const this)
     de_manager_reset(this);
     uclist_end(&this->list);
 
-    if (this->data != 0)
-    {
-        free(this->data);
-    }
+    free(this->data);
+    this->data = 0;
 
     memset(this, 0, sizeof(de_manager));
 
