@@ -17,17 +17,19 @@ static void _destroy(de_entity *const this)
     }
 }
 
-static void _update(de_entity *const this)
+//
+
+static void _entity_update(de_entity *const this, void *const data)
 {
-    this->update(this, this->data);
+    this->update(this, data);
 }
 
-static void _skip(de_entity *const this)
+static void _entity_skip(de_entity *const this, void *const data)
 {
     this->status = _DE_ENTITY_STATUS_UPDATE;
 }
 
-static void _delete(de_entity *const this)
+static void _entity_delete(de_entity *const this, void *const data)
 {
     int ret = uclist_remove(&this->manager->list, this, _destroy);
 
@@ -47,18 +49,18 @@ static void _delete(de_entity *const this)
 #endif
 }
 
-static void _set(de_entity *const this)
+static void _entity_set(de_entity *const this, void *const data)
 {
     if (this->leave != 0)
     {
-        this->leave(this, this->data);
+        this->leave(this, data);
     }
 
     de_state *const state = this->state;
 
     if (state->enter != 0)
     {
-        state->enter(this, this->data);
+        state->enter(this, data);
     }
 
     this->update = state->update ?: _de_state_nullf;
@@ -66,11 +68,11 @@ static void _set(de_entity *const this)
     this->status = _DE_ENTITY_STATUS_UPDATE;
 }
 
-static const void (*const _array[_DE_ENTITY_STATUS_MAX])(de_entity *const) = {
-    [_DE_ENTITY_STATUS_UPDATE] = _update,
-    [_DE_ENTITY_STATUS_SKIP] = _skip,
-    [_DE_ENTITY_STATUS_DELETE] = _delete,
-    [_DE_ENTITY_STATUS_SET] = _set};
+static const void (*const _entity_array[_DE_ENTITY_STATUS_MAX])(de_entity *const, void *const) = {
+    [_DE_ENTITY_STATUS_UPDATE] = _entity_update,
+    [_DE_ENTITY_STATUS_SKIP] = _entity_skip,
+    [_DE_ENTITY_STATUS_DELETE] = _entity_delete,
+    [_DE_ENTITY_STATUS_SET] = _entity_set};
 
 //
 
@@ -91,7 +93,7 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
 
     while (*loop == 1)
     {
-        _array[entity->status](entity);
+        _entity_array[entity->status](entity, entity->data);
     }
 
     if (entity->leave != 0)
@@ -151,7 +153,7 @@ void de_manager_update(de_manager *const this)
     for (unsigned i = 0; i < count; i++)
     {
         de_entity *const entity = list->items[i];
-        _array[entity->status](entity);
+        _entity_array[entity->status](entity, entity->data);
     }
 }
 

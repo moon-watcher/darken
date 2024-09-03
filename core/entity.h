@@ -10,7 +10,7 @@ typedef struct de_entity
     void (*destructor)();
     de_state *state;
     de_manager *manager;
-    unsigned char status : 2;
+    int status;
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
 
