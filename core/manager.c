@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "manager.h"
 #include "entity.h"
 #include "entity.status.h"
