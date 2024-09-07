@@ -2,29 +2,29 @@
 
 #include <genesis.h>
 
-#ifdef DARKEN_DEBUG
-#undef DARKEN_DEBUG
-#define DARKEN_DEBUG 1
+#ifdef _DARKEN_DEBUG
+#undef _DARKEN_DEBUG
+#define _DARKEN_DEBUG 1
 #endif
 
 /*
-#ifdef DARKEN_INFO
-#undef DARKEN_INFO
-#define DARKEN_INFO(M) kprintf("Darken INFO: %s", M)
+#ifdef _DARKEN_DEBUG_INFO
+#undef _DARKEN_DEBUG_INFO
+#define _DARKEN_DEBUG_INFO(M) kprintf("Darken INFO: %s", M)
 #endif
 
-#ifdef DARKEN_ERROR
-#undef DARKEN_ERROR
-#define DARKEN_ERROR(M) kprintf("Darken ERROR: %s", M)
+#ifdef _DARKEN_DEBUG_ERROR
+#undef _DARKEN_DEBUG_ERROR
+#define _DARKEN_DEBUG_ERROR(M) kprintf("Darken ERROR: %s", M)
 #endif
 
-#ifdef DARKEN_NOTICE
-#undef DARKEN_NOTICE
-#define DARKEN_NOTICE(M) kprintf("Darken NOTICE: %s", M)
+#ifdef _DARKEN_DEBUG_NOTICE
+#undef _DARKEN_DEBUG_NOTICE
+#define _DARKEN_DEBUG_NOTICE(M) kprintf("Darken NOTICE: %s", M)
 #endif
 
-#ifdef DARKEN_WARNING
-#undef DARKEN_WARNING
-#define DARKEN_WARNING(M) kprintf("Darken WARNING: %s", M)
+#ifdef _DARKEN_DEBUG_WARNING
+#undef _DARKEN_DEBUG_WARNING
+#define _DARKEN_DEBUG_WARNING(M) kprintf("Darken WARNING: %s", M)
 #endif
 */

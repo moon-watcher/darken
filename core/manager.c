@@ -3,20 +3,19 @@
 #include "entity.status.h"
 #include "../config.h"
 
-static void _nullf() { }
+#define _DARKEN_MANAGER_EXEC(METHOD, ENTITY, DATA) \
+    if (METHOD != 0)                               \
+    {                                              \
+        METHOD(ENTITY, DATA);                      \
+    }
+
+static void _nullf() {}
 static const de_state _empty = {_nullf, _nullf, _nullf};
 
 static void _destroy(de_entity *const this)
 {
-    if (this->leave != 0)
-    {
-        this->leave(this, this->data);
-    }
-
-    if (this->destructor != 0)
-    {
-        this->destructor(this, this->data);
-    }
+    _DARKEN_MANAGER_EXEC(this->leave, this, this->data);
+    _DARKEN_MANAGER_EXEC(this->destructor, this, this->data);
 }
 
 //
@@ -35,17 +34,17 @@ static void _entity_delete(de_entity *const this, void *const data)
 {
     int ret = uclist_remove(&this->manager->list, this, _destroy);
 
-#if DARKEN_DEBUG
+#if _DARKEN_DEBUG
     switch (ret)
     {
     case -1:
-        DARKEN_WARNING("manager, entity not found");
+        _DARKEN_DEBUG_WARNING("manager, entity not found");
         break;
     case -2:
-        DARKEN_WARNING("manager, this->count");
+        _DARKEN_DEBUG_WARNING("manager, this->count");
         break;
     default:
-        DARKEN_INFO("manager _delete");
+        _DARKEN_DEBUG_INFO("manager _delete");
         break;
     }
 #endif
@@ -53,17 +52,11 @@ static void _entity_delete(de_entity *const this, void *const data)
 
 static void _entity_set(de_entity *const this, void *const data)
 {
-    if (this->leave != 0)
-    {
-        this->leave(this, data);
-    }
+    _DARKEN_MANAGER_EXEC(this->leave, this, data);
 
     de_state *const state = this->state ?: &_empty;
 
-    if (state->enter != 0)
-    {
-        state->enter(this, data);
-    }
+    _DARKEN_MANAGER_EXEC(state->enter, this, data);
 
     this->update = state->update ?: _nullf;
     this->leave = state->leave ?: _nullf;
@@ -88,20 +81,14 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
     entity->update = state->update ?: _nullf;
     entity->leave = state->leave ?: _nullf;
 
-    if (state->enter != 0)
-    {
-        state->enter(entity, entity->data);
-    }
+    _DARKEN_MANAGER_EXEC(state->enter, entity, entity->data);
 
     while (*loop == 1)
     {
         _entity_array[entity->status](entity, entity->data);
     }
 
-    if (entity->leave != 0)
-    {
-        entity->leave(entity, entity->data);
-    }
+    _DARKEN_MANAGER_EXEC(entity->leave, entity, entity->data);
 
     free(entity);
     entity = 0;
@@ -114,15 +101,15 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 
     if (datasize == 0)
     {
-        DARKEN_NOTICE("manager datasize is 0");
+        _DARKEN_DEBUG_NOTICE("manager datasize is 0");
     }
     else if ((this->data = malloc(datasize)) == 0)
     {
-        DARKEN_ERROR("manager malloc() is null");
+        _DARKEN_DEBUG_ERROR("manager malloc() is null");
     }
     else
     {
-        DARKEN_INFO("manager init");
+        _DARKEN_DEBUG_INFO("manager init");
     }
 }
 
@@ -132,7 +119,7 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
 
     if (entity == 0)
     {
-        DARKEN_ERROR("manager uclist_alloc() is null");
+        _DARKEN_DEBUG_ERROR("manager uclist_alloc() is null");
     }
     else
     {
@@ -141,7 +128,7 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
         entity->destructor = desctructor ?: _nullf;
         entity->manager = this;
 
-        DARKEN_INFO("manager added entity");
+        _DARKEN_DEBUG_INFO("manager added entity");
     }
 
     return entity;
@@ -164,7 +151,7 @@ void de_manager_reset(de_manager *const this)
     uclist *const list = &this->list;
     unsigned const count = list->count;
 
-    DARKEN_INFO("manager reset");
+    _DARKEN_DEBUG_INFO("manager reset");
 
     for (unsigned i = 0; i < count; i++)
     {
@@ -194,5 +181,5 @@ void de_manager_end(de_manager *const this)
 
     memset(this, 0, sizeof(de_manager));
 
-    DARKEN_INFO("manager end");
+    _DARKEN_DEBUG_INFO("manager end");
 }

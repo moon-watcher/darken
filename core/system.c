@@ -12,15 +12,15 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
 
     if (datasize == 0)
     {
-        DARKEN_NOTICE("system datasize is 0");
+        _DARKEN_DEBUG_NOTICE("system datasize is 0");
     }
     else if ((this->data = malloc(datasize)) == 0)
     {
-        DARKEN_ERROR("system malloc() is null");
+        _DARKEN_DEBUG_ERROR("system malloc() is null");
     }
     else
     {
-        DARKEN_INFO("system init");
+        _DARKEN_DEBUG_INFO("system init");
     }
 }
 
@@ -35,11 +35,11 @@ void de_system_add(de_system *const this, ...)
     {
         if (uclist_add(list, va_arg(ap, void *const)) == 0)
         {
-            DARKEN_ERROR("system add reference");
+            _DARKEN_DEBUG_ERROR("system add reference");
         }
         else
         {
-            DARKEN_INFO("system added");
+            _DARKEN_DEBUG_INFO("system added");
         }
     }
 
@@ -57,17 +57,17 @@ void de_system_delete(de_system *const this, ...)
     {
         int ret = uclist_remove(list, va_arg(ap, void *const), 0);
 
-#if DARKEN_DEBUG
+#if _DARKEN_DEBUG
         switch (ret)
         {
         case -1:
-            DARKEN_WARNING("system, ref not found");
+            _DARKEN_DEBUG_WARNING("system, ref not found");
             break;
         case -2:
-            DARKEN_WARNING("system, this->count");
+            _DARKEN_DEBUG_WARNING("system, this->count");
             break;
         default:
-            DARKEN_INFO("system _destoy");
+            _DARKEN_DEBUG_INFO("system _destoy");
             break;
         }
 #endif
@@ -80,23 +80,23 @@ int de_system_update(de_system *const this)
 {
     int ret = uclist_iterator(&this->list, this->update, this->params);
 
-#if DARKEN_DEBUG
+#if _DARKEN_DEBUG
     switch (ret)
     {
     case 1:
-        DARKEN_INFO("system, update");
+        _DARKEN_DEBUG_INFO("system, update");
         break;
     case -4:
-        DARKEN_WARNING("system, this->params");
+        _DARKEN_DEBUG_WARNING("system, this->params");
         break;
     case -3:
-        DARKEN_WARNING("system, this->update");
+        _DARKEN_DEBUG_WARNING("system, this->update");
         break;
     case -2:
-        DARKEN_WARNING("system, this->count");
+        _DARKEN_DEBUG_WARNING("system, this->count");
         break;
     default:
-        DARKEN_ERROR("system, WTF?! #2");
+        _DARKEN_DEBUG_ERROR("system, WTF?! #2");
         break;
     }
 #endif
@@ -130,5 +130,5 @@ void de_system_end(de_system *const this)
 
     memset(this, 0, sizeof(de_system));
 
-    DARKEN_INFO("system end");
+    _DARKEN_DEBUG_INFO("system end");
 }
