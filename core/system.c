@@ -12,11 +12,11 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
 
     if (datasize == 0)
     {
-        _DARKEN_DEBUG_NOTICE("system datasize is 0");
+        DARKEN_DEBUG_NOTICE("system datasize is 0");
     }
     else if ((this->data = malloc(datasize)) == 0)
     {
-        _DARKEN_DEBUG_ERROR("system malloc() is null");
+        DARKEN_DEBUG_ERROR("system malloc() is null");
     }
 }
 
@@ -31,7 +31,7 @@ void de_system_add(de_system *const this, ...)
     {
         if (uclist_add(list, va_arg(ap, void *const)) == 0)
         {
-            _DARKEN_DEBUG_ERROR("system add reference");
+            DARKEN_DEBUG_ERROR("system add reference");
         }
     }
 
@@ -49,14 +49,14 @@ void de_system_delete(de_system *const this, ...)
     {
         int ret = uclist_remove(list, va_arg(ap, void *const), 0);
 
-#if _DARKEN_DEBUG
+#if DARKEN_DEBUG
         switch (ret)
         {
         case -1:
-            _DARKEN_DEBUG_WARNING("system, ref not found");
+            DARKEN_DEBUG_WARNING("system, ref not found");
             break;
         case -2:
-            _DARKEN_DEBUG_WARNING("system, this->count");
+            DARKEN_DEBUG_WARNING("system, this->count");
         }
 #endif
     }
@@ -68,22 +68,22 @@ int de_system_update(de_system *const this)
 {
     int ret = uclist_iterator(&this->list, this->update, this->params);
 
-#if _DARKEN_DEBUG
+#if DARKEN_DEBUG
     switch (ret)
     {
     case 1:
         break;
     case -4:
-        _DARKEN_DEBUG_WARNING("system, this->params");
+        DARKEN_DEBUG_WARNING("system, this->params");
         break;
     case -3:
-        _DARKEN_DEBUG_WARNING("system, this->update");
+        DARKEN_DEBUG_WARNING("system, this->update");
         break;
     case -2:
-        _DARKEN_DEBUG_WARNING("system, this->count");
+        DARKEN_DEBUG_WARNING("system, this->count");
         break;
     default:
-        _DARKEN_DEBUG_ERROR("system, WTF?! #2");
+        DARKEN_DEBUG_ERROR("system, WTF?! #2");
     }
 #endif
 
