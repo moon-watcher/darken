@@ -1,8 +1,10 @@
 #include "manager.h"
 #include "entity.h"
-#include "../private/entity.h"
-#include "../private/state.h"
+#include "entity.status.h"
 #include "../config.h"
+
+static void _nullf() { }
+static const de_state _empty = {_nullf, _nullf, _nullf};
 
 static void _destroy(de_entity *const this)
 {
@@ -26,7 +28,7 @@ static void _entity_update(de_entity *const this, void *const data)
 
 static void _entity_skip(de_entity *const this, void *const data)
 {
-    this->status = _DE_ENTITY_STATUS_UPDATE;
+    this->status = _DARKEN_ENTITY_STATUS_UPDATE;
 }
 
 static void _entity_delete(de_entity *const this, void *const data)
@@ -56,23 +58,23 @@ static void _entity_set(de_entity *const this, void *const data)
         this->leave(this, data);
     }
 
-    de_state *const state = this->state;
+    de_state *const state = this->state ?: &_empty;
 
     if (state->enter != 0)
     {
         state->enter(this, data);
     }
 
-    this->update = state->update ?: _de_state_nullf;
-    this->leave = state->leave ?: _de_state_nullf;
-    this->status = _DE_ENTITY_STATUS_UPDATE;
+    this->update = state->update ?: _nullf;
+    this->leave = state->leave ?: _nullf;
+    this->status = _DARKEN_ENTITY_STATUS_UPDATE;
 }
 
-static const void (*const _entity_array[_DE_ENTITY_STATUS_MAX])(de_entity *const, void *const) = {
-    [_DE_ENTITY_STATUS_UPDATE] = _entity_update,
-    [_DE_ENTITY_STATUS_SKIP] = _entity_skip,
-    [_DE_ENTITY_STATUS_DELETE] = _entity_delete,
-    [_DE_ENTITY_STATUS_SET] = _entity_set};
+static const void (*const _entity_array[_DARKEN_ENTITY_STATUS_MAX])(de_entity *const, void *const) = {
+    [_DARKEN_ENTITY_STATUS_UPDATE] = _entity_update,
+    [_DARKEN_ENTITY_STATUS_SKIP] = _entity_skip,
+    [_DARKEN_ENTITY_STATUS_DELETE] = _entity_delete,
+    [_DARKEN_ENTITY_STATUS_SET] = _entity_set};
 
 //
 
@@ -82,9 +84,9 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
     de_entity *entity = malloc(size);
     memset(entity, 0, size);
 
-    de_state *state = loop_state ?: &_de_state_empty;
-    entity->update = state->update ?: _de_state_nullf;
-    entity->leave = state->leave ?: _de_state_nullf;
+    de_state *state = loop_state ?: &_empty;
+    entity->update = state->update ?: _nullf;
+    entity->leave = state->leave ?: _nullf;
 
     if (state->enter != 0)
     {
@@ -134,9 +136,9 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     }
     else
     {
-        entity->update = _de_state_nullf;
-        entity->leave = _de_state_nullf;
-        entity->destructor = desctructor ?: _de_state_nullf;
+        entity->update = _nullf;
+        entity->leave = _nullf;
+        entity->destructor = desctructor ?: _nullf;
         entity->manager = this;
 
         DARKEN_INFO("manager added entity");
