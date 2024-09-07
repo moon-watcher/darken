@@ -32,21 +32,17 @@ static void _entity_skip(de_entity *const this, void *const data)
 
 static void _entity_delete(de_entity *const this, void *const data)
 {
-    int ret = uclist_remove(&this->manager->list, this, _destroy);
-
 #if _DARKEN_DEBUG
-    switch (ret)
+    switch (uclist_remove(&this->manager->list, this, _destroy))
     {
     case -1:
         _DARKEN_DEBUG_WARNING("manager, entity not found");
         break;
     case -2:
-        _DARKEN_DEBUG_WARNING("manager, this->count");
-        break;
-    default:
-        _DARKEN_DEBUG_INFO("manager _delete");
-        break;
+        _DARKEN_DEBUG_WARNING("manager, this->count is 0");
     }
+#else
+    uclist_remove(&this->manager->list, this, _destroy);
 #endif
 }
 
@@ -107,10 +103,6 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
     {
         _DARKEN_DEBUG_ERROR("manager malloc() is null");
     }
-    else
-    {
-        _DARKEN_DEBUG_INFO("manager init");
-    }
 }
 
 de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
@@ -127,8 +119,6 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
         entity->leave = _nullf;
         entity->destructor = desctructor ?: _nullf;
         entity->manager = this;
-
-        _DARKEN_DEBUG_INFO("manager added entity");
     }
 
     return entity;
@@ -151,13 +141,11 @@ void de_manager_reset(de_manager *const this)
     uclist *const list = &this->list;
     unsigned const count = list->count;
 
-    _DARKEN_DEBUG_INFO("manager reset");
-
     for (unsigned i = 0; i < count; i++)
     {
         _destroy(list->items[i]);
     }
-
+    
     uclist_reset(list);
 }
 
@@ -180,6 +168,4 @@ void de_manager_end(de_manager *const this)
     this->data = 0;
 
     memset(this, 0, sizeof(de_manager));
-
-    _DARKEN_DEBUG_INFO("manager end");
 }

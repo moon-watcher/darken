@@ -18,10 +18,6 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     {
         _DARKEN_DEBUG_ERROR("system malloc() is null");
     }
-    else
-    {
-        _DARKEN_DEBUG_INFO("system init");
-    }
 }
 
 void de_system_add(de_system *const this, ...)
@@ -36,10 +32,6 @@ void de_system_add(de_system *const this, ...)
         if (uclist_add(list, va_arg(ap, void *const)) == 0)
         {
             _DARKEN_DEBUG_ERROR("system add reference");
-        }
-        else
-        {
-            _DARKEN_DEBUG_INFO("system added");
         }
     }
 
@@ -65,10 +57,6 @@ void de_system_delete(de_system *const this, ...)
             break;
         case -2:
             _DARKEN_DEBUG_WARNING("system, this->count");
-            break;
-        default:
-            _DARKEN_DEBUG_INFO("system _destoy");
-            break;
         }
 #endif
     }
@@ -84,7 +72,6 @@ int de_system_update(de_system *const this)
     switch (ret)
     {
     case 1:
-        _DARKEN_DEBUG_INFO("system, update");
         break;
     case -4:
         _DARKEN_DEBUG_WARNING("system, this->params");
@@ -97,7 +84,6 @@ int de_system_update(de_system *const this)
         break;
     default:
         _DARKEN_DEBUG_ERROR("system, WTF?! #2");
-        break;
     }
 #endif
 
@@ -129,6 +115,4 @@ void de_system_end(de_system *const this)
     }
 
     memset(this, 0, sizeof(de_system));
-
-    _DARKEN_DEBUG_INFO("system end");
 }

@@ -8,11 +8,6 @@
 #endif
 
 /*
-#ifdef _DARKEN_DEBUG_INFO
-#undef _DARKEN_DEBUG_INFO
-#define _DARKEN_DEBUG_INFO(M) kprintf("Darken INFO: %s", M)
-#endif
-
 #ifdef _DARKEN_DEBUG_ERROR
 #undef _DARKEN_DEBUG_ERROR
 #define _DARKEN_DEBUG_ERROR(M) kprintf("Darken ERROR: %s", M)
