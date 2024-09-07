@@ -52,12 +52,12 @@ static void _entity_set(de_entity *const this, void *const data)
 {
     _DARKEN_MANAGER_EXEC(this->leave, this, data);
 
-    de_state *const state = this->state ?: &_empty;
+    this->state = this->state ?: &_empty;
 
-    _DARKEN_MANAGER_EXEC(state->enter, this, data);
+    _DARKEN_MANAGER_EXEC(this->state->enter, this, data);
 
-    this->update = state->update ?: _nullf;
-    this->leave = state->leave ?: _nullf;
+    this->update = this->state->update ?: _nullf;
+    this->leave = this->state->leave ?: _nullf;
     this->status = _DARKEN_ENTITY_STATUS_UPDATE;
 }
 
