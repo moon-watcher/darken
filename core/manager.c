@@ -140,5 +140,5 @@ void de_manager_reset(de_manager *const this)
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    _DARKEN_COMMON_END(this, de_manager);    
+    _DARKEN_COMMON_END(this, de_manager);
 }

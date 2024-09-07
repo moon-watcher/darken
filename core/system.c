@@ -21,10 +21,14 @@ void de_system_add(de_system *const this, ...)
 
     for (unsigned i = 0; i < params; i++)
     {
+#if DARKEN_DEBUG
         if (uclist_add(list, va_arg(ap, void *const)) == 0)
         {
             DARKEN_DEBUG_ERROR("system add reference");
         }
+#else
+        uclist_add(list, va_arg(ap, void *const));
+#endif
     }
 
     va_end(ap);
@@ -39,10 +43,8 @@ void de_system_delete(de_system *const this, ...)
 
     for (unsigned i = 0; i < params; i++)
     {
-        int ret = uclist_remove(list, va_arg(ap, void *const), 0);
-
 #if DARKEN_DEBUG
-        switch (ret)
+        switch (uclist_remove(list, va_arg(ap, void *const), 0))
         {
         case -1:
             DARKEN_DEBUG_WARNING("system, ref not found");
@@ -50,6 +52,8 @@ void de_system_delete(de_system *const this, ...)
         case -2:
             DARKEN_DEBUG_WARNING("system, this->count");
         }
+#else
+        uclist_remove(list, va_arg(ap, void *const), 0);
 #endif
     }
 
