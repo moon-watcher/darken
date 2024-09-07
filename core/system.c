@@ -9,7 +9,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     this->params = params ?: 1;
 
     uclist_init(&this->list);
-    _DARKEN_COMMON_INIT(this->data, datasize);
+    _DARKEN_COMMON_INIT(this, datasize);
 }
 
 void de_system_add(de_system *const this, ...)

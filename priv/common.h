@@ -1,18 +1,18 @@
 #pragma once
 
 #if DARKEN_DEBUG
-#define _DARKEN_COMMON_INIT(DATA, DATASIZE)                    \
+#define _DARKEN_COMMON_INIT(THIS, DATASIZE)                    \
     if (DATASIZE == 0)                                         \
     {                                                          \
         DARKEN_DEBUG_NOTICE("manager/system datasize is 0");   \
     }                                                          \
-    else if ((DATA = malloc(DATASIZE)) == 0)                   \
+    else if ((THIS->data = malloc(DATASIZE)) == 0)             \
     {                                                          \
         DARKEN_DEBUG_ERROR("manager/system malloc() is null"); \
     }
 #else
-#define _DARKEN_COMMON_INIT(DATA, DATASIZE) \
-    DATASIZE && (DATA = malloc(DATASIZE))
+#define _DARKEN_COMMON_INIT(THIS, DATASIZE) \
+    DATASIZE && (THIS->data = malloc(DATASIZE))
 #endif
 
 #define _DARKEN_COMMON_END(THIS, TYPE) \

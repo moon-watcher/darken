@@ -95,7 +95,7 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 {
     uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
-    _DARKEN_COMMON_INIT(this->data, datasize);
+    _DARKEN_COMMON_INIT(this, datasize);
 }
 
 de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
