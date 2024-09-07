@@ -1,7 +1,8 @@
 #include "debug.h"
 #include "manager.h"
 #include "entity.h"
-#include "entity.status.h"
+#include "../priv/entity.h"
+#include "../priv/common.h"
 #include "../config.h"
 
 #define _DARKEN_MANAGER_EXEC(METHOD, ENTITY, DATA) \
@@ -94,16 +95,7 @@ void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned 
 void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 {
     uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
-    this->data = 0;
-
-    if (datasize == 0)
-    {
-        DARKEN_DEBUG_NOTICE("manager datasize is 0");
-    }
-    else if ((this->data = malloc(datasize)) == 0)
-    {
-        DARKEN_DEBUG_ERROR("manager malloc() is null");
-    }
+    _DARKEN_COMMON_INIT(this->data, datasize);
 }
 
 de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
@@ -145,23 +137,8 @@ void de_manager_reset(de_manager *const this)
     uclist_reset(list);
 }
 
-unsigned de_manager_count(de_manager *const this)
-{
-    return this->list.count;
-}
-
-unsigned de_manager_capacity(de_manager *const this)
-{
-    return this->list.capacity;
-}
-
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    uclist_end(&this->list);
-
-    free(this->data);
-    this->data = 0;
-
-    memset(this, 0, sizeof(de_manager));
+    _DARKEN_COMMON_END(this, de_manager);    
 }

@@ -1,5 +1,5 @@
 #include "entity.h"
-#include "entity.status.h"
+#include "../priv/entity.h"
 #include "../config.h"
 
 void de_entity_set(de_entity *const this, de_state *state)

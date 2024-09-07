@@ -1,5 +1,6 @@
 #include "debug.h"
 #include "system.h"
+#include "../priv/common.h"
 #include "../config.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params, unsigned datasize)
@@ -8,17 +9,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     this->params = params ?: 1;
 
     uclist_init(&this->list);
-
-    this->data = 0;
-
-    if (datasize == 0)
-    {
-        DARKEN_DEBUG_NOTICE("system datasize is 0");
-    }
-    else if ((this->data = malloc(datasize)) == 0)
-    {
-        DARKEN_DEBUG_ERROR("system malloc() is null");
-    }
+    _DARKEN_COMMON_INIT(this->data, datasize);
 }
 
 void de_system_add(de_system *const this, ...)
@@ -96,24 +87,7 @@ void de_system_reset(de_system *const this)
     uclist_reset(&this->list);
 }
 
-unsigned de_system_count(de_system *const this)
-{
-    return this->list.count;
-}
-
-unsigned de_system_capacity(de_system *const this)
-{
-    return this->list.capacity;
-}
-
 void de_system_end(de_system *const this)
 {
-    uclist_end(&this->list);
-
-    if (this->data != 0)
-    {
-        free(this->data);
-    }
-
-    memset(this, 0, sizeof(de_system));
+    _DARKEN_COMMON_END(this, de_system);
 }
