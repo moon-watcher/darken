@@ -6,7 +6,6 @@
 typedef struct de_entity
 {
     void (*update)();
-    void (*leave)();
     void (*destructor)();
     de_state *state;
     de_manager *manager;
