@@ -5,18 +5,19 @@
 #include "../priv/common.h"
 #include "../config.h"
 
-#define _EXEC(METHOD, ENTITY, DATA) \
-    if (METHOD != 0)                \
-    {                               \
-        METHOD(ENTITY, DATA);       \
+#define _EXEC(METHOD, ENTITY, DATA)          \
+    if (ENTITY->state->METHOD != 0)          \
+    {                                        \
+        ENTITY->state->METHOD(ENTITY, DATA); \
     }
 
 static void _nullf() {}
 
 static void _destroy(de_entity *const this)
 {
-    _EXEC(this->state->leave, this, this->data);
-    _EXEC(this->destructor, this, this->data);
+    _EXEC(leave, this, this->data);
+
+    this->destructor(this, this->data);
 }
 
 //
@@ -49,11 +50,11 @@ static void _entity_delete(de_entity *const this, void *const data)
 
 static void _entity_set(de_entity *const this, void *const data)
 {
-    _EXEC(this->state->leave, this, data);
+    _EXEC(leave, this, data);
 
     this->state = this->state ?: &(de_state){_nullf, _nullf, _nullf};
 
-    _EXEC(this->state->enter, this, data);
+    _EXEC(enter, this, data);
 
     this->update = this->state->update ?: _nullf;
     this->status = _DARKEN_ENTITY_STATUS_UPDATE;
@@ -79,7 +80,7 @@ void de_manager_loop(unsigned *const loop, de_state *const state, unsigned size)
         _entity_array[entity->status](entity, entity->data);
     }
 
-    _EXEC(entity->state->leave, entity, entity->data);
+    _EXEC(leave, entity, entity->data);
 
     free(entity);
 }
