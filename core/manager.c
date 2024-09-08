@@ -11,6 +11,9 @@
         ENTITY->state->METHOD(ENTITY, DATA); \
     }
 
+#define _TICK(ENTITY) \
+    _entity_array[ENTITY->status](ENTITY, ENTITY->data)
+
 static void _nullf() {}
 
 static void _destroy(de_entity *const this)
@@ -53,11 +56,10 @@ static void _entity_set(de_entity *const this, void *const data)
     _EXEC(leave, this, data);
 
     this->state = this->state ?: &(de_state){_nullf, _nullf, _nullf};
-
-    _EXEC(enter, this, data);
-
     this->update = this->state->update ?: _nullf;
     this->status = _DARKEN_ENTITY_STATUS_UPDATE;
+
+    _EXEC(enter, this, data);
 }
 
 static const void (*const _entity_array[_DARKEN_ENTITY_STATUS_MAX])(de_entity *const, void *const) = {
@@ -77,7 +79,7 @@ void de_manager_loop(unsigned *const loop, de_state *const state, unsigned size)
 
     while (*loop == 1)
     {
-        _entity_array[entity->status](entity, entity->data);
+        _TICK(entity);
     }
 
     _EXEC(leave, entity, entity->data);
@@ -117,7 +119,7 @@ void de_manager_update(de_manager *const this)
     for (unsigned i = 0; i < count; i++)
     {
         de_entity *const entity = list->items[i];
-        _entity_array[entity->status](entity, entity->data);
+        _TICK(entity);
     }
 }
 
