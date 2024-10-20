@@ -11,5 +11,5 @@ void darken_break();
 #define DE_CAST(DATA, TYPE) ((TYPE *const)DATA)
 #define DE_DATA(DATA, TYPE, VAR) TYPE *const VAR = DE_CAST(DATA, TYPE)
 
-#define DE_UCLIST_COUNT(THIS) THIS.list.count
-#define DE_UCLIST_CAPACITY(THIS) THIS.list.capacity
+#define DE_LIST_COUNT(THIS) THIS.list.count
+#define DE_LIST_CAPACITY(THIS) THIS.list.capacity
