@@ -25,14 +25,14 @@ static void _update(de_entity *const this)
 
 static void _transition(de_entity *const this)
 {
-    _EXEC(leave, this);
+    _EXEC(Exit, this);
 
     this->state = this->state ?: &(de_state){_nullf, _nullf, _nullf};
-    this->handle = this->state->update ?: _nullf;
+    this->handle = this->state->Handle ?: _nullf;
     this->event = EVENT_UPDATE;
     this->timer = 0;
 
-    _EXEC(enter, this);
+    _EXEC(Enter, this);
 }
 
 static const void (*const _entity_array[EVEMT_MAX])(de_entity *const) = {
@@ -70,7 +70,7 @@ void _de_entity_init(de_entity *const this, de_manager *const manager, void (*de
 // for Darken use
 void _de_entity_destroy(de_entity *const this)
 {
-    _EXEC(leave, this);
+    _EXEC(Exit, this);
 
     if (this->destructor != 0)
         this->destructor(this, this->data);
