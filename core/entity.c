@@ -8,7 +8,6 @@ enum
     STATUS_SET
 };
 
-
 void de_entity_set(de_entity *const this, de_state *state)
 {
     this->state = state;
