@@ -10,8 +10,8 @@ void darken_loop(de_state *const state, unsigned size)
     de_entity *entity = malloc(sizeof(de_entity) + size);
 
     entity->state = state;
-    entity->update = entity->state->update;
-    entity->status = 0;
+    entity->update = state->update;
+    entity->event = 0;
     entity->timer = 0;
 
     _EXEC(enter, entity);
