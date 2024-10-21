@@ -1,4 +1,4 @@
-#include "debug.h"
+#include "../debug.h"
 #include "system.h"
 #include "../priv/common.h"
 #include "../config.h"

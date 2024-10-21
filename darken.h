@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/debug.h"
+#include "debug.h"
 #include "core/entity.h"
 #include "core/manager.h"
 #include "core/system.h"
