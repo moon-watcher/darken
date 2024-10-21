@@ -3,22 +3,24 @@
 
 static void *_nullf() { return 0; }
 
+enum
+{
+    EVENT_UPDATE,
+    EVENT_TRANSACTION,
+    EVEMT_MAX
+};
+
 ////////////////////////////////////////////////////////////////
 
 static void _update(de_entity *const this)
 {
-    de_state *newstate = this->update(this, this->data);
+    de_state *newstate = this->handle(this, this->data);
     ++this->timer;
 
     if (newstate != 0)
     {
-        de_entity_set(this, newstate);
+        _de_entity_transtion(this, newstate);
     }
-}
-
-static void _delete(de_entity *const this)
-{
-    _de_manager_delete(this->manager, this);
 }
 
 static void _transition(de_entity *const this)
@@ -26,34 +28,46 @@ static void _transition(de_entity *const this)
     _EXEC(leave, this);
 
     this->state = this->state ?: &(de_state){_nullf, _nullf, _nullf};
-    this->update = this->state->update ?: _nullf;
-    this->event = 0;
+    this->handle = this->state->update ?: _nullf;
+    this->event = EVENT_UPDATE;
     this->timer = 0;
 
     _EXEC(enter, this);
 }
 
-static const void (*const _entity_array[])(de_entity *const) = {_update, _delete, _transition};
+static const void (*const _entity_array[EVEMT_MAX])(de_entity *const) = {
+    [EVENT_UPDATE] = _update,
+    [EVENT_TRANSACTION] = _transition
+    };
 
 ////////////////////////////////////////////////////////////////
 
-void _de_entity_init(de_entity *const this, de_manager *const manager, void (*desctructor)())
-{
-    this->update = _nullf;
-    this->destructor = desctructor;
-    this->manager = manager;
-}
-
-// DSM_update
+// DSM_update & for Darken use
 void _de_entity_update(de_entity *const this)
 {
     _entity_array[this->event](this);
 }
 
 // DSM_transition
+void _de_entity_transtion(de_entity *const this, de_state *const state)
+{
+    this->state = state;
+    this->event = EVENT_TRANSACTION;
+}
 
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
-// DSM ????
+// for Darken use
+void _de_entity_init(de_entity *const this, de_manager *const manager, void (*desctructor)())
+{
+    this->handle = _nullf;
+    this->destructor = desctructor;
+    this->manager = manager;
+}
+
+// for Darken use
 void _de_entity_destroy(de_entity *const this)
 {
     _EXEC(leave, this);

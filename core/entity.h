@@ -5,12 +5,12 @@
 
 typedef struct de_entity
 {
-    de_state *(*update)();
+    de_state *(*handle)();
     de_state *(*destructor)();
     de_state *state;
     de_manager *manager;
-    int event;
-    unsigned timer;
+    unsigned int timer;
+    unsigned short event;
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
 
