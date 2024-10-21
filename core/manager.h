@@ -18,4 +18,6 @@ void de_manager_end(de_manager *const);
 typedef struct de_entity de_entity;
 
 de_entity *de_manager_new(de_manager *const, void (*)());
-void de_manager_delete(de_manager *const, de_entity *const);
+
+// Darken private
+void _de_manager_delete(de_manager *const, de_entity *const);

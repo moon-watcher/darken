@@ -1,11 +1,11 @@
 #include "darken.h"
 #include "config.h"
 
-static unsigned loop;
+static bool loop;
 
 void darken_loop(de_state *const state, unsigned size)
 {
-    loop = 1;
+    loop = true;
     de_entity *entity = malloc(sizeof(de_entity) + size);
 
     entity->state = state;
@@ -15,9 +15,9 @@ void darken_loop(de_state *const state, unsigned size)
 
     _EXEC(enter, entity);
 
-    while (loop != 0)
+    while (loop)
     {
-        de_entity_update(entity);
+        _de_entity_update(entity);
     }
 
     _EXEC(leave, entity);
@@ -27,5 +27,5 @@ void darken_loop(de_state *const state, unsigned size)
 
 void darken_break()
 {
-    loop = 0;
+    loop = false;
 }

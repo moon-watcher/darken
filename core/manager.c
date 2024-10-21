@@ -13,12 +13,12 @@ void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
 
 void de_manager_update(de_manager *const this)
 {
-    uclist_iterator(&this->list, de_entity_update, 1);
+    uclist_iterator(&this->list, _de_entity_update, 1);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, de_entity_destroy, 1);
+    uclist_iterator(&this->list, _de_entity_destroy, 1);
     uclist_reset(&this->list);
 }
 
@@ -40,13 +40,14 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     }
     else
     {
-        de_entity_init(entity, this, desctructor);
+        _de_entity_init(entity, this, desctructor);
     }
 
     return entity;
 }
 
-void de_manager_delete(de_manager *const this, de_entity *const entity)
+// Darken private
+void _de_manager_delete(de_manager *const this, de_entity *const entity)
 {
     int ret = uclist_remove(&this->list, entity, 0);
 
