@@ -15,13 +15,13 @@ de_entity *de_manager_new(de_manager *const this, de_state desctructor)
 {
     de_entity *entity = uclist_alloc(&this->list);
 
-    if (entity == 0)
+    if (entity != 0)
     {
-        DARKEN_ERROR("manager uclist_alloc() is null");
+        _entity_init(entity, this, desctructor);
     }
     else
     {
-        _entity_init(entity, this, desctructor);
+        DARKEN_ERROR("manager uclist_alloc() is null");
     }
 
     return entity;
