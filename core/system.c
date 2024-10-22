@@ -1,8 +1,6 @@
+#include "system.h"
 #include "../debug.h"
 #include "../config.h"
-#include "../core/system.h"
-#include "../priv/declarations.h"
-#include "../priv/macros.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params, unsigned datasize)
 {
@@ -10,7 +8,19 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     this->params = params ?: 1;
 
     uclist_init(&this->list);
-    _COMMON_INIT(this, datasize);
+
+#if DARKEN_DEBUG
+    if (datasize == 0)
+    {
+        DARKEN_NOTICE("system datasize is 0");
+    }
+    else if ((this->data = malloc(datasize)) == 0)
+    {
+        DARKEN_ERROR("system malloc() is null");
+    }
+#else
+    datasize && (this->data = malloc(datasize));
+#endif
 }
 
 void de_system_add(de_system *const this, ...)
@@ -94,5 +104,7 @@ void de_system_reset(de_system *const this)
 
 void de_system_end(de_system *const this)
 {
-    _COMMON_END(this, de_system);
+    uclist_end(&this->list);
+    MEM_free(this->data);
+    memset(this, 0, sizeof(de_system));
 }

@@ -1,6 +1,5 @@
 #include "config.h"
 #include "core/entity.h"
-#include "priv/declarations.h"
 
 static bool loop;
 
@@ -13,7 +12,7 @@ void darken_loop(de_state state, unsigned size)
 
     while (loop)
     {
-        _entity_update(entity);
+        de_entity_update(entity);
     }
 
     free(entity);

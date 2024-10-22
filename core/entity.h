@@ -1,8 +1,7 @@
 #pragma once
 
 #include "state.h"
-
-typedef struct de_manager de_manager;
+#include "manager.h"
 
 typedef struct de_entity
 {
@@ -14,4 +13,5 @@ typedef struct de_entity
 } de_entity;
 
 void de_entity_set(de_entity *const, de_state);
-void de_entity_delete(de_entity *const);
+void de_entity_update(de_entity *const);
+int de_entity_delete(de_entity *const);
