@@ -1,11 +1,18 @@
 #include "../debug.h"
 #include "manager.h"
 #include "entity.h"
+#include "state.h"
 #include "../priv/common.h"
 #include "../priv/entity.h"
 #include "../config.h"
 
-de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
+void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
+{
+    uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
+    _DARKEN_COMMON_INIT(this, datasize);
+}
+
+de_entity *de_manager_new(de_manager *const this, de_state desctructor)
 {
     de_entity *entity = uclist_alloc(&this->list);
 
@@ -19,12 +26,6 @@ de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
     }
 
     return entity;
-}
-
-void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
-{
-    uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
-    _DARKEN_COMMON_INIT(this, datasize);
 }
 
 void de_manager_update(de_manager *const this)

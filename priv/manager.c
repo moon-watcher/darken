@@ -1,11 +1,6 @@
 #include "../debug.h"
 #include "../core/manager.h"
 #include "../core/entity.h"
-#include "manager.h"
-#include "entity.h"
-#include "../priv/common.h"
-#include "../priv/entity.h"
-#include "../config.h"
 
 void _de_manager_delete(de_manager *const this, de_entity *const entity)
 {
