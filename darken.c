@@ -1,14 +1,25 @@
-#include "darken.h"
+#include "config.h"
+#include "core/entity.h"
+#include "priv/entity.h"
 
-static unsigned loop;
+static bool loop;
 
-void darken_loop(de_state *const state, unsigned size)
+void darken_loop(de_state state, unsigned size)
 {
-    loop = 1;
-    de_manager_loop(&loop, state, size);
+    loop = true;
+    
+    de_entity *entity = malloc(sizeof(de_entity) + size);
+    de_entity_set(entity, state);
+
+    while (loop)
+    {
+        _de_entity_update(entity);
+    }
+
+    free(entity);
 }
 
 void darken_break()
 {
-    loop = 0;
+    loop = false;
 }

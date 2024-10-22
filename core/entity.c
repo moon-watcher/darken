@@ -1,19 +1,12 @@
 #include "entity.h"
-#include "../priv/entity.h"
-#include "../config.h"
 
-void de_entity_set(de_entity *const this, de_state *state)
+void de_entity_set(de_entity *const this, de_state state)
 {
     this->state = state;
-    this->status = _DARKEN_ENTITY_STATUS_SET;
+    this->timer = 0;
 }
 
 void de_entity_delete(de_entity *const this)
 {
-    this->status = _DARKEN_ENTITY_STATUS_DELETE;
-}
-
-void de_entity_skipUpdate(de_entity *const this)
-{
-    this->status = _DARKEN_ENTITY_STATUS_SKIP;
+    _de_manager_delete(this->manager, this);
 }
