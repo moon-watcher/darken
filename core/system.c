@@ -48,6 +48,7 @@ void de_system_delete(de_system *const this, ...)
             break;
         case -2:
             DARKEN_WARNING("system, this->count");
+            break;
         }
 #else
         uclist_remove(list, va_arg(ap, void *const), 0);
