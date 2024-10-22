@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "../priv/declarations.h"
 
 void de_entity_set(de_entity *const this, de_state state)
 {
@@ -8,5 +9,5 @@ void de_entity_set(de_entity *const this, de_state state)
 
 void de_entity_delete(de_entity *const this)
 {
-    _de_manager_delete(this->manager, this);
+    _manager_delete(this->manager, this);
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../libs/uclist/uclist.h"
+#include "../uclist/uclist.h"
 
 typedef struct
 {

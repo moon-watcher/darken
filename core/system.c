@@ -1,7 +1,8 @@
 #include "../debug.h"
-#include "system.h"
-#include "../priv/common.h"
 #include "../config.h"
+#include "../core/system.h"
+#include "../priv/declarations.h"
+#include "../priv/macros.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params, unsigned datasize)
 {
@@ -9,7 +10,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params, un
     this->params = params ?: 1;
 
     uclist_init(&this->list);
-    _DARKEN_COMMON_INIT(this, datasize);
+    _COMMON_INIT(this, datasize);
 }
 
 void de_system_add(de_system *const this, ...)
@@ -24,7 +25,7 @@ void de_system_add(de_system *const this, ...)
 #if DARKEN_DEBUG
         if (uclist_add(list, va_arg(ap, void *const)) == 0)
         {
-            DARKEN_DEBUG_ERROR("system add reference");
+            DARKEN_ERROR("system add reference");
         }
 #else
         uclist_add(list, va_arg(ap, void *const));
@@ -47,10 +48,10 @@ void de_system_delete(de_system *const this, ...)
         switch (uclist_remove(list, va_arg(ap, void *const), 0))
         {
         case -1:
-            DARKEN_DEBUG_WARNING("system, ref not found");
+            DARKEN_WARNING("system, ref not found");
             break;
         case -2:
-            DARKEN_DEBUG_WARNING("system, this->count");
+            DARKEN_WARNING("system, this->count");
         }
 #else
         uclist_remove(list, va_arg(ap, void *const), 0);
@@ -70,16 +71,16 @@ int de_system_update(de_system *const this)
     case 1:
         break;
     case -4:
-        DARKEN_DEBUG_WARNING("system, this->params");
+        DARKEN_WARNING("system, this->params");
         break;
     case -3:
-        DARKEN_DEBUG_WARNING("system, this->update");
+        DARKEN_WARNING("system, this->update");
         break;
     case -2:
-        DARKEN_DEBUG_WARNING("system, this->count");
+        DARKEN_WARNING("system, this->count");
         break;
     default:
-        DARKEN_DEBUG_ERROR("system, WTF?! #2");
+        DARKEN_ERROR("system, WTF?! #2");
     }
 #endif
 
@@ -93,5 +94,5 @@ void de_system_reset(de_system *const this)
 
 void de_system_end(de_system *const this)
 {
-    _DARKEN_COMMON_END(this, de_system);
+    _COMMON_END(this, de_system);
 }
