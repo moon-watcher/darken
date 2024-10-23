@@ -3,8 +3,14 @@
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
+    if (params == 0)
+    {
+        DARKEN_WARNING("system, set params to 1");
+        params = 1;
+    }
+
     this->update = update;
-    this->params = params ?: 1;
+    this->params = params;
 
     uclist_init(&this->list);
 }
