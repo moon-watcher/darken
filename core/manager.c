@@ -17,9 +17,9 @@ de_entity *de_manager_new(de_manager *const this, de_state desctructor)
         return 0;
     }
 
-    entity->state = ({ de_state f() { return f; } f; });
+    de_entity_set(entity, 0);
     entity->destructor = desctructor;
-    entity->manager = this;    
+    entity->manager = this;
 
     return entity;
 }

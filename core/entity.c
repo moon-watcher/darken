@@ -4,7 +4,12 @@
 
 void de_entity_set(de_entity *const this, de_state state)
 {
-    this->state = state;
+    de_state _nullf()
+    {
+        return 0;
+    }
+    
+    this->state = state ?: _nullf;
     this->timer = 0;
 }
 
