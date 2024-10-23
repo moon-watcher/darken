@@ -1,9 +1,6 @@
 #pragma once
 
-#define DARKEN_DEBUG 0
-
-#define DARKEN_ERROR(MESSAGE)
-#define DARKEN_NOTICE(MESSAGE)
-#define DARKEN_WARNING(MESSAGE)
+#define DARKEN_ERROR(MESSAGE) 0
+#define DARKEN_WARNING(MESSAGE) 0
 
 #include "config.h"

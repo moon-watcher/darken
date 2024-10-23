@@ -23,6 +23,7 @@ int de_entity_delete(de_entity *const this)
 {
     int ret = uclist_remove(&this->manager->list, this, 0);
 
+#if DARKEN_WARNING
     switch (ret)
     {
     case -1:
@@ -32,6 +33,7 @@ int de_entity_delete(de_entity *const this)
         DARKEN_WARNING("Delete entity: manager, this->count is 0");
         break;
     }
+#endif
 
     return ret;
 }
