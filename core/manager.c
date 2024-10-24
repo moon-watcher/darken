@@ -1,6 +1,7 @@
 #include "manager.h"
 #include "entity.h"
 #include "../debug.h"
+#include "../config.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {

@@ -1,6 +1,6 @@
 #include "entity.h"
 #include "../debug.h"
-#include "../uclist/uclist.h"
+#include "../config.h"
 
 void de_entity_set(de_entity *const this, de_state state)
 {

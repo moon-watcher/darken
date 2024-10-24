@@ -1,5 +1,6 @@
 #include "system.h"
 #include "../debug.h"
+#include "../config.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
@@ -15,15 +16,14 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     uclist_init(&this->list);
 }
 
-unsigned de_system_add(de_system *const this, ...)
+int de_system_add(de_system *const this, ...)
 {
     va_list ap;
     va_start(ap, this);
     unsigned const params = this->params;
     uclist *const list = &this->list;
-    unsigned i = 0;
-
-    for (; i < params; i++)
+    
+    for (unsigned i = 0; i < params; i++)
     {
         if (0 == uclist_add(list, va_arg(ap, void *const)))
         {
@@ -32,15 +32,16 @@ unsigned de_system_add(de_system *const this, ...)
         }
     }
 
-    return i;
+    return 1;
 }
 
-void de_system_delete(de_system *const this, ...)
+int de_system_delete(de_system *const this, ...)
 {
     va_list ap;
     va_start(ap, this);
     unsigned const params = this->params;
     uclist *const list = &this->list;
+    int ret = 1;
 
     for (unsigned i = 0; i < params; i++)
     {
@@ -48,14 +49,18 @@ void de_system_delete(de_system *const this, ...)
         {
 #if DARKEN_WARNING
         case -1:
+            ret = -1;
             DARKEN_WARNING("system, ref not found");
             break;
         case -2:
+            ret = -2;
             DARKEN_WARNING("system, this->count");
             break;
 #endif
         }
     }
+    
+    return ret;
 }
 
 int de_system_update(de_system *const this)
