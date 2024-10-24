@@ -1,6 +1,5 @@
 #include "entity.h"
 #include "../debug.h"
-#include "../config.h"
 
 void de_entity_set(de_entity *const this, de_state state)
 {
@@ -8,7 +7,7 @@ void de_entity_set(de_entity *const this, de_state state)
     {
         return 0;
     }
-    
+
     this->state = state ?: _nullf;
     this->timer = 0;
 }
