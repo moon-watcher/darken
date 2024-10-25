@@ -1,5 +1,15 @@
 #pragma once
 
+enum
+{
+    UCLIST_OK = 1,
+    UCLIST_ERROR_ALLOC = 0,
+    UCLIST_ERROR_NOTFOUND = -1,
+    UCLIST_ERROR_COUNT = -2,
+    UCLIST_ERROR_ITERATOR = -3,
+    UCLIST_ERROR_NBITEMS = -4,
+};
+
 typedef struct uclist
 {
     void **items;
