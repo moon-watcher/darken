@@ -1,12 +1,14 @@
 #pragma once
 
 #include "debug.h"
-#include "core/state.h"
 #include "core/entity.h"
 #include "core/manager.h"
 #include "core/system.h"
 
-void darken_loop(de_state, unsigned);
+// Delete
+typedef void (*de_state)();
+
+void darken_loop(void (*[static 1])(), unsigned);
 void darken_break();
 
 #define DE_CAST(DATA, TYPE) ((TYPE *const)DATA)
