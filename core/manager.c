@@ -3,7 +3,7 @@
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
+    uclist_init(&this->list, sizeof(de_entity) + bytes);
 }
 
 void de_manager_update(de_manager *const this)
