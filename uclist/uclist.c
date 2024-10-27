@@ -23,35 +23,32 @@ static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
 //
 
-void uclist_init(uclist *const this, unsigned itemSize)
+void uclist_init(uclist *const this)
 {
-    this->items = 0;
-    this->count = 0;
-    this->capacity = 0;
-    this->error = UCLIST_OK;
+    memset(this, 0, sizeof(uclist));
+}
+
+void uclist_initAlloc(uclist *const this, unsigned itemSize)
+{
+    uclist_init(this);
     this->itemSize = itemSize;
 }
 
 void *uclist_alloc(uclist *const this)
 {
-    this->error = UCLIST_OK;
-    void *ptr;
-
-    if (this->itemSize == 0)
-    {
-        this->error = UCLIST_ERROR_ITEMSIZE;
-        return UCLIST_ERROR;
-    }
-    else if (this->count < this->capacity)
+    if (this->count < this->capacity)
     {
         unsigned count = this->count++;
         memset(this->items[count], 0, this->itemSize);
 
         return this->items[count];
     }
-    else if ((ptr = malloc(this->itemSize)) == 0)
+
+    void *ptr = malloc(this->itemSize);
+
+    if (ptr == 0)
     {
-        return this->error = UCLIST_ERROR_ALLOC;
+        return UCLIST_ERROR_ALLOC;
     }
 
     memset(ptr, 0, this->itemSize);
@@ -68,20 +65,13 @@ void *uclist_alloc(uclist *const this)
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    this->error = UCLIST_OK;
-
-    if (this->itemSize != 0)
-    {
-        this->error = UCLIST_ERROR_ITEMSIZE;
-        return UCLIST_ERROR;
-    }
-    else if (this->count >= this->capacity)
+    if (this->count >= this->capacity)
     {
         void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
         if (ptr == 0)
         {
-            return this->error = UCLIST_ERROR_ALLOC;
+            return UCLIST_ERROR_ALLOC;
         }
 
         memcpy(ptr, this->items, this->capacity * sizeof(void *));
@@ -95,8 +85,6 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_find(uclist *const this, void *const data)
 {
-    this->error = UCLIST_OK;
-
     for (unsigned i = 0; i < this->count; i++)
     {
         if (this->items[i] == data)
@@ -105,24 +93,22 @@ int uclist_find(uclist *const this, void *const data)
         }
     }
 
-    return this->error = UCLIST_ERROR_NOTFOUND;
+    return UCLIST_ERROR_NOTFOUND;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
-    this->error = UCLIST_OK;
-
     if (nbItems == 0)
     {
-        return this->error = UCLIST_ERROR_NBITEMS;
+        return UCLIST_ERROR_NBITEMS;
     }
     else if (iterator == 0)
     {
-        return this->error = UCLIST_ERROR_ITERATOR;
+        return UCLIST_ERROR_ITERATOR;
     }
     else if (this->count == 0)
     {
-        return this->error = UCLIST_ERROR_COUNT;
+        return UCLIST_ERROR_COUNT;
     }
 
     _exec[nbItems](this->items, iterator, this->count, nbItems);
@@ -132,11 +118,9 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
-    this->error = UCLIST_OK;
-
     if (this->count == 0)
     {
-        return this->error = UCLIST_ERROR_COUNT;
+        return UCLIST_ERROR_COUNT;
     }
 
     int index = uclist_find(this, data);
@@ -170,5 +154,5 @@ void uclist_end(uclist *const this)
     }
 
     free(this->items);
-    uclist_init(this, this->itemSize);
+    uclist_initAlloc(this, this->itemSize);
 }
