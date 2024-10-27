@@ -13,7 +13,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     this->update = update;
     this->params = params;
 
-    uclist_init(&this->list, 0);
+    uclist_init(&this->list);
 }
 
 int de_system_add(de_system *const this, ...)
@@ -22,7 +22,7 @@ int de_system_add(de_system *const this, ...)
     va_start(ap, this);
     unsigned const params = this->params;
     uclist *const list = &this->list;
-    
+
     for (unsigned i = 0; i < params; i++)
     {
         if (0 == uclist_add(list, va_arg(ap, void *const)))
@@ -59,7 +59,7 @@ int de_system_delete(de_system *const this, ...)
 #endif
         }
     }
-    
+
     return ret;
 }
 

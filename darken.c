@@ -3,14 +3,18 @@
 
 static bool loop;
 
-void darken_loop(void (*state[static 1])(), unsigned size)
+void darken_loop(void (*state)(), unsigned size)
 {
-    loop = true;
+    if (state == 0)
+    {
+        return;
+    }
 
     de_entity *entity = malloc(sizeof(de_entity) + size);
     de_entity_set(entity, state);
 
-    while (loop)
+    loop = true;
+    while (loop == true)
     {
         entity->state(entity, entity->data);
     }

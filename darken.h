@@ -5,10 +5,7 @@
 #include "core/manager.h"
 #include "core/system.h"
 
-// Delete
-typedef void (*de_state)();
-
-void darken_loop(void (*[static 1])(), unsigned);
+void darken_loop(void (*)(), unsigned);
 void darken_break();
 
 #define DE_CAST(DATA, TYPE) ((TYPE *const)DATA)
