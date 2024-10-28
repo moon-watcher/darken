@@ -1,14 +1,11 @@
 #include "entity.h"
 #include "../debug.h"
 
-static void _nullf()
-{
-    //
-}
+static void _nullf() {}
 
 //
 
-void *de_entity_set(de_entity *const this, void (*state)())
+void *de_entity_setState(de_entity *const this, void (*state)())
 {
     if (state == 0)
     {
@@ -20,7 +17,7 @@ void *de_entity_set(de_entity *const this, void (*state)())
     return this->state = state;
 }
 
-void *de_entity_destructor(de_entity *const this, void (*destructor)())
+void *de_entity_setDestructor(de_entity *const this, void (*destructor)())
 {
     if (destructor == 0)
     {
@@ -35,6 +32,7 @@ void *de_entity_exec(de_entity *const this, void (*exec)())
 {
     if (exec == 0)
     {
+        DARKEN_WARNING("Entity: null exec");
         return 0;
     }
 

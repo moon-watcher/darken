@@ -1,10 +1,7 @@
 #include "manager.h"
 #include "../debug.h"
 
-static void _nullf()
-{
-    //
-}
+static void _nullf() {}
 
 static void _update(de_entity *const entity)
 {
