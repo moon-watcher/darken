@@ -5,7 +5,7 @@ static void _nullf() {}
 
 static void _update(de_entity *const entity)
 {
-    entity->state(entity, entity->data);
+    /* entity->state = */ entity->state(entity, entity->data);
 }
 
 static void _destroy(de_entity *const entity)
@@ -18,7 +18,7 @@ static void _destroy(de_entity *const entity)
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_initAlloc(&this->list, sizeof(de_entity) + bytes);
+    uclist_init(&this->list, sizeof(de_entity) + bytes);
 }
 
 void de_manager_update(de_manager *const this)

@@ -23,14 +23,9 @@ static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
 //
 
-void uclist_init(uclist *const this)
+void uclist_init(uclist *const this, unsigned itemSize)
 {
     memset(this, 0, sizeof(uclist));
-}
-
-void uclist_initAlloc(uclist *const this, unsigned itemSize)
-{
-    uclist_init(this);
     this->itemSize = itemSize;
 }
 
@@ -154,5 +149,5 @@ void uclist_end(uclist *const this)
     }
 
     free(this->items);
-    uclist_initAlloc(this, this->itemSize);
+    uclist_init(this, this->itemSize);
 }

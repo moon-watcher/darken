@@ -18,8 +18,7 @@ typedef struct uclist
     unsigned itemSize;
 } uclist;
 
-void uclist_init(uclist *const);
-void uclist_initAlloc(uclist *const, unsigned);
+void uclist_init(uclist *const, unsigned);
 void *uclist_alloc(uclist *const);
 void *uclist_add(uclist *const, void *const);
 int uclist_find(uclist *const, void *const);
