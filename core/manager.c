@@ -36,7 +36,7 @@ de_entity *de_manager_entityNew(de_manager *const this)
     }
     else
     {
-        entity->state = entity->destructor = de_entity_null;
+        entity->handler = entity->destructor = de_entity_null;
     }
 
     return entity;
