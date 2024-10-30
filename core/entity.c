@@ -13,7 +13,7 @@ inline __attribute__((always_inline)) void *de_entity_update(de_entity *const th
     return this->handler = this->handler(this, this->data);
 }
 
-void *de_entity_setState(de_entity *const this, void *(*state)())
+void *de_entity_set(de_entity *const this, void *(*state)())
 {
     if (state == 0)
     {
@@ -23,19 +23,19 @@ void *de_entity_setState(de_entity *const this, void *(*state)())
     return this->handler = state ?: de_entity_null;
 }
 
-void *de_entity_setDestructor(de_entity *const this, void *(*destructor)())
+void *de_entity_exec(de_entity *const this, void *(*state)())
 {
-    return this->destructor = destructor ?: de_entity_null;
-}
-
-void *de_entity_exec(de_entity *const this, void *(*exec)())
-{
-    if (exec == 0)
+    if (state == 0)
     {
         DARKEN_ERROR("Entity: exec null state");
     }
 
-    return this->handler = exec ? exec(this, this->data) : de_entity_null;
+    return this->handler = state ? exec(this, this->data) : de_entity_null;
+}
+
+void *de_entity_destructor(de_entity *const this, void *(*state)())
+{
+    return this->destructor = state ?: de_entity_null;
 }
 
 void *de_entity_destroy(de_entity *const this)

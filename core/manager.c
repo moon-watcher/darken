@@ -6,27 +6,7 @@ void de_manager_init(de_manager *const this, unsigned bytes)
     uclist_init(&this->list, sizeof(de_entity) + bytes);
 }
 
-void de_manager_update(de_manager *const this)
-{
-
-    uclist_iterator(&this->list, de_entity_update, 1);
-}
-
-void de_manager_reset(de_manager *const this)
-{
-    uclist_iterator(&this->list, de_entity_destroy, 1);
-    uclist_reset(&this->list);
-}
-
-void de_manager_end(de_manager *const this)
-{
-    de_manager_reset(this);
-    uclist_end(&this->list);
-}
-
-//
-
-de_entity *de_manager_entityNew(de_manager *const this)
+de_entity *de_manager_new(de_manager *const this)
 {
     de_entity *entity = uclist_alloc(&this->list);
 
@@ -42,7 +22,7 @@ de_entity *de_manager_entityNew(de_manager *const this)
     return entity;
 }
 
-int de_manager_entityDelete(de_manager *const this, de_entity *const entity)
+int de_manager_delete(de_manager *const this, de_entity *const entity)
 {
     int ret = uclist_remove(&this->list, entity, 0);
 
@@ -59,4 +39,22 @@ int de_manager_entityDelete(de_manager *const this, de_entity *const entity)
 #endif
 
     return ret;
+}
+
+void de_manager_update(de_manager *const this)
+{
+
+    uclist_iterator(&this->list, de_entity_update, 1);
+}
+
+void de_manager_reset(de_manager *const this)
+{
+    uclist_iterator(&this->list, de_entity_destroy, 1);
+    uclist_reset(&this->list);
+}
+
+void de_manager_end(de_manager *const this)
+{
+    de_manager_reset(this);
+    uclist_end(&this->list);
 }

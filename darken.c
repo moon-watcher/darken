@@ -11,7 +11,7 @@ void darken_loop(void (*state)(), unsigned size)
     }
 
     de_entity *entity = malloc(sizeof(de_entity) + size);
-    de_entity_setState(entity, state);
+    de_entity_set(entity, state);
 
     loop = true;
     while (loop == true)
