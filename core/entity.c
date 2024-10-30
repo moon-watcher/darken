@@ -1,42 +1,49 @@
 #include "entity.h"
 #include "../debug.h"
 
-static void _nullf() {}
+inline void *de_entity_null()
+{
+    DARKEN_WARNING("Entity: exec de_entity_null()");
 
-//
+    return de_entity_null;
+}
 
-void *de_entity_setState(de_entity *const this, void (*state)())
+inline void *de_entity_update(de_entity *const entity)
+{
+    return entity->state = entity->state(entity, entity->data);
+}
+
+inline void *de_entity_setState(de_entity *const this, void *(*state)())
 {
     if (state == 0)
     {
-        DARKEN_ERROR("Entity: null state");
-        this->state = _nullf;
-        return 0;
+        DARKEN_ERROR("Entity: set null state");
+        state = de_entity_null;
     }
 
     return this->state = state;
 }
 
-void *de_entity_setDestructor(de_entity *const this, void (*destructor)())
+inline void *de_entity_setDestructor(de_entity *const this, void *(*state)())
 {
-    if (destructor == 0)
-    {
-        this->destructor = _nullf;
-        return 0;
-    }
-
-    return this->destructor = destructor;
+    return this->destructor = state ?: de_entity_null;
 }
 
-void *de_entity_exec(de_entity *const this, void (*exec)())
+inline void *de_entity_exec(de_entity *const this, void *(*state)())
 {
-    if (exec == 0)
+    if (state == 0)
     {
-        DARKEN_WARNING("Entity: null exec");
-        return 0;
+        DARKEN_ERROR("Entity: exec null state");
+        state = de_entity_null;
     }
 
-    exec(this, this->data);
+    return this->state = state(this, this->data);
+}
 
-    return exec;
+inline void *de_entity_destroy(de_entity *const entity)
+{
+    entity->state = entity->destructor ? entity->destructor(entity, entity->data) : de_entity_null;
+    entity->destructor = de_entity_null;
+
+    return entity->state;
 }

@@ -16,7 +16,7 @@ void darken_loop(void (*state)(), unsigned size)
     loop = true;
     while (loop == true)
     {
-        entity->state(entity, entity->data);
+        de_entity_update(entity);
     }
 
     free(entity);

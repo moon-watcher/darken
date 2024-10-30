@@ -1,21 +1,6 @@
 #include "manager.h"
 #include "../debug.h"
 
-static void _nullf() {}
-
-static void _update(de_entity *const entity)
-{
-    /* entity->state = */ entity->state(entity, entity->data);
-}
-
-static void _destroy(de_entity *const entity)
-{
-    if (entity->destructor != 0)
-        entity->destructor(entity, entity->data);
-}
-
-//
-
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uclist_init(&this->list, sizeof(de_entity) + bytes);
@@ -24,12 +9,12 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 void de_manager_update(de_manager *const this)
 {
 
-    uclist_iterator(&this->list, _update, 1);
+    uclist_iterator(&this->list, de_entity_update, 1);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, _destroy, 1);
+    uclist_iterator(&this->list, de_entity_destroy, 1);
     uclist_reset(&this->list);
 }
 
@@ -51,8 +36,8 @@ de_entity *de_manager_entityNew(de_manager *const this)
         return 0;
     }
 
-    entity->state = _nullf;
-    entity->destructor = _nullf;
+    entity->state = de_entity_null;
+    entity->destructor = de_entity_null;
 
     return entity;
 }
