@@ -1,5 +1,12 @@
 // Unordered Cacheable List
 
+/**
+ * TODO: add lastIndex to uclist struct
+ * TODO: create uclist_lastIndex()
+ * TODO: create uclist_removeByIndex()
+ * TODO: rewrite uclist_alloc()/uclist_add() ussage
+ */
+
 #include "uclist.h"
 #include "config.h"
 
@@ -80,6 +87,11 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_find(uclist *const this, void *const data)
 {
+    if (this->count == 0)
+    {
+        return UCLIST_ERROR_COUNT;
+    }
+
     for (unsigned i = 0; i < this->count; i++)
     {
         if (this->items[i] == data)
@@ -113,11 +125,6 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
-    if (this->count == 0)
-    {
-        return UCLIST_ERROR_COUNT;
-    }
-
     int index = uclist_find(this, data);
 
     if (index >= 0)
