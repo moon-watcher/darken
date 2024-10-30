@@ -33,11 +33,11 @@ de_entity *de_manager_entityNew(de_manager *const this)
     if (entity == 0)
     {
         DARKEN_ERROR("manager uclist_alloc() is null");
-        return 0;
     }
-
-    entity->state = de_entity_null;
-    entity->destructor = de_entity_null;
+    else
+    {
+        entity->state = entity->destructor = de_entity_null;
+    }
 
     return entity;
 }
