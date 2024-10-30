@@ -43,7 +43,6 @@ int de_manager_delete(de_manager *const this, de_entity *const entity)
 
 void de_manager_update(de_manager *const this)
 {
-
     uclist_iterator(&this->list, de_entity_update, 1);
 }
 
