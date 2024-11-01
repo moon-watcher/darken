@@ -11,12 +11,12 @@ void darken_loop(void (*state)(), unsigned size)
     }
 
     de_entity *entity = malloc(sizeof(de_entity) + size);
-    de_entity_set(entity, state);
+    de_entity_setState(entity, state);
 
     loop = true;
     while (loop == true)
     {
-        de_entity_update(entity);
+        entity->handler(entity, entity->data);
     }
 
     free(entity);
