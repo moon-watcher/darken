@@ -5,7 +5,7 @@ static void _nullf() {}
 
 //
 
-void de_entity_setState(de_entity *const this, void (*state)())
+void de_entity_setState(de_entity *const this, de_state state)
 {
     if (state == 0)
     {
@@ -15,12 +15,7 @@ void de_entity_setState(de_entity *const this, void (*state)())
     this->handler = state ?: _nullf;
 }
 
-void de_entity_setDestructor(de_entity *const this, void (*destructor)())
+void de_entity_setDestructor(de_entity *const this, de_state state)
 {
-    if (destructor == 0)
-    {
-        DARKEN_ERROR("Entity: destructor is null. Not set");
-    }
-
-    this->destructor = destructor ?: _nullf;
+    this->destructor = state ?: _nullf;
 }
