@@ -19,3 +19,14 @@ void de_entity_setDestructor(de_entity *const this, de_state state)
 {
     this->destructor = state ?: _nullf;
 }
+
+void de_entity_execState(de_entity *const this, de_state state)
+{
+    if (state == 0)
+    {
+        DARKEN_WARNING("Entity: exec not set");
+        return;
+    }
+
+    state(this, this->data);
+}

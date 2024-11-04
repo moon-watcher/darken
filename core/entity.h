@@ -11,3 +11,4 @@ typedef struct
 
 void de_entity_setState(de_entity *const, de_state);
 void de_entity_setDestructor(de_entity *const, de_state);
+void de_entity_execState(de_entity *const, de_state);
