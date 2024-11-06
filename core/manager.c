@@ -8,22 +8,12 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 void de_manager_update(de_manager *const this)
 {
-    inline __attribute__((always_inline)) void _update(de_entity *const entity)
-    {
-        entity->handler(entity, entity->data);
-    }
-
-    uclist_iterator(&this->list, _update, 1);
+    uclist_iterator(&this->list, de_entity_update, 1);
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    void _destroy(de_entity *const entity)
-    {
-        entity->destructor ?: entity->destructor(entity, entity->data);
-    }
-
-    uclist_iterator(&this->list, _destroy, 1);
+    uclist_iterator(&this->list, de_entity_destroy, 1);
     uclist_reset(&this->list);
 }
 
@@ -45,6 +35,7 @@ de_entity *de_manager_newEntity(de_manager *const this)
     }
     else
     {
+        de_entity_setManager(entity, this);
         de_entity_setState(entity, 0);
         de_entity_setDestructor(entity, 0);
     }
@@ -54,7 +45,7 @@ de_entity *de_manager_newEntity(de_manager *const this)
 
 int de_manager_deleteEntity(de_manager *const this, de_entity *const entity)
 {
-    int ret = uclist_remove(&this->list, entity, 0);
+    int ret = uclist_remove(&this->list, entity, de_entity_destroy);
 
 #if DARKEN_WARNING
     switch (ret)
