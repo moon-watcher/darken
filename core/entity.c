@@ -42,18 +42,18 @@ void de_entity_setManager(de_entity *const this, de_manager *const manager)
     this->manager = manager;
 }
 
-void de_entity_setDestructor(de_entity *const this, de_state state)
+void de_entity_setDestructor(de_entity *const this, de_state destructor)
 {
-    this->destructor = state ?: _nullf;
+    this->destructor = destructor ?: _nullf;
 }
 
-void de_entity_execState(de_entity *const this, de_state state)
+void de_entity_execState(de_entity *const this, de_state exec)
 {
-    if (state == 0)
+    if (exec == 0)
     {
         DARKEN_WARNING("Entity: exec not set");
         return;
     }
 
-    state(this, this->data);
+    exec(this, this->data);
 }
