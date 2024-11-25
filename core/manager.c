@@ -1,9 +1,19 @@
 #include "manager.h"
 #include "../debug.h"
 
+static inline __attribute__((always_inline)) void _update(de_entity *const entity)
+{
+    entity->handler = entity->handler(entity, entity->data);
+}
+
 static void _destroy(de_entity *const entity)
 {
     entity->destructor != 0 && entity->destructor(entity, entity->data);
+}
+
+static void *_nullf()
+{
+    return _nullf;
 }
 
 //
@@ -15,7 +25,7 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 void de_manager_update(de_manager *const this)
 {
-    uclist_iterator(&this->list, de_entity_update, 1);
+    uclist_iterator(&this->list, _update, 1);
 }
 
 void de_manager_reset(de_manager *const this)
@@ -43,7 +53,7 @@ de_entity *de_manager_new(de_manager *const this)
     }
 
     entity->manager = this;
-    de_entity_set(entity, 0);
+    entity->handler = _nullf;
 
     return entity;
 }
