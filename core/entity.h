@@ -15,4 +15,4 @@ typedef struct de_entity
 int de_entity_delete(de_entity *const);
 void de_entity_destructor(de_entity *const, de_state);
 void de_entity_set(de_entity *const, de_state);
-void de_entity_exec(de_entity *const, de_state);
+void *de_entity_exec(de_entity *const, de_state);
