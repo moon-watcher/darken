@@ -1,7 +1,6 @@
 #include "config.h"
 #include "core/entity.h"
 #include "core/manager.h"
-#include "debug.h"
 
 static bool loop;
 
@@ -9,6 +8,7 @@ void darken_loop(de_state state, unsigned size)
 {
     if (state == 0)
     {
+        loop = false;
         return;
     }
 
@@ -18,7 +18,7 @@ void darken_loop(de_state state, unsigned size)
     loop = true;
     while (loop == true)
     {
-        entity->handler = entity->handler(entity, entity->data);
+        de_entity_update(entity);
     }
 
     free(entity);
