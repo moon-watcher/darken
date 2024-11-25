@@ -1,6 +1,5 @@
 #include "config.h"
 #include "core/entity.h"
-#include "core/manager.h"
 
 static bool loop;
 
