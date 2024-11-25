@@ -1,3 +1,3 @@
 #pragma once
 
-typedef void (*de_state)();
+typedef void *(*de_state)();
