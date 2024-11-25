@@ -3,7 +3,7 @@
 
 static bool loop;
 
-void darken_loop(de_state state, unsigned size)
+void darken_loop(void *(*state)(), unsigned size)
 {
     if (state == 0)
     {
