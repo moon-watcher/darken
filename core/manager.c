@@ -20,7 +20,7 @@ static void *_nullf()
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_init(this, sizeof(de_entity) + bytes);
+    uclist_init(&this->list, sizeof(de_entity) + bytes);
 }
 
 void de_manager_update(de_manager *const this)
