@@ -52,7 +52,6 @@ de_entity *de_manager_new(de_manager *const this)
         return 0;
     }
 
-    entity->manager = this;
     entity->handler = _nullf;
 
     return entity;
