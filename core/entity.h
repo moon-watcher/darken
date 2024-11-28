@@ -1,6 +1,6 @@
 #pragma once
 
-typedef struct de_entity
+typedef struct
 {
     void *(*handler)();
     void *(*destructor)();

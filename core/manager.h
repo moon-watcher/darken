@@ -2,7 +2,7 @@
 
 #include "../uclist/uclist.h"
 
-typedef struct de_manager
+typedef struct
 {
     uclist list;
 } de_manager;
