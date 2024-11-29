@@ -2,8 +2,8 @@
 
 typedef struct
 {
-    void *(*handler)();
-    void *(*destructor)();
+    void *(*handler)(void *const);
+    void *(*destructor)(void *const);
     //
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
