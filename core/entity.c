@@ -7,5 +7,5 @@ void *de_entity_delete(de_entity *const this)
         return 0;
     }
 
-    return this->destructor(this->data, this);
+    return this->destructor(this->data);
 }

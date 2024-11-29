@@ -3,12 +3,12 @@
 
 static inline __attribute__((always_inline)) void _update(de_entity *const entity)
 {
-    entity->handler = entity->handler(entity->data, entity);
+    entity->handler = entity->handler(entity->data);
 }
 
 static void _destroy(de_entity *const entity)
 {
-    entity->destructor != 0 && entity->destructor(entity->data, entity);
+    entity->destructor != 0 && entity->destructor(entity->data);
 }
 
 static void *_nullf()
