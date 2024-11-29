@@ -1,11 +1,11 @@
 #include "entity.h"
 
-void *de_entity_delete(de_entity *const this)
+inline __attribute__((always_inline)) void *de_entity_update(de_entity *const entity)
 {
-    if (this->destructor == 0)
-    {
-        return 0;
-    }
+    return entity->handler = entity->handler(entity->data, entity);
+}
 
-    return this->destructor(this->data, this);
+void *de_entity_delete(de_entity *const entity)
+{
+    return entity->destructor != 0 ? entity->destructor(entity->data, entity) : 0;
 }

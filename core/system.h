@@ -2,7 +2,7 @@
 
 #include "../uclist/uclist.h"
 
-typedef struct
+typedef struct de_system
 {
     void (*update)();
     unsigned params;
