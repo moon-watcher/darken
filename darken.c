@@ -17,7 +17,7 @@ void darken_loop(void *(*state)(), unsigned size)
     loop = true;
     while (loop == true)
     {
-        entity->handler = entity->handler(entity->data);
+        entity->handler = entity->handler(entity, entity->data);
     }
 
     free(entity);
