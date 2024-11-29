@@ -2,5 +2,10 @@
 
 void *de_entity_delete(de_entity *const this)
 {
-    return this->destructor ? this->destructor(this->data) : 0;
+    if (this->destructor == 0)
+    {
+        return 0;
+    }
+
+    return this->destructor(this->data);
 }
