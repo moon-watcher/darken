@@ -7,5 +7,5 @@ inline __attribute__((always_inline)) de_state de_entity_update(de_entity *const
 
 de_state de_entity_delete(de_entity *const entity)
 {
-    return entity->destructor != 0 ? entity->destructor(entity->data, entity) : 0;
+    return (entity->destructor != 0) ? entity->destructor(entity->data, entity) : 0;
 }
