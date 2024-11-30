@@ -14,5 +14,5 @@ void de_manager_end(de_manager *const);
 
 #include "entity.h"
 
-de_entity *de_manager_new(de_manager *const);
+de_entity *de_manager_new(de_manager *const, de_state (*constructor)());
 int de_manager_delete(de_manager *const, de_entity *const);

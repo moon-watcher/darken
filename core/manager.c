@@ -25,7 +25,7 @@ void de_manager_end(de_manager *const this)
 
 //
 
-de_entity *de_manager_new(de_manager *const this)
+de_entity *de_manager_new(de_manager *const this, de_state (*constructor)())
 {
     de_entity *entity = uclist_alloc(&this->list);
 
@@ -35,7 +35,8 @@ de_entity *de_manager_new(de_manager *const this)
         return 0;
     }
 
-    entity->handler = de_state_null;
+    entity->handler = constructor != 0 ? constructor : de_state_null;
+    de_entity_update(entity);
 
     return entity;
 }
