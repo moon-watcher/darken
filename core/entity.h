@@ -1,12 +1,14 @@
 #pragma once
 
+#include "state.h"
+
 typedef struct de_entity
 {
-    void *(*handler)();
-    void *(*destructor)();
+    de_state (*handler)();
+    de_state (*destructor)();
     //
     unsigned char data[]; // Bytes for casting data & components
 } de_entity;
 
-void *de_entity_update(de_entity *const);
-void *de_entity_delete(de_entity *const);
+de_state de_entity_update(de_entity *const);
+de_state de_entity_delete(de_entity *const);

@@ -35,7 +35,7 @@ de_entity *de_manager_new(de_manager *const this)
         return 0;
     }
 
-    entity->handler = ({void *f() { return f; } f; });
+    entity->handler = de_state_null;
 
     return entity;
 }
