@@ -2,7 +2,7 @@
 
 de_entity *de_entity_set(de_entity *const this, de_state (*state)())
 {
-    this->handler = (state != 0) ? state : ({de_state f(){ return f; } f; });
+    this->handler = (state != 0) ? state : de_state_null;
 
     return this;
 }

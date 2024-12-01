@@ -35,9 +35,7 @@ de_entity *de_manager_new(de_manager *const this, de_state (*state)())
         return 0;
     }
 
-    de_entity_set(entity, state);
-
-    return entity;
+    return de_entity_set(entity, state);
 }
 
 int de_manager_delete(de_manager *const this, de_entity *const entity)
