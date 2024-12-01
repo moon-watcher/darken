@@ -4,7 +4,7 @@
 
 typedef struct de_entity
 {
-    de_state (*handler)();
+    de_state (*state)();
     de_state (*destructor)();
     //
     unsigned char data[]; // Bytes for casting data & components
