@@ -3,13 +3,8 @@
 
 void darken(de_state (*state)(), unsigned size)
 {
-    if (state == 0)
-    {
-        return;
-    }
-
     de_entity *entity = malloc(sizeof(de_entity) + size);
-    entity->handler = state;
+    de_entity_set(entity, state);
 
     while (de_entity_update(entity))
         ;

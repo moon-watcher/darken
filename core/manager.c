@@ -35,7 +35,7 @@ de_entity *de_manager_new(de_manager *const this, de_state (*state)())
         return 0;
     }
 
-    entity->handler = (state != 0) ? state : ({de_state f(){ return f; } f;});
+    de_entity_set(entity, state);
 
     return entity;
 }
