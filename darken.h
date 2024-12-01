@@ -8,5 +8,5 @@
 
 void darken(de_state (*)(), unsigned);
 
-#define DE_CAST(DATA, TYPE) ((TYPE *const)DATA)
-#define DE_DATA(DATA, TYPE, VAR) TYPE *const VAR = DE_CAST(DATA, TYPE)
+#define DE_CAST(ENTITY, TYPE) ((TYPE *const)ENTITY->data)
+#define DE_DATA(ENTITY, TYPE, VAR) TYPE *const VAR = DE_CAST(ENTITY, TYPE)
