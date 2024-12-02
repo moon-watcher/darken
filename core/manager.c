@@ -25,7 +25,7 @@ void de_manager_end(de_manager *const this)
 
 //
 
-de_entity *de_manager_new(de_manager *const this, de_state (*state)())
+de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
     de_entity *entity = uclist_alloc(&this->list);
 

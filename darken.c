@@ -1,7 +1,7 @@
 #include "config.h"
 #include "core/entity.h"
 
-void darken(de_state (*state)(), unsigned size)
+void darken(de_state_f state, unsigned size)
 {
     de_entity *entity = malloc(sizeof(de_entity) + size);
     de_entity_set(entity, state);

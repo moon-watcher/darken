@@ -1,13 +1,13 @@
 #include "entity.h"
 
-de_entity *de_entity_set(de_entity *const this, de_state (*state)())
+de_entity *de_entity_set(de_entity *const this, de_state_f state)
 {
     this->state = (state != 0) ? state : de_state_null;
 
     return this;
 }
 
-de_entity *de_entity_destructor(de_entity *const this, de_state (*destructor)())
+de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 {
     this->destructor = destructor;
 
