@@ -19,7 +19,7 @@ void de_manager_reset(de_manager *const this)
 
 void de_manager_end(de_manager *const this)
 {
-    de_manager_reset(this);
+    uclist_iterator(&this->list, de_entity_delete, 1);
     uclist_end(&this->list);
 }
 
