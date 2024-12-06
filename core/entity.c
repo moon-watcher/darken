@@ -18,15 +18,26 @@ de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 
 inline __attribute__((always_inline)) de_state de_entity_exec(de_entity *const this)
 {
+    if (this->state == 0)
+    {
+        return 0;
+    }
+
     return this->state(this->data, this);
 }
 
 inline __attribute__((always_inline)) de_state de_entity_update(de_entity *const this)
 {
-    return this->state = de_entity_exec(this);
+    if (this->state == 0)
+    {
+        de_entity_delete(this);
+        return 0;
+    }
+
+    return this->state = this->state(this->data, this);
 }
 
-de_state de_entity_delete(de_entity *const this)
+int de_entity_delete(de_entity *const this)
 {
-    return (this->destructor != 0) ? this->destructor(this->data, this) : 0;
+    return de_manager_delete(this->manager, this);
 }
