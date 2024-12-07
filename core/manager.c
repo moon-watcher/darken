@@ -1,9 +1,12 @@
 #include "manager.h"
-#include "../debug.h"
+#include "../config.h"
 
-static void _destroy(de_entity *const this)
+static void _destroy(de_entity *const entity)
 {
-    this->destructor && this->destructor(this->data, this);
+    if (entity->destructor != 0)
+    {
+        entity->destructor(entity->data, entity);
+    }
 }
 
 //
@@ -12,25 +15,6 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uclist_init(&this->list, sizeof(de_entity) + bytes);
 }
-
-void de_manager_update(de_manager *const this)
-{
-    uclist_iterator(&this->list, de_entity_update, 1);
-}
-
-void de_manager_reset(de_manager *const this)
-{
-    uclist_iterator(&this->list, _destroy, 1);
-    uclist_reset(&this->list);
-}
-
-void de_manager_end(de_manager *const this)
-{
-    uclist_iterator(&this->list, _destroy, 1);
-    uclist_end(&this->list);
-}
-
-//
 
 de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
@@ -43,24 +27,39 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
     }
 
     entity->manager = this;
-    return de_entity_set(entity, state);
+    entity->state = state;
+
+    return entity;
 }
 
-int de_manager_delete(de_manager *const this, de_entity *const entity)
+void de_manager_update(de_manager *const this)
 {
-    int ret = uclist_remove(&this->list, entity, _destroy);
+    unsigned index = 0;
 
-#if DARKEN_WARNING
-    switch (ret)
+    while (index < this->list.count)
     {
-    case -1:
-        DARKEN_WARNING("Manager: deleteEntity: entity not found");
-        break;
-    case -2:
-        DARKEN_WARNING("Manager: deleteEntity: count is 0");
-        break;
-    }
-#endif
+        de_entity *const entity = this->list.items[index];
 
-    return ret;
+        if (entity->state != 0)
+        {
+            entity->state = entity->state(entity->data, entity);
+            ++index;
+        }
+        else
+        {
+            uclist_removeByIndex(&this->list, index, _destroy);
+        }
+    }
+}
+
+void de_manager_reset(de_manager *const this)
+{
+    uclist_iterator(&this->list, _destroy, 1);
+    uclist_reset(&this->list);
+}
+
+void de_manager_end(de_manager *const this)
+{
+    uclist_iterator(&this->list, _destroy, 1);
+    uclist_end(&this->list);
 }
