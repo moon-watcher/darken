@@ -142,10 +142,7 @@ void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
         exec(this->items[index]);
     }
 
-    --this->count;
-    
-    this->items[index] = this->items[this->count];
-    this->items[this->count] = 0;
+    this->items[index] = this->items[--this->count];
 }
 
 void uclist_reset(uclist *const this)
