@@ -35,10 +35,12 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 void de_manager_update(de_manager *const this)
 {
     unsigned index = 0;
+    uclist *const list = &this->list;
+    de_entity **items = list->items;
 
-    while (index < this->list.count)
+    while (index < list->count)
     {
-        de_entity *const entity = this->list.items[index];
+        de_entity *const entity = items[index];
 
         if (entity->state != 0)
         {
@@ -47,7 +49,7 @@ void de_manager_update(de_manager *const this)
         }
         else
         {
-            uclist_removeByIndex(&this->list, index, _destroy);
+            uclist_removeByIndex(list, index, _destroy);
         }
     }
 }
