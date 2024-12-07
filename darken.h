@@ -1,6 +1,5 @@
 #pragma once
 
-#include "debug.h"
 #include "core/state.h"
 #include "core/entity.h"
 #include "core/manager.h"
