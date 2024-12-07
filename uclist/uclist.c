@@ -129,15 +129,23 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
 
     if (index >= 0)
     {
-        if (exec != 0)
-        {
-            exec(this->items[index]);
-        }
-
-        this->items[index] = this->items[--this->count];
+        uclist_removeByIndex(this, index, exec);
     }
 
     return index;
+}
+
+void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
+{
+    if (exec != 0)
+    {
+        exec(this->items[index]);
+    }
+
+    --this->count;
+    
+    this->items[index] = this->items[this->count];
+    this->items[this->count] = 0;
 }
 
 void uclist_reset(uclist *const this)
