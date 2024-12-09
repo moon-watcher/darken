@@ -22,7 +22,7 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 
     if (entity == 0)
     {
-        DARKEN_ERROR("Manager: uclist_alloc() is null");
+        DARKEN_LOG("Manager: uclist_alloc() is null");
     }
     else
     {

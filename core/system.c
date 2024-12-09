@@ -5,7 +5,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
     if (params == 0)
     {
-        DARKEN_WARNING("system, set params to 1");
+        DARKEN_LOG("system, set params to 1");
         params = 1;
     }
 
@@ -26,7 +26,7 @@ int de_system_add(de_system *const this, ...)
     {
         if (0 == uclist_add(list, va_arg(ap, void *const)))
         {
-            DARKEN_ERROR("system add reference");
+            DARKEN_LOG("system add reference");
             return 0;
         }
     }
@@ -46,14 +46,14 @@ int de_system_delete(de_system *const this, ...)
     {
         switch (uclist_remove(list, va_arg(ap, void *const), 0))
         {
-#if DARKEN_WARNING
+#if DARKEN_LOG
         case -1:
             ret = -1;
-            DARKEN_WARNING("system, ref not found");
+            DARKEN_LOG("system, ref not found");
             break;
         case -2:
             ret = -2;
-            DARKEN_WARNING("system, this->count");
+            DARKEN_LOG("system, this->count");
             break;
 #endif
         }
@@ -66,17 +66,17 @@ int de_system_update(de_system *const this)
 {
     int ret = uclist_iterator(&this->list, this->update, this->params);
 
-#if DARKEN_WARNING
+#if DARKEN_LOG
     switch (ret)
     {
     case -4:
-        DARKEN_WARNING("system, this->params");
+        DARKEN_LOG("system, this->params");
         break;
     case -3:
-        DARKEN_WARNING("system, this->update");
+        DARKEN_LOG("system, this->update");
         break;
     case -2:
-        DARKEN_WARNING("system, this->count");
+        DARKEN_LOG("system, this->count");
         break;
     }
 #endif
