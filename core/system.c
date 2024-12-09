@@ -1,8 +1,14 @@
 #include "system.h"
 #include "../config.h"
 
-void de_system_init(de_system *const this, void (*update)(), unsigned params)
+int de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
+    if (update == 0)
+    {
+        DARKEN_LOG("de_system_init: update is null");
+        return 0;
+    }
+
     if (params == 0)
     {
         DARKEN_LOG("de_system_init: params forced to 1");
@@ -13,6 +19,8 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     this->params = params;
 
     uclist_init(&this->list, 0);
+
+    return 1;
 }
 
 void *de_system_add(de_system *const this, void *const data)
@@ -46,26 +54,14 @@ int de_system_delete(de_system *const this, void *const data)
     return ret;
 }
 
-int de_system_update(de_system *const this)
+void de_system_update(de_system *const this)
 {
-    int ret = uclist_iterator(&this->list, this->update, this->params);
-
-#if DARKEN_LOG
-    switch (ret)
+    if (this->list.count == 0)
     {
-    case UCLIST_ERROR_NBITEMS:
-        DARKEN_LOG("de_system_update: this->params");
-        break;
-    case UCLIST_ERROR_ITERATOR:
-        DARKEN_LOG("de_system_update: no function");
-        break;
-    case UCLIST_ERROR_COUNT:
-        DARKEN_LOG("de_system_update: count is 0");
-        break;
+        return;
     }
-#endif
 
-    return ret;
+    uclist_iteratorEx(&this->list, this->update, this->params);
 }
 
 void de_system_reset(de_system *const this)
