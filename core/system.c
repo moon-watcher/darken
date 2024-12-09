@@ -1,7 +1,7 @@
 #include "system.h"
 #include "../config.h"
 
-int de_system_init(de_system *const this, void (*update)(), unsigned params)
+unsigned de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
     if (update == 0)
     {

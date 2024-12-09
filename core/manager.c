@@ -3,10 +3,12 @@
 
 static void _destroy(de_entity *const entity)
 {
-    if (entity->destructor != 0)
+    if (entity->destructor == 0)
     {
-        entity->destructor(entity->data, entity);
+        return;
     }
+
+    entity->destructor(entity->data, entity);
 }
 
 //
@@ -23,11 +25,10 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
     if (entity == 0)
     {
         DARKEN_LOG("de_manager_new: not allocated");
+        return 0;
     }
-    else
-    {
-        entity->state = state;
-    }
+
+    entity->state = state;
 
     return entity;
 }
