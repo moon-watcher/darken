@@ -5,7 +5,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
     if (params == 0)
     {
-        DARKEN_LOG("system, set params to 1");
+        DARKEN_LOG("de_system_init: params forced to 1");
         params = 1;
     }
 
@@ -15,49 +15,33 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     uclist_init(&this->list, 0);
 }
 
-int de_system_add(de_system *const this, ...)
+void *de_system_add(de_system *const this, void *const data)
 {
-    va_list ap;
-    va_start(ap, this);
-    unsigned const params = this->params;
-    uclist *const list = &this->list;
+    void *ret = uclist_add(&this->list, data);
 
-    for (unsigned i = 0; i < params; i++)
+    if (ret == UCLIST_ERROR_ALLOC)
     {
-        if (0 == uclist_add(list, va_arg(ap, void *const)))
-        {
-            DARKEN_LOG("system add reference");
-            return 0;
-        }
+        DARKEN_LOG("de_system_add: no allocated");
     }
 
-    return 1;
+    return ret;
 }
 
-int de_system_delete(de_system *const this, ...)
+int de_system_delete(de_system *const this, void *const data)
 {
-    va_list ap;
-    va_start(ap, this);
-    unsigned const params = this->params;
-    uclist *const list = &this->list;
-    int ret = 1;
+    int ret = uclist_remove(&this->list, data, 0);
 
-    for (unsigned i = 0; i < params; i++)
-    {
-        switch (uclist_remove(list, va_arg(ap, void *const), 0))
-        {
 #if DARKEN_LOG
-        case -1:
-            ret = -1;
-            DARKEN_LOG("system, ref not found");
-            break;
-        case -2:
-            ret = -2;
-            DARKEN_LOG("system, this->count");
-            break;
-#endif
-        }
+    switch (ret)
+    {
+    case UCLIST_ERROR_NOTFOUND:
+        DARKEN_LOG("de_system_delete: reference not found");
+        break;
+    case UCLIST_ERROR_COUNT:
+        DARKEN_LOG("de_system_delete: count is 0");
+        break;
     }
+#endif
 
     return ret;
 }
@@ -69,14 +53,14 @@ int de_system_update(de_system *const this)
 #if DARKEN_LOG
     switch (ret)
     {
-    case -4:
-        DARKEN_LOG("system, this->params");
+    case UCLIST_ERROR_NBITEMS:
+        DARKEN_LOG("de_system_update: this->params");
         break;
-    case -3:
-        DARKEN_LOG("system, this->update");
+    case UCLIST_ERROR_ITERATOR:
+        DARKEN_LOG("de_system_update: no function");
         break;
-    case -2:
-        DARKEN_LOG("system, this->count");
+    case UCLIST_ERROR_COUNT:
+        DARKEN_LOG("de_system_update: count is 0");
         break;
     }
 #endif
@@ -93,3 +77,17 @@ void de_system_end(de_system *const this)
 {
     uclist_end(&this->list);
 }
+
+// void de_system_add(de_system *const this, ...)
+// {
+//     va_list ap; va_start(ap, this);
+//     for (unsigned i = 0; i < this->params; i++)
+//         uclist_add(&this->list, va_arg(ap, void *const)));
+// }
+
+// void de_system_delete(de_system *const this, ...)
+// {
+//     va_list ap; va_start(ap, this);
+//     for (unsigned i = 0; i < this->params; i++)
+//         uclist_remove(&this->list, va_arg(ap, void *const), 0);
+// }
