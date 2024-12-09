@@ -26,7 +26,6 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
     }
     else
     {
-        entity->manager = this;
         entity->state = state;
     }
 
