@@ -37,6 +37,8 @@ void uclist_init(uclist *const this, unsigned itemSize)
 
 void *uclist_alloc(uclist *const this)
 {
+    void *ptr;
+
     if (this->count < this->capacity)
     {
         unsigned count = this->count++;
@@ -44,24 +46,14 @@ void *uclist_alloc(uclist *const this)
 
         return this->items[count];
     }
-
-    void *ptr = malloc(this->itemSize);
-
-    if (ptr == 0)
+    else if ((ptr = malloc(this->itemSize)) == 0)
     {
         return UCLIST_ERROR_ALLOC;
     }
 
     memset(ptr, 0, this->itemSize);
 
-    void *added = uclist_add(this, ptr);
-
-    if (added == 0)
-    {
-        free(ptr);
-    }
-
-    return added;
+    return uclist_add(this, ptr);
 }
 
 void *uclist_add(uclist *const this, void *const add)
@@ -152,7 +144,7 @@ void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
     }
 
     --this->count;
-    
+
     void *const swap = this->items[index];
     this->items[index] = this->items[this->count];
     this->items[this->count] = swap;
