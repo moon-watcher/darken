@@ -3,8 +3,7 @@
 /**
  * TODO: add lastIndex to uclist struct
  * TODO: create uclist_lastIndex()
- * TODO: create uclist_removeByIndex()
- * TODO: rewrite uclist_alloc()/uclist_add() ussage
+ * TODO: redefine uclist_alloc()/uclist_add() ussage
  */
 
 #include "uclist.h"
