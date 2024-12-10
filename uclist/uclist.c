@@ -1,8 +1,6 @@
 // Unordered Cacheable List
 
 /**
- * TODO: add lastIndex to uclist struct
- * TODO: create uclist_lastIndex()
  * TODO: redefine uclist_alloc()/uclist_add() ussage
  */
 
