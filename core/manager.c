@@ -24,15 +24,15 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
     }
 
     de_entity_state(entity, state);
-    
+
     return entity;
 }
 
 void de_manager_update(de_manager *const this)
 {
-    for (unsigned index = 0; index < this->count;)
+    for (unsigned i = 0; i < this->count;)
     {
-        de_entity_update(this->items[index++]) ?: uclist_removeByIndex(this, --index, _destroy);
+        de_entity_update(this->items[i++]) ?: uclist_removeByIndex(this, --i, _destroy);
     }
 }
 
