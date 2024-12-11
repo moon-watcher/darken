@@ -23,8 +23,8 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
         return 0;
     }
 
-    entity->state = state;
-
+    de_entity_state(entity, state);
+    
     return entity;
 }
 
