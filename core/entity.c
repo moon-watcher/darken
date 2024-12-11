@@ -1,13 +1,8 @@
 #include "entity.h"
 
-de_state de_entity_exec(de_entity *const this)
+inline __attribute__((always_inline)) de_state de_entity_update(de_entity *const this)
 {
-    if (this->state == 0)
-    {
-        return 0;
-    }
-
-    return this->state(this->data, this);
+    return this->state = (this->state == 0 ?: this->state(this->data, this));
 }
 
 void de_entity_delete(de_entity *const this)
