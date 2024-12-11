@@ -3,24 +3,19 @@
 
 static void _destroy(de_entity *const entity)
 {
-    if (entity->destructor == 0)
-    {
-        return;
-    }
-
-    entity->destructor(entity->data, entity);
+    entity->destructor && entity->destructor(entity->data, entity);
 }
 
 //
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_init(&this->list, sizeof(de_entity) + bytes);
+    uclist_init(this, sizeof(de_entity) + bytes);
 }
 
 de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
-    de_entity *entity = uclist_alloc(&this->list);
+    de_entity *entity = uclist_alloc(this);
 
     if (entity == 0)
     {
@@ -35,34 +30,20 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 
 void de_manager_update(de_manager *const this)
 {
-    unsigned index = 0;
-    uclist *const list = &this->list;
-    de_entity **items = list->items;
-
-    while (index < list->count)
+    for (unsigned index = 0; index < this->count;)
     {
-        de_entity *const entity = items[index];
-
-        if (entity->state != 0)
-        {
-            entity->state = entity->state(entity->data, entity);
-            ++index;
-        }
-        else
-        {
-            uclist_removeByIndex(list, index, _destroy);
-        }
+        de_entity_update(this->items[index++]) ?: uclist_removeByIndex(this, --index, _destroy);
     }
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, _destroy, 1);
-    uclist_reset(&this->list);
+    uclist_iterator(this, _destroy, 1);
+    uclist_reset(this);
 }
 
 void de_manager_end(de_manager *const this)
 {
-    uclist_iterator(&this->list, _destroy, 1);
-    uclist_end(&this->list);
+    uclist_iterator(this, _destroy, 1);
+    uclist_end(this);
 }
