@@ -21,6 +21,21 @@ FUNC(f6, items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4], i
 
 static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
+static void *_resize(uclist *const this)
+{
+    void *ptr = malloc((this->capacity + 1) * sizeof(void *));
+
+    if (ptr != UCLIST_ALLOC_ERROR)
+    {
+        memcpy(ptr, this->items, this->capacity * sizeof(void *));
+        free(this->items);
+        this->items = ptr;
+        ++this->capacity;
+    }
+
+    return ptr;
+}
+
 //
 
 void uclist_init(uclist *const this, unsigned maxItemSize)
@@ -49,19 +64,9 @@ void *uclist_alloc(uclist *const this)
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (this->count >= this->capacity)
+    if (this->count >= this->capacity && _resize(this) == 0)
     {
-        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
-
-        if (ptr == 0)
-        {
-            return UCLIST_ALLOC_ERROR;
-        }
-
-        memcpy(ptr, this->items, this->capacity * sizeof(void *));
-        free(this->items);
-        this->items = ptr;
-        ++this->capacity;
+        return UCLIST_ALLOC_ERROR;
     }
 
     return this->items[this->count++] = add;
