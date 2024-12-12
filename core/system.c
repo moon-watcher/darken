@@ -27,7 +27,7 @@ void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(&this->list, data);
 
-    if (ret == UCLIST_ERROR_ALLOC)
+    if (ret == UCLIST_ALLOC_ERROR)
     {
         DARKEN_LOG("de_system_add: no allocated");
     }
@@ -42,10 +42,10 @@ int de_system_delete(de_system *const this, void *const data)
 #if DARKEN_LOG
     switch (ret)
     {
-    case UCLIST_ERROR_NOTFOUND:
+    case UCLIST_NOT_FOUND:
         DARKEN_LOG("de_system_delete: reference not found");
         break;
-    case UCLIST_ERROR_COUNT:
+    case UCLIST_NO_COUNT:
         DARKEN_LOG("de_system_delete: count is 0");
         break;
     }

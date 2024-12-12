@@ -46,7 +46,7 @@ void *uclist_alloc(uclist *const this)
     }
     else if ((ptr = malloc(this->itemSize)) == 0)
     {
-        return UCLIST_ERROR_ALLOC;
+        return UCLIST_ALLOC_ERROR;
     }
 
     memset(ptr, 0, this->itemSize);
@@ -62,7 +62,7 @@ void *uclist_add(uclist *const this, void *const add)
 
         if (ptr == 0)
         {
-            return UCLIST_ERROR_ALLOC;
+            return UCLIST_ALLOC_ERROR;
         }
 
         memcpy(ptr, this->items, this->capacity * sizeof(void *));
@@ -78,7 +78,7 @@ int uclist_find(uclist *const this, void *const data)
 {
     if (this->count == 0)
     {
-        return UCLIST_ERROR_COUNT;
+        return UCLIST_NO_COUNT;
     }
 
     for (unsigned i = 0; i < this->count; i++)
@@ -89,22 +89,22 @@ int uclist_find(uclist *const this, void *const data)
         }
     }
 
-    return UCLIST_ERROR_NOTFOUND;
+    return UCLIST_NOT_FOUND;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
     if (nbItems == 0)
     {
-        return UCLIST_ERROR_NBITEMS;
+        return UCLIST_NO_NBITEMS;
     }
     else if (iterator == 0)
     {
-        return UCLIST_ERROR_ITERATOR;
+        return UCLIST_NO_ITERATOR;
     }
     else if (this->count == 0)
     {
-        return UCLIST_ERROR_COUNT;
+        return UCLIST_NO_COUNT;
     }
 
     _exec[nbItems](this->items, iterator, this->count, nbItems);

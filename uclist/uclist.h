@@ -3,11 +3,11 @@
 enum
 {
     UCLIST_OK = 1,
-    UCLIST_ERROR_ALLOC = 0,
-    UCLIST_ERROR_NOTFOUND = -1,
-    UCLIST_ERROR_COUNT = -2,
-    UCLIST_ERROR_ITERATOR = -3,
-    UCLIST_ERROR_NBITEMS = -4,
+    UCLIST_ALLOC_ERROR = 0,
+    UCLIST_NOT_FOUND = -1,
+    UCLIST_NO_COUNT = -2,
+    UCLIST_NO_ITERATOR = -3,
+    UCLIST_NO_NBITEMS = -4,
 };
 
 typedef struct uclist
