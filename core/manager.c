@@ -37,7 +37,7 @@ void de_manager_update(de_manager *const this)
 {
     for (unsigned index = 0; index < this->count;)
     {
-        de_entity *const entity = this->items[index++];
+        de_entity *const entity = this->list[index++];
 
         if (entity->state != 0)
         {

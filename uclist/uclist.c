@@ -3,21 +3,21 @@
 #include "uclist.h"
 #include "config.h"
 
-#define FUNC(NAME, ...)                                                             \
-    static void NAME(void *items[], void (*it)(), unsigned count, unsigned nbItems) \
-    {                                                                               \
-        for (unsigned i = 0; i < count; i += nbItems)                               \
-        {                                                                           \
-            it(__VA_ARGS__);                                                        \
-        }                                                                           \
+#define FUNC(NAME, ...)                                                            \
+    static void NAME(void *list[], void (*it)(), unsigned count, unsigned nbItems) \
+    {                                                                              \
+        for (unsigned i = 0; i < count; i += nbItems)                              \
+        {                                                                          \
+            it(__VA_ARGS__);                                                       \
+        }                                                                          \
     }
 
-FUNC(f1, items[i + 0]);
-FUNC(f2, items[i + 0], items[i + 1]);
-FUNC(f3, items[i + 0], items[i + 1], items[i + 2]);
-FUNC(f4, items[i + 0], items[i + 1], items[i + 2], items[i + 3]);
-FUNC(f5, items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4]);
-FUNC(f6, items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4], items[i + 5]);
+FUNC(f1, list[i + 0]);
+FUNC(f2, list[i + 0], list[i + 1]);
+FUNC(f3, list[i + 0], list[i + 1], list[i + 2]);
+FUNC(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
+FUNC(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
+FUNC(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
 
 static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
@@ -27,9 +27,9 @@ static void *_resize(uclist *const this)
 
     if (ptr != UCLIST_ALLOC_ERROR)
     {
-        memcpy(ptr, this->items, this->capacity * sizeof(void *));
-        free(this->items);
-        this->items = ptr;
+        memcpy(ptr, this->list, this->capacity * sizeof(void *));
+        free(this->list);
+        this->list = ptr;
         ++this->capacity;
     }
 
@@ -46,11 +46,11 @@ void uclist_init(uclist *const this, unsigned maxItemSize)
 
 void *uclist_alloc(uclist *const this)
 {
-    void *ptr = UCLIST_ALLOC_ERROR;;
+    void *ptr = UCLIST_ALLOC_ERROR;
 
     if (this->count < this->capacity)
     {
-        ptr = this->items[this->count++];
+        ptr = this->list[this->count++];
     }
     else if ((ptr = malloc(this->itemSize)) != 0)
     {
@@ -69,7 +69,7 @@ void *uclist_add(uclist *const this, void *const add)
         return UCLIST_ALLOC_ERROR;
     }
 
-    return this->items[this->count++] = add;
+    return this->list[this->count++] = add;
 }
 
 int uclist_find(uclist *const this, void *const data)
@@ -81,7 +81,7 @@ int uclist_find(uclist *const this, void *const data)
 
     for (unsigned i = 0; i < this->count; i++)
     {
-        if (this->items[i] == data)
+        if (this->list[i] == data)
         {
             return i;
         }
@@ -105,7 +105,7 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
         return UCLIST_NO_COUNT;
     }
 
-    _exec[nbItems](this->items, iterator, this->count, nbItems);
+    _exec[nbItems](this->list, iterator, this->count, nbItems);
 
     return UCLIST_OK;
 }
@@ -131,14 +131,14 @@ void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
 
     if (exec != 0)
     {
-        exec(this->items[index]);
+        exec(this->list[index]);
     }
 
     --this->count;
 
-    void *const swap = this->items[index];
-    this->items[index] = this->items[this->count];
-    this->items[this->count] = swap;
+    void *const swap = this->list[index];
+    this->list[index] = this->list[this->count];
+    this->list[this->count] = swap;
 }
 
 void uclist_reset(uclist *const this)
@@ -152,10 +152,10 @@ void uclist_end(uclist *const this)
     {
         for (unsigned i = 0; i < this->capacity; i++)
         {
-            free(this->items[i]);
+            free(this->list[i]);
         }
     }
 
-    free(this->items);
+    free(this->list);
     uclist_init(this, this->itemSize);
 }
