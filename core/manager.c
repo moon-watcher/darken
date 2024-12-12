@@ -3,7 +3,12 @@
 
 static void _destroy(de_entity *const entity)
 {
-    entity->destructor && entity->destructor(entity->data, entity);
+    if (entity->destructor == 0)
+    {
+        return;
+    }
+
+    entity->destructor(entity->data, entity);
 }
 
 //
@@ -30,9 +35,18 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 
 void de_manager_update(de_manager *const this)
 {
-    for (unsigned i = 0; i < this->count;)
+    for (unsigned index = 0; index < this->count;)
     {
-        de_entity_update(this->items[i++]) ?: uclist_removeByIndex(this, --i, _destroy);
+        de_entity *const entity = this->items[index++];
+
+        if (entity->state != 0)
+        {
+            entity->state = entity->state(entity->data, entity);
+        }
+        else
+        {
+            uclist_removeByIndex(this, --index, _destroy);
+        }
     }
 }
 
