@@ -1,9 +1,5 @@
 // Unordered Cacheable List
 
-/**
- * TODO: redefine uclist_alloc()/uclist_add() ussage
- */
-
 #include "uclist.h"
 #include "config.h"
 
@@ -25,36 +21,7 @@ FUNC(f6, items[i + 0], items[i + 1], items[i + 2], items[i + 3], items[i + 4], i
 
 static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
-//
-
-void uclist_init(uclist *const this, unsigned itemSize)
-{
-    memset(this, 0, sizeof(uclist));
-    this->itemSize = itemSize;
-}
-
-void *uclist_alloc(uclist *const this)
-{
-    void *ptr;
-
-    if (this->count < this->capacity)
-    {
-        unsigned count = this->count++;
-        memset(this->items[count], 0, this->itemSize);
-
-        return this->items[count];
-    }
-    else if ((ptr = malloc(this->itemSize)) == 0)
-    {
-        return UCLIST_ALLOC_ERROR;
-    }
-
-    memset(ptr, 0, this->itemSize);
-
-    return uclist_add(this, ptr);
-}
-
-void *uclist_add(uclist *const this, void *const add)
+static void *_add(uclist *const this, void *const ptr)
 {
     if (this->count >= this->capacity)
     {
@@ -71,7 +38,51 @@ void *uclist_add(uclist *const this, void *const add)
         ++this->capacity;
     }
 
-    return this->items[this->count++] = add;
+    return this->items[this->count++] = ptr;
+}
+
+//
+
+void uclist_init(uclist *const this, unsigned maxItemSize)
+{
+    memset(this, 0, sizeof(uclist));
+    this->itemSize = maxItemSize;
+}
+
+void *uclist_alloc(uclist *const this)
+{
+    if (this->itemSize == 0)
+    {
+        return 0;
+    }
+
+    void *ptr;
+
+    if (this->count < this->capacity)
+    {
+        unsigned count = this->count++;
+        memset(this->items[count], 0, this->itemSize);
+
+        return this->items[count];
+    }
+    else if ((ptr = malloc(this->itemSize)) == 0)
+    {
+        return UCLIST_ALLOC_ERROR;
+    }
+
+    memset(ptr, 0, this->itemSize);
+
+    return _add(this, ptr);
+}
+
+void *uclist_add(uclist *const this, void *const ptr)
+{
+    if (this->itemSize != 0)
+    {
+        return 0;
+    }
+
+    return _add(this, ptr);
 }
 
 int uclist_find(uclist *const this, void *const data)
