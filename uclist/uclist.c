@@ -31,30 +31,24 @@ void uclist_init(uclist *const this, unsigned maxItemSize)
 
 void *uclist_alloc(uclist *const this)
 {
-    void *ptr;
+    void *ptr = UCLIST_ALLOC_ERROR;;
 
     if (this->count < this->capacity)
     {
-        unsigned count = this->count++;
-        memset(this->items[count], 0, this->itemSize);
-
-        return this->items[count];
+        ptr = this->items[this->count++];
     }
     else if ((ptr = malloc(this->itemSize)) != 0)
     {
-        memset(ptr, 0, this->itemSize);
+        ptr = uclist_add(this, ptr);
     }
+
+    memset(ptr, 0, this->itemSize);
 
     return ptr;
 }
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (add == 0)
-    {
-        return UCLIST_ALLOC_ERROR;
-    }
-
     if (this->count >= this->capacity)
     {
         void *ptr = malloc((this->capacity + 1) * sizeof(void *));

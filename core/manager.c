@@ -20,7 +20,7 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
-    de_entity *entity = uclist_add(this, uclist_alloc(this));
+    de_entity *entity = uclist_alloc(this);
 
     if (entity == 0)
     {
