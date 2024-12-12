@@ -56,12 +56,7 @@ int de_system_delete(de_system *const this, void *const data)
 
 void de_system_update(de_system *const this)
 {
-    if (this->list.count == 0)
-    {
-        return;
-    }
-
-    uclist_iteratorEx(&this->list, this->update, this->params);
+    uclist_iterator(&this->list, this->update, this->params);
 }
 
 void de_system_reset(de_system *const this)

@@ -107,14 +107,9 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
         return UCLIST_ERROR_COUNT;
     }
 
-    uclist_iteratorEx(this, iterator, nbItems);
+    _exec[nbItems](this->items, iterator, this->count, nbItems);
 
     return UCLIST_OK;
-}
-
-inline __attribute__((always_inline)) void uclist_iteratorEx(uclist *const this, void (*iterator)(), unsigned nbItems)
-{
-    _exec[nbItems](this->items, iterator, this->count, nbItems);
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
