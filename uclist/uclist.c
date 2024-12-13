@@ -7,9 +7,7 @@
     static void NAME(void *list[], void (*it)(), unsigned count, unsigned nbItems) \
     {                                                                              \
         for (unsigned i = 0; i < count; i += nbItems)                              \
-        {                                                                          \
             it(__VA_ARGS__);                                                       \
-        }                                                                          \
     }
 
 FUNC(f1, list[i + 0]);
@@ -74,24 +72,28 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_find(uclist *const this, void *const data)
 {
-    if (this->count == 0)
+    int count = (int)this->count;
+
+    if (count == 0)
     {
         return UCLIST_NO_COUNT;
     }
 
-    for (unsigned i = 0; i < this->count; i++)
+    while (count--)
     {
-        if (this->list[i] == data)
+        if (this->list[count] == data)
         {
-            return i;
+            break;
         }
     }
 
-    return UCLIST_NOT_FOUND;
+    return count; // UCLIST_NOT_FOUND;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
+    unsigned count = this->count;
+
     if (nbItems == 0)
     {
         return UCLIST_NO_NBITEMS;
@@ -100,12 +102,12 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
     {
         return UCLIST_NO_ITERATOR;
     }
-    else if (this->count == 0)
+    else if (count == 0)
     {
         return UCLIST_NO_COUNT;
     }
 
-    _exec[nbItems](this->list, iterator, this->count, nbItems);
+    _exec[nbItems](this->list, iterator, count, nbItems);
 
     return UCLIST_OK;
 }
@@ -128,8 +130,7 @@ void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
     {
         return;
     }
-
-    if (exec != 0)
+    else if (exec != 0)
     {
         exec(this->list[index]);
     }
@@ -150,9 +151,9 @@ void uclist_end(uclist *const this)
 {
     if (this->itemSize)
     {
-        for (unsigned i = 0; i < this->capacity; i++)
+        while (this->capacity--)
         {
-            free(this->list[i]);
+            free(this->list[this->capacity]);
         }
     }
 
