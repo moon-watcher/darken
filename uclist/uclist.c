@@ -23,7 +23,7 @@ static void *_resize(uclist *const this)
 {
     void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-    if (ptr != UCLIST_ALLOC_ERROR)
+    if (ptr != 0)
     {
         memcpy(ptr, this->list, this->capacity * sizeof(void *));
         free(this->list);
@@ -44,7 +44,7 @@ void uclist_init(uclist *const this, unsigned maxItemSize)
 
 void *uclist_alloc(uclist *const this)
 {
-    void *ptr = UCLIST_ALLOC_ERROR;
+    void *ptr = 0;
 
     if (this->count < this->capacity)
     {
@@ -64,7 +64,7 @@ void *uclist_add(uclist *const this, void *const add)
 {
     if (this->count >= this->capacity && _resize(this) == 0)
     {
-        return UCLIST_ALLOC_ERROR;
+        return 0;
     }
 
     return this->list[this->count++] = add;
@@ -74,26 +74,19 @@ int uclist_find(uclist *const this, void *const data)
 {
     int count = (int)this->count;
 
-    if (count == 0)
-    {
-        return UCLIST_NO_COUNT;
-    }
-
     while (count--)
     {
         if (this->list[count] == data)
         {
-            break;
+            return count;
         }
     }
 
-    return count; // UCLIST_NOT_FOUND;
+    return UCLIST_NOT_FOUND;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
 {
-    unsigned count = this->count;
-
     if (nbItems == 0)
     {
         return UCLIST_NO_NBITEMS;
@@ -102,14 +95,10 @@ int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
     {
         return UCLIST_NO_ITERATOR;
     }
-    else if (count == 0)
-    {
-        return UCLIST_NO_COUNT;
-    }
 
-    _exec[nbItems](this->list, iterator, count, nbItems);
+    _exec[nbItems](this->list, iterator, this->count, nbItems);
 
-    return UCLIST_OK;
+    return this->count / nbItems;
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
@@ -149,12 +138,9 @@ void uclist_reset(uclist *const this)
 
 void uclist_end(uclist *const this)
 {
-    if (this->itemSize)
+    while (this->itemSize && this->capacity--)
     {
-        while (this->capacity--)
-        {
-            free(this->list[this->capacity]);
-        }
+        free(this->list[this->capacity]);
     }
 
     free(this->list);

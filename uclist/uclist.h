@@ -2,12 +2,9 @@
 
 enum
 {
-    UCLIST_OK = 1,
-    UCLIST_ALLOC_ERROR = 0,
     UCLIST_NOT_FOUND = -1,
-    UCLIST_NO_COUNT = -2,
-    UCLIST_NO_ITERATOR = -3,
-    UCLIST_NO_NBITEMS = -4,
+    UCLIST_NO_ITERATOR = -1,
+    UCLIST_NO_NBITEMS = -2,
 };
 
 typedef struct uclist

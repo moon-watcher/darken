@@ -3,12 +3,10 @@
 
 static void _destroy(de_entity *const entity)
 {
-    if (entity->destructor == 0)
+    if (entity->destructor != 0)
     {
-        return;
+        entity->destructor(entity->data, entity);
     }
-
-    entity->destructor(entity->data, entity);
 }
 
 //
@@ -22,13 +20,14 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
     de_entity *entity = uclist_alloc(this);
 
-    if (entity == 0)
-    {
-        DARKEN_LOG("de_manager_new: not allocated");
-        return 0;
-    }
+#ifdef DARKEN_LOG
+    (entity == 0) && (DARKEN_LOG("de_manager_new: not allocated"));
+#endif
 
-    de_entity_state(entity, state);
+    if (entity != 0)
+    {
+        de_entity_state(entity, state);
+    }
 
     return entity;
 }
