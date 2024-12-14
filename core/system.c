@@ -22,7 +22,7 @@ int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
 
-#if DARKEN_LOG
+#ifdef DARKEN_LOG
     switch (ret)
     {
     case UCLIST_NOT_FOUND:
@@ -41,7 +41,7 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
     int ret = uclist_iterator(this, update, params);
 
-#if DARKEN_LOG
+#ifdef DARKEN_LOG
     switch (ret)
     {
     case UCLIST_NO_NBITEMS:
