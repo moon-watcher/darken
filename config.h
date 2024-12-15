@@ -2,4 +2,4 @@
 
 #include "../src/implement_SGDK.h"
 
-#define DARKEN_LOG(MESSAGE) 0
+#define DARKEN_LOG(MESSAGE)

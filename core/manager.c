@@ -21,7 +21,10 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
     de_entity *entity = uclist_alloc(this);
 
 #ifdef DARKEN_LOG
-    (entity == 0) && (DARKEN_LOG("de_manager_new: not allocated"));
+    if (entity == 0)
+    {
+        DARKEN_LOG("de_manager_new: not allocated");
+    }
 #endif
 
     if (entity != 0)
