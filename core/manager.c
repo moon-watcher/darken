@@ -18,32 +18,20 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
-    de_entity *entity = uclist_alloc(this);
-
-#ifdef DARKEN_LOG
-    if (entity == 0)
-    {
-        DARKEN_LOG("de_manager_new: not allocated");
-    }
-#endif
-
-    if (entity != 0)
-    {
-        de_entity_state(entity, state);
-    }
-
-    return entity;
+    return de_entity_state(uclist_alloc(this), state);
 }
 
 void de_manager_update(de_manager *const this)
 {
+    de_state_f state;
+
     for (unsigned index = 0; index < this->count;)
     {
         de_entity *const entity = this->list[index++];
 
-        if (entity->state != 0)
+        if ((state = entity->state) != 0)
         {
-            entity->state = entity->state(entity->data, entity);
+            state = state(entity->data, entity);
         }
         else
         {
