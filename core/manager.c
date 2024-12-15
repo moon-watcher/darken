@@ -23,13 +23,12 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 
 void de_manager_update(de_manager *const this)
 {
-    de_state_f state;
-
     for (unsigned index = 0; index < this->count;)
     {
         de_entity *const entity = this->list[index++];
+        de_state_f state = entity->state;
 
-        if ((state = entity->state) != 0)
+        if (state != 0)
         {
             state = state(entity->data, entity);
         }

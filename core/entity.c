@@ -3,17 +3,20 @@
 
 de_state de_entity_exec(de_entity *const this)
 {
-    if (this != 0 && this->state != 0)
+    if (this != 0)
     {
-        return this->state(this->data, this);
+        de_state_f state = this->state;
+
+        if (state != 0)
+        {
+            return state(this->data, this);
+        }
+
+        DARKEN_LOG("de_entity: exec, state");
     }
-    else if (this == 0)
+    else
     {
         DARKEN_LOG("de_entity: exec, this");
-    }
-    else if (this->state == 0)
-    {
-        DARKEN_LOG("de_entity: exec, state");
     }
 
     return 0;
