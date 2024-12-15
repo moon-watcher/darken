@@ -3,7 +3,7 @@
 
 static void _destroy(de_entity *const entity)
 {
-    if (entity->destructor != 0)
+    if (entity != 0 && entity->destructor != 0)
     {
         entity->destructor(entity->data, entity);
     }
