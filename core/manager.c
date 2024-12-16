@@ -40,12 +40,12 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(this, _destroy, 1);
+    uclist_iterator(this, _destroy);
     uclist_reset(this);
 }
 
 void de_manager_end(de_manager *const this)
 {
-    uclist_iterator(this, _destroy, 1);
+    uclist_iterator(this, _destroy);
     uclist_end(this);
 }

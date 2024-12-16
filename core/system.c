@@ -1,11 +1,14 @@
 #include "system.h"
 #include "../config.h"
 
-#define _DARKEN_LOG(EXPRESION, MSG)        \
+#define _RETURN(RET, EXPRESION, MSG) ({    \
     if (EXPRESION)                         \
     {                                      \
         DARKEN_LOG("de_system_add: " MSG); \
-    }
+        return RET;                        \
+    }                                      \
+    RET;                                   \
+})
 
 //
 
@@ -18,28 +21,29 @@ void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(this, data);
 
-    _DARKEN_LOG(ret == 0, "allocation");
-
-    return ret;
+    return _RETURN(ret, ret == 0, "allocation");
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
 
-    _DARKEN_LOG(ret == UCLIST_NOT_FOUND, "reference not found");
-
-    return ret;
+    return _RETURN(ret, ret == UCLIST_NOT_FOUND, "reference not found");
 }
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    int ret = uclist_iterator(this, update, params);
+    _RETURN(UCLIST_NO_ITERATOR, update == 0, "no iterator");
+    _RETURN(UCLIST_NO_NBITEMS, params == 0, "params is 0");
 
-    _DARKEN_LOG(ret == UCLIST_NO_NBITEMS, "params is 0");
-    _DARKEN_LOG(ret == UCLIST_NO_ITERATOR, "no iterator");
+    unsigned count = this->count;
 
-    return ret;
+    for (unsigned i = 0; i < count; i += params)
+    {
+        update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
+    }
+
+    return count / params;
 }
 
 void de_system_reset(de_system *const this)

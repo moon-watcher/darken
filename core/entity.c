@@ -7,13 +7,14 @@
         DARKEN_LOG("de_entity: " MSG); \
     }
 
-#define _SET(THIS, ASSIGN, MSG) ({ \
-    if (THIS != 0)                 \
-    {                              \
-        ASSIGN;                    \
-    }                              \
-    _DARKEN_LOG(MSG);              \
-    this;                          \
+#define _RETURN(THIS, ASSIGN, MSG) ({ \
+    if (THIS != 0)                    \
+    {                                 \
+        ASSIGN;                       \
+    }                                 \
+    _DARKEN_LOG(MSG);                 \
+                                      \
+    THIS;                             \
 })
 
 //
@@ -37,15 +38,15 @@ de_state de_entity_exec(de_entity *const this)
 
 de_entity *de_entity_delete(de_entity *const this)
 {
-    return _SET(this, this->state = 0, "delete");
+    return _RETURN(this, this->state = 0, "delete");
 }
 
 de_entity *de_entity_state(de_entity *const this, de_state_f state)
 {
-    return _SET(this, this->state = state, "state");
+    return _RETURN(this, this->state = state, "state");
 }
 
 de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 {
-    return _SET(this, this->destructor = destructor, "destructor");
+    return _RETURN(this, this->destructor = destructor, "destructor");
 }
