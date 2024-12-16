@@ -7,7 +7,7 @@
         DARKEN_LOG("de_entity: " MSG); \
     }
 
-#define _RETURN(THIS, ASSIGN, MSG) ({ \
+#define _PROCESS(THIS, ASSIGN, MSG) ({ \
     if (THIS != 0)                    \
     {                                 \
         ASSIGN;                       \
@@ -38,15 +38,15 @@ de_state de_entity_exec(de_entity *const this)
 
 de_entity *de_entity_delete(de_entity *const this)
 {
-    return _RETURN(this, this->state = 0, "delete");
+    return _PROCESS(this, this->state = 0, "delete");
 }
 
 de_entity *de_entity_state(de_entity *const this, de_state_f state)
 {
-    return _RETURN(this, this->state = state, "state");
+    return _PROCESS(this, this->state = state, "state");
 }
 
 de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 {
-    return _RETURN(this, this->destructor = destructor, "destructor");
+    return _PROCESS(this, this->destructor = destructor, "destructor");
 }

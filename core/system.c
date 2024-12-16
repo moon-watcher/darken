@@ -1,8 +1,8 @@
 #include "system.h"
 #include "../config.h"
 
-#define _RETURN(RET, EXPRESION, MSG) ({    \
-    if (EXPRESION)                         \
+#define _PROCESS(RET, EXPRESSION, MSG) ({  \
+    if (EXPRESSION)                        \
     {                                      \
         DARKEN_LOG("de_system_add: " MSG); \
         return RET;                        \
@@ -21,20 +21,20 @@ void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(this, data);
 
-    return _RETURN(ret, ret == 0, "allocation");
+    return _PROCESS(ret, ret == 0, "allocation");
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
 
-    return _RETURN(ret, ret == UCLIST_NOT_FOUND, "reference not found");
+    return _PROCESS(ret, ret == UCLIST_NOT_FOUND, "reference not found");
 }
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    _RETURN(UCLIST_NO_ITERATOR, update == 0, "no iterator");
-    _RETURN(UCLIST_NO_NBITEMS, params == 0, "params is 0");
+    _PROCESS(UCLIST_NO_ITERATOR, update == 0, "no iterator");
+    _PROCESS(UCLIST_NO_NBITEMS, params == 0, "params is 0");
 
     unsigned count = this->count;
 
