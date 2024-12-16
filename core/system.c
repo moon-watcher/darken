@@ -1,6 +1,14 @@
 #include "system.h"
 #include "../config.h"
 
+#define _DARKEN_LOG(EXPRESION, MSG)        \
+    if (EXPRESION)                         \
+    {                                      \
+        DARKEN_LOG("de_system_add: " MSG); \
+    }
+
+//
+
 void de_system_init(de_system *const this)
 {
     uclist_init(this, 0);
@@ -10,10 +18,7 @@ void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(this, data);
 
-    if (ret == 0)
-    {
-        DARKEN_LOG("de_system_add: no allocated");
-    }
+    _DARKEN_LOG(ret == 0, "allocation");
 
     return ret;
 }
@@ -22,10 +27,7 @@ int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
 
-    if (ret == UCLIST_NOT_FOUND)
-    {
-        DARKEN_LOG("de_system_delete: reference not found");
-    }
+    _DARKEN_LOG(ret == UCLIST_NOT_FOUND, "reference not found");
 
     return ret;
 }
@@ -34,14 +36,8 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
     int ret = uclist_iterator(this, update, params);
 
-    if (ret == UCLIST_NO_NBITEMS)
-    {
-        DARKEN_LOG("de_system_update: params is 0");
-    }
-    else if (ret == UCLIST_NO_ITERATOR)
-    {
-        DARKEN_LOG("de_system_update: no iterator");
-    }
+    _DARKEN_LOG(ret == UCLIST_NO_NBITEMS, "params is 0");
+    _DARKEN_LOG(ret == UCLIST_NO_ITERATOR, "no iterator");
 
     return ret;
 }

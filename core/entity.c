@@ -1,6 +1,23 @@
 #include "entity.h"
 #include "../config.h"
 
+#define _DARKEN_LOG(MSG)               \
+    else                               \
+    {                                  \
+        DARKEN_LOG("de_entity: " MSG); \
+    }
+
+#define _SET(THIS, ASSIGN, MSG) ({ \
+    if (THIS != 0)                 \
+    {                              \
+        ASSIGN;                    \
+    }                              \
+    _DARKEN_LOG(MSG);              \
+    this;                          \
+})
+
+//
+
 de_state de_entity_exec(de_entity *const this)
 {
     if (this != 0)
@@ -11,55 +28,24 @@ de_state de_entity_exec(de_entity *const this)
         {
             return state(this->data, this);
         }
-
-        DARKEN_LOG("de_entity: exec, state");
+        _DARKEN_LOG("exec, state");
     }
-    else
-    {
-        DARKEN_LOG("de_entity: exec, this");
-    }
+    _DARKEN_LOG("exec, this");
 
     return 0;
 }
 
 de_entity *de_entity_delete(de_entity *const this)
 {
-    if (this != 0)
-    {
-        this->state = 0;
-    }
-    else
-    {
-        DARKEN_LOG("de_entity: delete");
-    }
-
-    return this;
+    return _SET(this, this->state = 0, "delete");
 }
 
 de_entity *de_entity_state(de_entity *const this, de_state_f state)
 {
-    if (this != 0)
-    {
-        this->state = state;
-    }
-    else
-    {
-        DARKEN_LOG("de_entity: state");
-    }
-
-    return this;
+    return _SET(this, this->state = state, "state");
 }
 
 de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 {
-    if (this != 0)
-    {
-        this->destructor = destructor;
-    }
-    else
-    {
-        DARKEN_LOG("de_entity: destructor");
-    }
-
-    return this;
+    return _SET(this, this->destructor = destructor, "destructor");
 }

@@ -1,5 +1,4 @@
 #include "manager.h"
-#include "../config.h"
 
 static void _destroy(de_entity *const entity)
 {
