@@ -30,7 +30,7 @@ void de_manager_update(de_manager *const this)
 
         if (state != 0)
         {
-            state = state(entity->data, entity);
+            entity->state = state(entity->data, entity);
         }
         else
         {
