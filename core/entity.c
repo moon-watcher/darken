@@ -27,11 +27,13 @@ de_entity *de_entity_delete(de_entity *const this)
     if (this != 0)
     {
         this->state = 0;
-        return this;
+    }
+    else
+    {
+        DARKEN_LOG("de_entity: delete");
     }
 
-    DARKEN_LOG("de_entity: delete");
-    return 0;
+    return this;
 }
 
 de_entity *de_entity_state(de_entity *const this, de_state_f state)
@@ -39,11 +41,13 @@ de_entity *de_entity_state(de_entity *const this, de_state_f state)
     if (this != 0)
     {
         this->state = state;
-        return this;
+    }
+    else
+    {
+        DARKEN_LOG("de_entity: state");
     }
 
-    DARKEN_LOG("de_entity: state");
-    return 0;
+    return this;
 }
 
 de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
@@ -51,9 +55,11 @@ de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
     if (this != 0)
     {
         this->destructor = destructor;
-        return this;
+    }
+    else
+    {
+        DARKEN_LOG("de_entity: destructor");
     }
 
-    DARKEN_LOG("de_entity: destructor");
-    return 0;
+    return this;
 }
