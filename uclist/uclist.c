@@ -7,15 +7,15 @@ static void *_resize(uclist *const this)
 {
     void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-    if (ptr == 0)
+    if (ptr != 0)
     {
-        return;
+        memcpy(ptr, this->list, this->capacity * sizeof(void *));
+        free(this->list);
+        this->list = ptr;
+        ++this->capacity;
     }
 
-    memcpy(ptr, this->list, this->capacity * sizeof(void *));
-    free(this->list);
-    this->list = ptr;
-    return ++this->capacity;
+    return ptr;
 }
 
 //
