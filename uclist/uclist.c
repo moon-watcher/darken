@@ -3,35 +3,19 @@
 #include "uclist.h"
 #include "config.h"
 
-#define FUNC(NAME, ...)                                                            \
-    static void NAME(void *list[], void (*it)(), unsigned count, unsigned nbItems) \
-    {                                                                              \
-        for (unsigned i = 0; i < count; i += nbItems)                              \
-            it(__VA_ARGS__);                                                       \
-    }
-
-FUNC(f1, list[i + 0]);
-FUNC(f2, list[i + 0], list[i + 1]);
-FUNC(f3, list[i + 0], list[i + 1], list[i + 2]);
-FUNC(f4, list[i + 0], list[i + 1], list[i + 2], list[i + 3]);
-FUNC(f5, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4]);
-FUNC(f6, list[i + 0], list[i + 1], list[i + 2], list[i + 3], list[i + 4], list[i + 5]);
-
-static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
-
 static void *_resize(uclist *const this)
 {
     void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-    if (ptr != 0)
+    if (ptr == 0)
     {
-        memcpy(ptr, this->list, this->capacity * sizeof(void *));
-        free(this->list);
-        this->list = ptr;
-        ++this->capacity;
+        return;
     }
 
-    return ptr;
+    memcpy(ptr, this->list, this->capacity * sizeof(void *));
+    free(this->list);
+    this->list = ptr;
+    return ++this->capacity;
 }
 
 //
@@ -85,20 +69,19 @@ int uclist_find(uclist *const this, void *const data)
     return UCLIST_NOT_FOUND;
 }
 
-int uclist_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
+int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    if (nbItems == 0)
-    {
-        return UCLIST_NO_NBITEMS;
-    }
-    else if (iterator == 0)
+    if (iterator == 0)
     {
         return UCLIST_NO_ITERATOR;
     }
 
-    _exec[nbItems](this->list, iterator, this->count, nbItems);
+    for (unsigned i = 0; i < this->count; ++i)
+    {
+        iterator(this->list[i]);
+    }
 
-    return this->count / nbItems;
+    return this->count;
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
