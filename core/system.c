@@ -7,8 +7,7 @@
         DARKEN_LOG("de_system_add: " MSG); \
         return RET;                        \
     }                                      \
-    RET;                                   \
-})
+    RET; })
 
 //
 

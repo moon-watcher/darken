@@ -13,9 +13,7 @@
         ASSIGN;                        \
     }                                  \
     _DARKEN_LOG(MSG);                  \
-                                       \
-    THIS;                              \
-})
+    THIS; })
 
 //
 
