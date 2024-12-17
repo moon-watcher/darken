@@ -46,7 +46,7 @@ void *uclist_alloc(uclist *const this)
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (this->count >= this->capacity && _resize(this) == 0)
+    if (add == 0 || (this->count >= this->capacity && _resize(this) == 0))
     {
         return 0;
     }
