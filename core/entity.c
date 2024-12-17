@@ -8,13 +8,13 @@
     }
 
 #define _PROCESS(THIS, ASSIGN, MSG) ({ \
-    if (THIS != 0)                    \
-    {                                 \
-        ASSIGN;                       \
-    }                                 \
-    _DARKEN_LOG(MSG);                 \
-                                      \
-    THIS;                             \
+    if (THIS != 0)                     \
+    {                                  \
+        ASSIGN;                        \
+    }                                  \
+    _DARKEN_LOG(MSG);                  \
+                                       \
+    THIS;                              \
 })
 
 //
