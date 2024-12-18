@@ -35,9 +35,7 @@ void de_system_update(de_system *const this, void (*update)(), unsigned params)
     _PROCESS(update == 0, , return UCLIST_NO_ITERATOR, "no iterator");
     _PROCESS(params == 0, , return UCLIST_NO_NBITEMS, "params is 0");
 
-    unsigned count = this->count;
-
-    for (unsigned i = 0; i < count; i += params)
+    for (unsigned i = 0; i < this->count; i += params)
     {
         update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
     }
