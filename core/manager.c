@@ -24,15 +24,18 @@ void de_manager_update(de_manager *const this)
 {
     for (unsigned index = 0; index < this->count;)
     {
-        de_entity *const entity = this->list[index++];
+        de_entity *const entity = this->list[index];
 
         if (entity->state != 0)
         {
             entity->state = entity->state(entity->data, entity);
+            ++index;
         }
         else
         {
-            uclist_removeIndex(this, --index, _destroy);
+            this->list[index] = this->list[--this->count];
+            this->list[this->count] = entity;
+            _destroy(entity);
         }
     }
 }
