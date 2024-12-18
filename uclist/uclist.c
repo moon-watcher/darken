@@ -54,21 +54,6 @@ void *uclist_add(uclist *const this, void *const add)
     return this->list[this->count++] = add;
 }
 
-int uclist_find(uclist *const this, void *const data)
-{
-    int count = (int)this->count;
-
-    while (count--)
-    {
-        if (this->list[count] == data)
-        {
-            return count;
-        }
-    }
-
-    return UCLIST_NOT_FOUND;
-}
-
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
     if (iterator == 0)
@@ -86,32 +71,14 @@ int uclist_iterator(uclist *const this, void (*iterator)())
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
-    int index = uclist_find(this, data);
+    int index = uclist_findIndex(this, data);
 
     if (index >= 0)
     {
-        uclist_removeByIndex(this, index, exec);
+        uclist_removeIndex(this, index, exec);
     }
 
     return index;
-}
-
-void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
-{
-    if (this->count == 0)
-    {
-        return;
-    }
-    else if (exec != 0)
-    {
-        exec(this->list[index]);
-    }
-
-    --this->count;
-
-    void *const swap = this->list[index];
-    this->list[index] = this->list[this->count];
-    this->list[this->count] = swap;
 }
 
 void uclist_reset(uclist *const this)
@@ -128,4 +95,39 @@ void uclist_end(uclist *const this)
 
     free(this->list);
     uclist_init(this, this->itemSize);
+}
+
+//
+
+int uclist_findIndex(uclist *const this, void *const data)
+{
+    int index = (int)this->count;
+
+    while (index--)
+    {
+        if (this->list[index] == data)
+        {
+            return index;
+        }
+    }
+
+    return UCLIST_NOT_FOUND;
+}
+
+void uclist_removeIndex(uclist *const this, unsigned index, void (*exec)())
+{
+    if (this->count == 0)
+    {
+        return;
+    }
+    else if (exec != 0)
+    {
+        exec(this->list[index]);
+    }
+
+    --this->count;
+
+    void *const swap = this->list[index];
+    this->list[index] = this->list[this->count];
+    this->list[this->count] = swap;
 }
