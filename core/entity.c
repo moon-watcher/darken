@@ -1,39 +1,49 @@
 #include "entity.h"
 #include "../config.h"
 
-#define _PROCESS(SET, MSG)         \
-    if (this != 0)                 \
-    {                              \
-        SET;                       \
-        return this;               \
-    }                              \
-    DARKEN_LOG("de_entity: " MSG); \
-    return 0
-
-//
-
 de_state de_entity_exec(de_entity *const this)
 {
-    if (this == 0 || this->state == 0)
+    if (this != 0 && this->state != 0)
     {
-        DARKEN_LOG("exec");
-        return 0;
+        return this->state(this->data, this);
     }
 
-    return this->state(this->data, this);
+    DARKEN_LOG("de_entity: exec");
+    return 0;
 }
 
 de_entity *de_entity_delete(de_entity *const this)
 {
-    _PROCESS(this->state = 0, "delete");
+    if (this != 0)
+    {
+        this->state = 0;
+        return this;
+    }
+
+    DARKEN_LOG("de_entity: delete");
+    return 0;
 }
 
 de_entity *de_entity_state(de_entity *const this, de_state_f state)
 {
-    _PROCESS(this->state = state, "state");
+    if (this != 0)
+    {
+        this->state = state;
+        return this;
+    }
+
+    DARKEN_LOG("de_entity: state");
+    return 0;
 }
 
 de_entity *de_entity_destructor(de_entity *const this, de_state_f destructor)
 {
-    _PROCESS(this->destructor = destructor, "destructor");
+    if (this != 0)
+    {
+        this->destructor = destructor;
+        return this;
+    }
+
+    DARKEN_LOG("de_entity: destructor");
+    return 0;
 }

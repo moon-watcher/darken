@@ -1,16 +1,6 @@
 #include "system.h"
 #include "../config.h"
 
-#define _PROCESS(EXP, OK, ERR, MSG)    \
-    if (EXP)                           \
-    {                                  \
-        DARKEN_LOG("de_system: " MSG); \
-        ERR;                           \
-    }                                  \
-    OK
-
-//
-
 void de_system_init(de_system *const this)
 {
     uclist_init(this, 0);
@@ -20,20 +10,38 @@ void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(this, data);
 
-    _PROCESS(ret == 0, return ret, , "allocation");
+    if (ret == 0)
+    {
+        DARKEN_LOG("de_system: allocation");
+    }
+
+    return ret;
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
 
-    _PROCESS(ret == UCLIST_NOT_FOUND, return ret, , "reference not found");
+    if (ret == UCLIST_NOT_FOUND)
+    {
+        DARKEN_LOG("de_system: not found");
+    }
+
+    return ret;
 }
 
 void de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    _PROCESS(update == 0, , return UCLIST_NO_ITERATOR, "no iterator");
-    _PROCESS(params == 0, , return UCLIST_NO_NBITEMS, "params is 0");
+    if (update == 0)
+    {
+        DARKEN_LOG("de_system: no iterator");
+        return UCLIST_NO_ITERATOR;
+    }
+    else if (params == 0)
+    {
+        DARKEN_LOG("de_system: params is 0");
+        return UCLIST_NO_NBITEMS;
+    }
 
     for (unsigned i = 0; i < this->count; i += params)
     {
