@@ -92,7 +92,7 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
         }
     }
 
-    return index; // or UCLIST_NOT_FOUND;
+    return UCLIST_NOT_FOUND;
 }
 
 void uclist_reset(uclist *const this)

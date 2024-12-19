@@ -33,7 +33,8 @@ void de_manager_update(de_manager *const this)
         }
         else
         {
-            this->list[index] = this->list[--this->count];
+            --this->count;
+            this->list[index] = this->list[this->count];
             this->list[this->count] = entity;
             _destroy(entity);
         }

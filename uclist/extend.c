@@ -1,4 +1,4 @@
-#include "uclist_extend.h"
+#include "uclist.h"
 
 #define FUNC(NAME, ...)                                                            \
     static void NAME(void *list[], void (*it)(), unsigned count, unsigned nbItems) \
