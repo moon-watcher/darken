@@ -88,7 +88,7 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
             this->list[index] = this->list[this->count];
             this->list[this->count] = swap;
 
-            break;
+            return index;
         }
     }
 
