@@ -30,9 +30,15 @@ int de_system_delete(de_system *const this, void *const data)
     return ret;
 }
 
-void de_system_update(de_system *const this, void (*update)(), unsigned params)
+int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    if (update == 0)
+    unsigned const count = this->count;
+
+    if (count == 0)
+    {
+        return 0;
+    }
+    else if (update == 0)
     {
         DARKEN_LOG("de_system: no iterator");
         return UCLIST_NO_ITERATOR;
@@ -43,10 +49,12 @@ void de_system_update(de_system *const this, void (*update)(), unsigned params)
         return UCLIST_NO_NBITEMS;
     }
 
-    for (unsigned i = 0; i < this->count; i += params)
+    for (unsigned i = 0; i < count; i += params)
     {
         update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
     }
+
+    return count / params;
 }
 
 void de_system_reset(de_system *const this)

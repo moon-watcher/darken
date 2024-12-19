@@ -56,17 +56,23 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    if (iterator == 0)
+    unsigned const count = this->count;
+
+    if (count == 0)
+    {
+        return 0;
+    }
+    else if (iterator == 0)
     {
         return UCLIST_NO_ITERATOR;
     }
 
-    for (unsigned i = 0; i < this->count; ++i)
+    for (unsigned i = 0; i < count; ++i)
     {
         iterator(this->list[i]);
     }
 
-    return this->count;
+    return count;
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
