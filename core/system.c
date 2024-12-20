@@ -8,7 +8,7 @@ void de_system_init(de_system *const this)
 
 void *de_system_add(de_system *const this, void *const data)
 {
-    void *ret = uclist_add(this, data);
+    void *const ret = uclist_add(this, data);
 
     if (ret == 0)
     {
@@ -32,9 +32,7 @@ int de_system_delete(de_system *const this, void *const data)
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    unsigned const count = this->count;
-
-    if (count == 0)
+    if (this->count == 0)
     {
         return 0;
     }
@@ -49,12 +47,12 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
         return UCLIST_NO_NBITEMS;
     }
 
-    for (unsigned i = 0; i < count; i += params)
+    for (unsigned i = 0; i < this->count; i += params)
     {
         update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
     }
 
-    return count / params;
+    return this->count / params;
 }
 
 void de_system_reset(de_system *const this)
