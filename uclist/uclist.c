@@ -3,23 +3,6 @@
 #include "uclist.h"
 #include "config.h"
 
-static void *_resize(uclist *const this)
-{
-    void *ptr = malloc((this->capacity + 1) * sizeof(void *));
-
-    if (ptr != 0)
-    {
-        memcpy(ptr, this->list, this->capacity * sizeof(void *));
-        free(this->list);
-        this->list = ptr;
-        ++this->capacity;
-    }
-
-    return ptr;
-}
-
-//
-
 void uclist_init(uclist *const this, unsigned maxItemSize)
 {
     memset(this, 0, sizeof(uclist));
@@ -32,7 +15,8 @@ void *uclist_alloc(uclist *const this)
 
     if (this->count < this->capacity)
     {
-        ptr = this->list[this->count++];
+        ptr = this->list[this->count];
+        ++this->count;
     }
     else if ((ptr = malloc(this->itemSize)) != 0)
     {
@@ -46,19 +30,34 @@ void *uclist_alloc(uclist *const this)
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (add == 0 || (this->count >= this->capacity && _resize(this) == 0))
+    if (add == 0)
     {
         return 0;
     }
+    else if (this->count >= this->capacity)
+    {
+        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-    return this->list[this->count++] = add;
+        if (ptr == 0)
+        {
+            return 0;
+        }
+
+        memcpy(ptr, this->list, this->capacity * sizeof(void *));
+        free(this->list);
+        this->list = ptr;
+        ++this->capacity;
+    }
+
+    this->list[this->count] = add;
+    ++this->count;
+
+    return add;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    unsigned const count = this->count;
-
-    if (count == 0)
+    if (this->count == 0)
     {
         return 0;
     }
@@ -67,12 +66,12 @@ int uclist_iterator(uclist *const this, void (*iterator)())
         return UCLIST_NO_ITERATOR;
     }
 
-    for (unsigned i = 0; i < count; ++i)
+    for (unsigned i = 0; i < this->count; ++i)
     {
         iterator(this->list[i]);
     }
 
-    return count;
+    return this->count;
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
@@ -81,18 +80,19 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
 
     while (index--)
     {
-        if (this->list[index] == data)
+        void *const ptr = this->list[index];
+
+        if (ptr == data)
         {
             if (exec != 0)
             {
-                exec(this->list[index]);
+                exec(ptr);
             }
 
             --this->count;
 
-            void *const swap = this->list[index];
             this->list[index] = this->list[this->count];
-            this->list[this->count] = swap;
+            this->list[this->count] = ptr;
 
             return index;
         }
