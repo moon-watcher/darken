@@ -20,13 +20,11 @@ static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
 int uclist_extend_findIndex(uclist *const this, void *const data)
 {
-    int index = (int)this->size;
-
-    while (index--)
+    for (int i = 0; i < this->size; i++)
     {
-        if (this->list[index] == data)
+        if (this->list[i] == data)
         {
-            return index;
+            return i;
         }
     }
 

@@ -76,11 +76,9 @@ int uclist_iterator(uclist *const this, void (*iterator)())
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
-    int index = (int)this->size;
-
-    while (index--)
+    for (unsigned i = 0; i < this->capacity; i++)
     {
-        void *const ptr = this->list[index];
+        void *const ptr = this->list[i];
 
         if (ptr == data)
         {
@@ -90,11 +88,10 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
             }
 
             --this->size;
-
-            this->list[index] = this->list[this->size];
+            this->list[i] = this->list[this->size];
             this->list[this->size] = ptr;
 
-            return index;
+            return i;
         }
     }
 
@@ -108,9 +105,9 @@ void uclist_reset(uclist *const this)
 
 void uclist_end(uclist *const this)
 {
-    while (this->itemSize && this->capacity--)
+    for (unsigned i = 0; this->itemSize && i < this->capacity; i++)
     {
-        free(this->list[this->capacity]);
+        free(this->list[i]);
     }
 
     free(this->list);
