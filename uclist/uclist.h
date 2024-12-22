@@ -10,7 +10,7 @@ enum
 typedef struct uclist
 {
     void **list;
-    unsigned count;
+    unsigned size;
     unsigned capacity;
     unsigned itemSize;
 } uclist;

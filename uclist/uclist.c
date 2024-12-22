@@ -13,10 +13,10 @@ void *uclist_alloc(uclist *const this)
 {
     void *ptr = 0;
 
-    if (this->count < this->capacity)
+    if (this->size < this->capacity)
     {
-        ptr = this->list[this->count];
-        ++this->count;
+        ptr = this->list[this->size];
+        ++this->size;
     }
     else if ((ptr = malloc(this->itemSize)) != 0)
     {
@@ -34,7 +34,7 @@ void *uclist_add(uclist *const this, void *const add)
     {
         return 0;
     }
-    else if (this->count >= this->capacity)
+    else if (this->size >= this->capacity)
     {
         void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
@@ -49,15 +49,15 @@ void *uclist_add(uclist *const this, void *const add)
         ++this->capacity;
     }
 
-    this->list[this->count] = add;
-    ++this->count;
+    this->list[this->size] = add;
+    ++this->size;
 
     return add;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    if (this->count == 0)
+    if (this->size == 0)
     {
         return 0;
     }
@@ -66,17 +66,17 @@ int uclist_iterator(uclist *const this, void (*iterator)())
         return UCLIST_NO_ITERATOR;
     }
 
-    for (unsigned i = 0; i < this->count; ++i)
+    for (unsigned i = 0; i < this->size; ++i)
     {
         iterator(this->list[i]);
     }
 
-    return this->count;
+    return this->size;
 }
 
 int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
-    int index = (int)this->count;
+    int index = (int)this->size;
 
     while (index--)
     {
@@ -89,10 +89,10 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
                 exec(ptr);
             }
 
-            --this->count;
+            --this->size;
 
-            this->list[index] = this->list[this->count];
-            this->list[this->count] = ptr;
+            this->list[index] = this->list[this->size];
+            this->list[this->size] = ptr;
 
             return index;
         }
@@ -103,7 +103,7 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
 
 void uclist_reset(uclist *const this)
 {
-    this->count = 0;
+    this->size = 0;
 }
 
 void uclist_end(uclist *const this)

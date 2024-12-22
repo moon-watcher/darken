@@ -32,7 +32,7 @@ int de_system_delete(de_system *const this, void *const data)
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    if (this->count == 0)
+    if (this->size == 0)
     {
         return 0;
     }
@@ -47,12 +47,12 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
         return UCLIST_NO_NBITEMS;
     }
 
-    for (unsigned i = 0; i < this->count; i += params)
+    for (unsigned i = 0; i < this->size; i += params)
     {
         update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
     }
 
-    return this->count / params;
+    return this->size / params;
 }
 
 void de_system_reset(de_system *const this)

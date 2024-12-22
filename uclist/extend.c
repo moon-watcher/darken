@@ -1,10 +1,10 @@
 #include "uclist.h"
 
-#define FUNC(NAME, ...)                                                            \
-    static void NAME(void *list[], void (*it)(), unsigned count, unsigned nbItems) \
-    {                                                                              \
-        for (unsigned i = 0; i < count; i += nbItems)                              \
-            it(__VA_ARGS__);                                                       \
+#define FUNC(NAME, ...)                                                           \
+    static void NAME(void *list[], void (*it)(), unsigned size, unsigned nbItems) \
+    {                                                                             \
+        for (unsigned i = 0; i < size; i += nbItems)                              \
+            it(__VA_ARGS__);                                                      \
     }
 
 FUNC(f1, list[i + 0]);
@@ -20,7 +20,7 @@ static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
 int uclist_extend_findIndex(uclist *const this, void *const data)
 {
-    int index = (int)this->count;
+    int index = (int)this->size;
 
     while (index--)
     {
@@ -35,7 +35,7 @@ int uclist_extend_findIndex(uclist *const this, void *const data)
 
 void uclist_extend_removeIndex(uclist *const this, unsigned index, void (*exec)())
 {
-    if (this->count == 0)
+    if (this->size == 0)
     {
         return;
     }
@@ -44,11 +44,11 @@ void uclist_extend_removeIndex(uclist *const this, unsigned index, void (*exec)(
         exec(this->list[index]);
     }
 
-    --this->count;
+    --this->size;
 
     void *const swap = this->list[index];
-    this->list[index] = this->list[this->count];
-    this->list[this->count] = swap;
+    this->list[index] = this->list[this->size];
+    this->list[this->size] = swap;
 }
 
 int uclist_extend_iterator(uclist *const this, void (*iterator)(), unsigned nbItems)
@@ -62,7 +62,7 @@ int uclist_extend_iterator(uclist *const this, void (*iterator)(), unsigned nbIt
         return UCLIST_NO_ITERATOR;
     }
 
-    _exec[nbItems](this->list, iterator, this->count, nbItems);
+    _exec[nbItems](this->list, iterator, this->size, nbItems);
 
-    return this->count / nbItems;
+    return this->size / nbItems;
 }

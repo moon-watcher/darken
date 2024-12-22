@@ -22,7 +22,7 @@ de_entity *de_manager_new(de_manager *const this, de_state_f state)
 
 void de_manager_update(de_manager *const this)
 {
-    for (unsigned index = 0; index < this->count;)
+    for (unsigned index = 0; index < this->size;)
     {
         de_entity *const entity = this->list[index];
 
@@ -33,9 +33,9 @@ void de_manager_update(de_manager *const this)
         }
         else
         {
-            --this->count;
-            this->list[index] = this->list[this->count];
-            this->list[this->count] = entity;
+            --this->size;
+            this->list[index] = this->list[this->size];
+            this->list[this->size] = entity;
             _destroy(entity);
         }
     }
