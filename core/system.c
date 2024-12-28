@@ -12,7 +12,7 @@ void *de_system_add(de_system *const this, void *const data)
 
     if (ret == 0)
     {
-        DARKEN_LOG("de_system: allocation");
+        DARKEN_LOG("de_system_add(): allocation");
     }
 
     return ret;
@@ -24,7 +24,7 @@ int de_system_delete(de_system *const this, void *const data)
 
     if (ret == UCLIST_NOT_FOUND)
     {
-        DARKEN_LOG("de_system: not found");
+        DARKEN_LOG("de_system_delete(): not found");
     }
 
     return ret;
@@ -38,12 +38,12 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
     }
     else if (update == 0)
     {
-        DARKEN_LOG("de_system: no iterator");
+        DARKEN_LOG("de_system_update(): null iterator");
         return UCLIST_NO_ITERATOR;
     }
     else if (params == 0)
     {
-        DARKEN_LOG("de_system: params is 0");
+        DARKEN_LOG("de_system_update(): params is 0");
         return UCLIST_NO_NBITEMS;
     }
 
