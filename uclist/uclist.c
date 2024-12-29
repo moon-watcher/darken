@@ -11,11 +11,10 @@ void uclist_init(uclist *const this, unsigned maxItemSize)
 
 void *uclist_alloc(uclist *const this)
 {
-    void *ptr = 0;
+    void *ptr = this->list[this->size];
 
     if (this->size < this->capacity)
     {
-        ptr = this->list[this->size];
         ++this->size;
     }
     else if ((ptr = malloc(this->itemSize)) != 0)
@@ -24,44 +23,38 @@ void *uclist_alloc(uclist *const this)
     }
 
     memset(ptr, 0, this->itemSize);
-
     return ptr;
 }
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (add == 0)
+    if (add != 0)
     {
-        return 0;
-    }
-    else if (this->size >= this->capacity)
-    {
-        void *ptr = malloc((this->capacity + 1) * sizeof(void *));
-
-        if (ptr == 0)
+        if (this->size >= this->capacity)
         {
-            return 0;
+            void *ptr = malloc((this->capacity + 1) * sizeof(void *));
+
+            if (ptr == 0)
+            {
+                return 0;
+            }
+
+            memcpy(ptr, this->list, this->capacity * sizeof(void *));
+            free(this->list);
+            this->list = ptr;
+            ++this->capacity;
         }
 
-        memcpy(ptr, this->list, this->capacity * sizeof(void *));
-        free(this->list);
-        this->list = ptr;
-        ++this->capacity;
+        this->list[this->size] = add;
+        ++this->size;
     }
-
-    this->list[this->size] = add;
-    ++this->size;
 
     return add;
 }
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    if (this->size == 0)
-    {
-        return 0;
-    }
-    else if (iterator == 0)
+    if (iterator == 0)
     {
         return UCLIST_NO_ITERATOR;
     }
@@ -78,19 +71,16 @@ int uclist_remove(uclist *const this, void *const data, void (*exec)())
 {
     for (unsigned i = 0; i < this->capacity; i++)
     {
-        void *const ptr = this->list[i];
-
-        if (ptr == data)
+        if (this->list[i] == data)
         {
             if (exec != 0)
             {
-                exec(ptr);
+                exec(data);
             }
 
             --this->size;
             this->list[i] = this->list[this->size];
-            this->list[this->size] = ptr;
-
+            this->list[this->size] = data;
             return i;
         }
     }
@@ -105,9 +95,9 @@ void uclist_reset(uclist *const this)
 
 void uclist_end(uclist *const this)
 {
-    for (unsigned i = 0; this->itemSize && i < this->capacity; i++)
+    while (this->itemSize && this->capacity--)
     {
-        free(this->list[i]);
+        free(this->list[this->capacity]);
     }
 
     free(this->list);
