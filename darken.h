@@ -5,6 +5,8 @@
 #include "core/manager.h"
 #include "core/system.h"
 
+#include "uclist/uclist.h"
+
 void darken(de_state_f, unsigned);
 
 #define DE_CAST(ENTITY, TYPE) ((TYPE *const)ENTITY->data)
