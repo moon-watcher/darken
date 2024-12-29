@@ -1,5 +1,5 @@
 #include "system.h"
-#include "../config.h"
+#include "../assert.h"
 
 void de_system_init(de_system *const this)
 {
@@ -8,26 +8,14 @@ void de_system_init(de_system *const this)
 
 void *de_system_add(de_system *const this, void *const data)
 {
-    void *const ret = uclist_add(this, data);
-
-    if (ret == 0)
-    {
-        DARKEN_LOG("de_system_add(): allocation");
-    }
-
-    return ret;
+    void *ret = uclist_add(this, data);
+    return _DE_ASSERT(ret == 0, ret, "Allocation");
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
-
-    if (ret == UCLIST_NOT_FOUND)
-    {
-        DARKEN_LOG("de_system_delete(): not found");
-    }
-
-    return ret;
+    return _DE_ASSERT(ret == UCLIST_NOT_FOUND, ret, "Not found");
 }
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
@@ -36,16 +24,9 @@ int de_system_update(de_system *const this, void (*update)(), unsigned params)
     {
         return 0;
     }
-    else if (update == 0)
-    {
-        DARKEN_LOG("de_system_update(): null iterator");
-        return UCLIST_NO_ITERATOR;
-    }
-    else if (params == 0)
-    {
-        DARKEN_LOG("de_system_update(): params is 0");
-        return UCLIST_NO_NBITEMS;
-    }
+
+    _DE_ASSERT(update == 0, UCLIST_NO_ITERATOR, "Null iterator");
+    _DE_ASSERT(params == 0, UCLIST_NO_NBITEMS, "No parameters");
 
     for (unsigned i = 0; i < this->size; i += params)
     {

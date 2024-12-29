@@ -33,13 +33,8 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    for (unsigned i = 0; i < this->size; ++i)
-    {
-        de_entity *const entity = this->list[i];
-        entity->destructor != 0 && entity->destructor(entity->data, entity);
-    }
-
-    uclist_reset(this);
+    uclist_iterator(this, de_entity_delete);
+    de_manager_update(this);
 }
 
 void de_manager_end(de_manager *const this)
