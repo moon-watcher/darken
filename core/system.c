@@ -20,11 +20,6 @@ int de_system_delete(de_system *const this, void *const data)
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    if (this->size == 0)
-    {
-        return 0;
-    }
-
     _DE_ASSERT(update == 0, UCLIST_NO_ITERATOR, "Null iterator");
     _DE_ASSERT(params == 0, UCLIST_NO_NBITEMS, "No parameters");
 
