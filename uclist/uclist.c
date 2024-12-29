@@ -2,6 +2,7 @@
 
 #include "uclist.h"
 #include "config.h"
+#include "assert.h"
 
 void uclist_init(uclist *const this, unsigned maxItemSize)
 {
@@ -34,10 +35,7 @@ void *uclist_add(uclist *const this, void *const add)
         {
             void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-            if (ptr == 0)
-            {
-                return 0;
-            }
+            _UCLIST_ASSERT(ptr, 0);
 
             memcpy(ptr, this->list, this->capacity * sizeof(void *));
             free(this->list);
@@ -54,10 +52,7 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    if (iterator == 0)
-    {
-        return UCLIST_NO_ITERATOR;
-    }
+    _UCLIST_ASSERT(iterator, UCLIST_NO_ITERATOR);
 
     for (unsigned i = 0; i < this->size; ++i)
     {
