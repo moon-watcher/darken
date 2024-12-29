@@ -2,7 +2,7 @@
 
 #include "config.h"
 
-#define _DE_ASSERT(CONDITION, RETURN, MESSAGE) \
+#define _DARKEN_ASSERT(CONDITION, RETURN, MESSAGE) \
     ({                                        \
         if (CONDITION)                        \
         {                                     \
