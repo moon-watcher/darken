@@ -7,7 +7,7 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 de_entity *de_manager_new(de_manager *const this, de_state_f state)
 {
-    return de_entity_state(uclist_alloc(this), state);
+    return de_entity_set(uclist_alloc(this), state);
 }
 
 void de_manager_update(de_manager *const this)
