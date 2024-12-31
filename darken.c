@@ -1,15 +1,16 @@
-#include "config.h"
 #include "core/entity.h"
 
-void darken(de_state_f state, unsigned size)
+de_entity *darken_init(void *(*alloc)(), unsigned size)
 {
-    de_entity *entity = malloc(sizeof(de_entity) + size);
+    return alloc(sizeof(de_entity) + size);
+}
+
+void darken_loop(de_entity *const entity, de_state_f state)
+{
     de_entity_set(entity, state);
 
     while (state != 0)
     {
         state = state(entity->data, entity);
     }
-
-    free(entity);
 }
