@@ -52,7 +52,7 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    UCLIST_ASSERT(iterator == 0, UCLIST_NO_ITERATOR);
+    UCLIST_ASSERT(iterator == 0, UCLIST_NULL_ITERATOR);
 
     for (unsigned i = 0; i < this->size; ++i)
     {

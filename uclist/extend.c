@@ -53,11 +53,11 @@ int uclist_extend_iterator(uclist *const this, void (*iterator)(), unsigned nbIt
 {
     if (nbItems == 0)
     {
-        return UCLIST_NO_NBITEMS;
+        return UCLIST_NO_ITEMS;
     }
     else if (iterator == 0)
     {
-        return UCLIST_NO_ITERATOR;
+        return UCLIST_NULL_ITERATOR;
     }
 
     _exec[nbItems](this->list, iterator, this->size, nbItems);

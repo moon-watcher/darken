@@ -20,8 +20,8 @@ int de_system_delete(de_system *const this, void *const data)
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    DARKEN_ASSERT(update == 0, UCLIST_NO_ITERATOR, "Null iterator");
-    DARKEN_ASSERT(params == 0, UCLIST_NO_NBITEMS, "No parameters");
+    DARKEN_ASSERT(update == 0, UCLIST_NULL_ITERATOR, "Null iterator");
+    DARKEN_ASSERT(params == 0, UCLIST_NO_ITEMS, "No parameters");
 
     for (unsigned i = 0; i < this->size; i += params)
     {

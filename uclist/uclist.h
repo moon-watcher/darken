@@ -1,11 +1,8 @@
 #pragma once
 
-enum
-{
-    UCLIST_NOT_FOUND = -1,
-    UCLIST_NO_ITERATOR = -1,
-    UCLIST_NO_NBITEMS = -2,
-};
+#define UCLIST_NOT_FOUND -1
+#define UCLIST_NULL_ITERATOR -1
+#define UCLIST_NO_ITEMS -2
 
 typedef struct uclist
 {
