@@ -35,7 +35,7 @@ void *uclist_add(uclist *const this, void *const add)
         {
             void *ptr = malloc((this->capacity + 1) * sizeof(void *));
 
-            _UCLIST_ASSERT(ptr, 0);
+            UCLIST_ASSERT(ptr == 0, 0);
 
             memcpy(ptr, this->list, this->capacity * sizeof(void *));
             free(this->list);
@@ -52,7 +52,7 @@ void *uclist_add(uclist *const this, void *const add)
 
 int uclist_iterator(uclist *const this, void (*iterator)())
 {
-    _UCLIST_ASSERT(iterator, UCLIST_NO_ITERATOR);
+    UCLIST_ASSERT(iterator == 0, UCLIST_NO_ITERATOR);
 
     for (unsigned i = 0; i < this->size; ++i)
     {

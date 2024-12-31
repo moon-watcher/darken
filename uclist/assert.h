@@ -1,7 +1,7 @@
 #pragma once
 
-#define _UCLIST_ASSERT(EVAL, VALUE) \
-    if (EVAL == 0)                  \
+#define UCLIST_ASSERT(EVAL, RETURN) \
+    if (EVAL)                       \
     {                               \
-        return VALUE;               \
+        return RETURN;              \
     }
