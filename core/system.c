@@ -9,19 +9,19 @@ void de_system_init(de_system *const this)
 void *de_system_add(de_system *const this, void *const data)
 {
     void *ret = uclist_add(this, data);
-    return _DARKEN_ASSERT(ret, ret, "Allocation");
+    return DARKEN_ASSERT(ret == 0, ret, "Allocation");
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
     int ret = uclist_remove(this, data, 0);
-    return _DARKEN_EQUAL(ret == UCLIST_NOT_FOUND, ret, "Not found");
+    return DARKEN_ASSERT(ret == UCLIST_NOT_FOUND, ret, "Not found");
 }
 
 int de_system_update(de_system *const this, void (*update)(), unsigned params)
 {
-    _DARKEN_ASSERT(update, UCLIST_NO_ITERATOR, "Null iterator");
-    _DARKEN_ASSERT(params, UCLIST_NO_NBITEMS, "No parameters");
+    DARKEN_ASSERT(update == 0, UCLIST_NO_ITERATOR, "Null iterator");
+    DARKEN_ASSERT(params == 0, UCLIST_NO_NBITEMS, "No parameters");
 
     for (unsigned i = 0; i < this->size; i += params)
     {
