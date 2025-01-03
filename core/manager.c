@@ -20,14 +20,13 @@ void de_manager_update(de_manager *const this)
         {
             entity->state = entity->state(entity->data, entity);
             ++i;
+            continue;
         }
-        else
-        {
-            --this->size;
-            this->list[i] = this->list[this->size];
-            this->list[this->size] = entity;
-            entity->destructor != 0 && entity->destructor(entity->data, entity);
-        }
+
+        --this->size;
+        this->list[i] = this->list[this->size];
+        this->list[this->size] = entity;
+        entity->destructor != 0 && entity->destructor(entity->data, entity);
     }
 }
 

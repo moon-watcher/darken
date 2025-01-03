@@ -62,16 +62,13 @@ int uclist_iterator(uclist *const this, void (*iterator)())
     return this->size;
 }
 
-int uclist_remove(uclist *const this, void *const data, void (*exec)())
+int uclist_remove(uclist *const this, void *const data, void *(*exec)())
 {
     for (unsigned i = 0; i < this->capacity; i++)
     {
         if (this->list[i] == data)
         {
-            if (exec != 0)
-            {
-                exec(data);
-            }
+            exec != 0 && exec(data);
 
             --this->size;
             this->list[i] = this->list[this->size];

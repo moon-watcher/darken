@@ -16,7 +16,7 @@ void uclist_init(uclist *const, unsigned);
 void *uclist_alloc(uclist *const);
 void *uclist_add(uclist *const, void *const);
 int uclist_iterator(uclist *const, void (*)());
-int uclist_remove(uclist *const, void *const, void (*exec)());
+int uclist_remove(uclist *const, void *const, void *(*exec)());
 void uclist_reset(uclist *const);
 void uclist_end(uclist *const);
 
