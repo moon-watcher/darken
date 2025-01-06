@@ -20,7 +20,7 @@ static void (*const _exec[])() = {0, f1, f2, f3, f4, f5, f6};
 
 int uclist_extend_findIndex(uclist *const this, void *const data)
 {
-    for (int i = 0; i < this->size; i++)
+    for (unsigned i = 0; i < this->size; i++)
     {
         if (this->list[i] == data)
         {

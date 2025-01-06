@@ -7,7 +7,7 @@
 
 #include "uclist/uclist.h"
 
-de_entity *darken_init(void *(*)(), unsigned);
+de_entity *darken_init(void *(*)(unsigned short), unsigned);
 void darken_loop(de_entity *const, de_state_f);
 
 #define DE_CAST(ENTITY, TYPE) ((TYPE *const)ENTITY->data)

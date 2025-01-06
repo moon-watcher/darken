@@ -1,6 +1,6 @@
 #include "core/entity.h"
 
-de_entity *darken_init(void *(*alloc)(), unsigned size)
+de_entity *darken_init(void *(*alloc)(unsigned short), unsigned size)
 {
     return alloc(sizeof(de_entity) + size);
 }

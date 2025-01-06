@@ -32,7 +32,7 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(this, de_entity_delete);
+    uclist_iterator(this, (void*) de_entity_delete);
     de_manager_update(this);
 }
 
