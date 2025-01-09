@@ -5,7 +5,7 @@ de_entity *darken_init(void *(*alloc)(unsigned short), unsigned size)
     return alloc(sizeof(de_entity) + size);
 }
 
-void darken_loop(de_entity *const entity, de_state_f state)
+void darken_loop(de_entity *const entity, de_state state)
 {
     de_entity_set(entity, state);
 
