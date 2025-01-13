@@ -1,8 +1,9 @@
 #include "manager.h"
+#include "../darken.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_init(this, sizeof(de_entity) + bytes);
+    uclist_init(this, DARKEN_SIZE(bytes));
 }
 
 de_entity *de_manager_new(de_manager *const this, de_state state)
