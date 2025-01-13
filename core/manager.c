@@ -15,19 +15,16 @@ void de_manager_update(de_manager *const this)
 {
     for (unsigned i = 0; i < this->size;)
     {
-        de_entity *const entity = this->list[i];
+        de_entity *const entity = this->list[i++];
 
         if (entity->state == 0)
         {
-            --this->size;
-            this->list[i] = this->list[this->size];
+            this->list[--i] = this->list[--this->size];
             this->list[this->size] = entity;
-            entity->destructor != 0 && entity->destructor(entity->data, entity);
-            continue;
+            entity->state = entity->destructor ?: ({ void *f(){return 0;} f; });
         }
 
         entity->state = entity->state(entity->data, entity);
-        ++i;
     }
 }
 
