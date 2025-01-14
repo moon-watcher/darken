@@ -20,7 +20,7 @@ void de_manager_update(de_manager *const this)
         if (entity->state == 0)
         {
             uclist_removeIndex(this, --i, 0);
-            entity->state = entity->destructor ?: ({ void *f(){return 0;} f; });
+            de_entity_set(entity, entity->destructor ?: ({ void *f(){return 0;} f; }));
         }
 
         entity->state = entity->state(entity->data, entity);
