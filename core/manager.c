@@ -19,8 +19,7 @@ void de_manager_update(de_manager *const this)
 
         if (entity->state == 0)
         {
-            this->list[--i] = this->list[--this->size];
-            this->list[this->size] = entity;
+            uclist_removeIndex(this, --i, 0);
             entity->state = entity->destructor ?: ({ void *f(){return 0;} f; });
         }
 
