@@ -13,7 +13,7 @@ int uclist_findIndex(uclist *const this, void *const data)
     return UCLIST_NOT_FOUND;
 }
 
-void uclist_removeIndex(uclist *const this, unsigned index, void (*exec)())
+void uclist_removeByIndex(uclist *const this, unsigned index, void (*exec)())
 {
     if (this->size == 0)
     {

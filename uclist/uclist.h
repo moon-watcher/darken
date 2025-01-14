@@ -23,5 +23,5 @@ void uclist_end(uclist *const);
 //
 
 int uclist_findIndex(uclist *const, void *const);
-void uclist_removeIndex(uclist *const, unsigned, void (*)());
+void uclist_removeByIndex(uclist *const, unsigned, void (*)());
 int uclist_iteratorEx(uclist *const, void (*)(), unsigned);
