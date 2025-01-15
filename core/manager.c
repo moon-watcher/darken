@@ -1,4 +1,3 @@
-#include "manager.h"
 #include "../darken.h"
 
 void de_manager_init(de_manager *const this, unsigned bytes)
