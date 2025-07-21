@@ -1,21 +1,36 @@
 #include "entity.h"
-#include "../assert.h"
 
-de_entity *de_entity_set(de_entity *const this, de_state state)
+inline de_entity *de_entity_set(de_entity *const this, de_state state)
 {
-    DARKEN_ASSERT(this == 0, 0, "Invalid entity");
-    this->state = state;
-    return this;
+    return this->state = state, this;
 }
 
-de_entity *de_entity_destructor(de_entity *const this, de_state state)
+inline de_entity *de_entity_destructor(de_entity *const this, de_state state)
 {
-    DARKEN_ASSERT(this == 0, 0, "Invalid entity");
-    this->destructor = state;
-    return this;
+    return this->destructor = state, this;
 }
 
-de_entity *de_entity_delete(de_entity *const this)
+inline de_entity *de_entity_delete(de_entity *const this)
 {
-    return de_entity_set(this, 0);
+    return this->state = 0, this;
+}
+
+inline de_entity *de_entity_pause(de_entity *const this)
+{
+    return uclist_remove(this->manager, this), this;
+}
+
+inline de_entity *de_entity_resume(de_entity *const this)
+{
+    return uclist_restore(this->manager, this), this;
+}
+
+inline void *de_entity_exec(de_entity *const this)
+{
+    return this->state(this->data, this);
+}
+
+inline void *de_entity_update(de_entity *const this)
+{
+    return this->state = de_entity_exec(this);
 }

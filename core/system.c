@@ -1,42 +1,106 @@
 #include "system.h"
-#include "../assert.h"
+#include "../config.h"
 
-void de_system_init(de_system *const this)
+void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
-    uclist_init(this, 0);
+    this->update_f = update;
+    this->params = params;
+    this->pause = 0;
+
+    uclist_init(&this->list, 0);
 }
 
-void *de_system_add(de_system *const this, void *const data)
+unsigned de_system_add(de_system *const this, ...)
 {
-    void *ret = uclist_add(this, data);
-    return DARKEN_ASSERT(ret == 0, ret, "Allocation");
+    va_list ap;
+    va_start(ap, this);
+
+    uclist *const list = &this->list;
+    unsigned count = this->params;
+
+    while (count--)
+        if (0 == uclist_add(list, va_arg(ap, void *const)))
+            return 0;
+
+    return 1;
 }
 
 int de_system_delete(de_system *const this, void *const data)
 {
-    int ret = uclist_remove(this, data, 0);
-    return DARKEN_ASSERT(ret == UCLIST_NOT_FOUND, ret, "Not found");
-}
+    uclist *const list = &this->list;
+    int index = uclist_find(list, data);
 
-int de_system_update(de_system *const this, void (*update)(), unsigned params)
-{
-    DARKEN_ASSERT(update == 0, UCLIST_NULL_ITERATOR, "Null iterator");
-    DARKEN_ASSERT(params == 0, UCLIST_NO_ITEMS, "No parameters");
+    if (index < 0)
+        return -1;
 
-    for (unsigned i = 0; i < this->size; i += params)
+    unsigned count = this->params;
+    void **const items = (void **)list->items;
+    void **src = &items[list->size -= count];
+    void **dst = &items[index];
+
+    while (count--)
     {
-        update(this->list[i + 0], this->list[i + 1], this->list[i + 2], this->list[i + 3]);
+        void *temp = *dst;
+        *dst++ = *src;
+        *src++ = temp;
     }
 
-    return this->size / params;
+    return index;
+}
+
+#define ITERATOR_CASE(N, ...)      \
+    case N:                        \
+        while (size--)             \
+        {                          \
+            update_f(__VA_ARGS__); \
+            items += N;            \
+        }                          \
+        return;
+
+void de_system_update(de_system *const this)
+{
+    if (this->pause)
+        return;
+
+    uclist *const list = &this->list;
+    unsigned count = this->params;
+    void **items = list->items;
+    unsigned size = list->size / count;
+    void (*update_f)() = this->update_f;
+
+    switch (count)
+    {
+        ITERATOR_CASE(1, items[0])
+        ITERATOR_CASE(2, items[0], items[1])
+        ITERATOR_CASE(3, items[0], items[1], items[2])
+        ITERATOR_CASE(4, items[0], items[1], items[2], items[3])
+        ITERATOR_CASE(5, items[0], items[1], items[2], items[3], items[4])
+    }
 }
 
 void de_system_reset(de_system *const this)
 {
-    uclist_reset(this);
+    uclist_reset(&this->list);
 }
 
 void de_system_end(de_system *const this)
 {
-    uclist_end(this);
+    uclist_end(&this->list);
 }
+
+// void de_system_update(de_system *const this)
+// {
+//     if (this->pause)
+//         return;
+
+//     uclist *const list = &this->list;
+//     unsigned count = this->params;
+//     void **items = list->items;
+//     unsigned size = list->size / count;
+
+//     while (size--)
+//     {
+//         this->update_f(items[0], items[1], items[2], items[3]);
+//         items += count;
+//     }
+// }
