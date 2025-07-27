@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "../uclist/uclist.h"
 
 inline de_entity *de_entity_set(de_entity *const this, de_state state)
 {
