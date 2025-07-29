@@ -1,7 +1,6 @@
 #pragma once
 
-#include "state.h"
-
+typedef void *(*de_state)();
 typedef struct de_manager de_manager;
 
 typedef struct de_entity
