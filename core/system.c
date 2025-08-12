@@ -16,9 +16,9 @@ unsigned de_system_add(de_system *const this, ...)
     va_start(ap, this);
 
     uclist *const list = &this->list;
-    unsigned count = this->params;
+    unsigned params = this->params;
 
-    while (count--)
+    while (params--)
     {
         void *const data = va_arg(ap, void *const);
 
@@ -35,9 +35,9 @@ unsigned de_system_addUnique(de_system *const this, ...)
     va_start(ap, this);
 
     uclist *const list = &this->list;
-    unsigned count = this->params;
+    unsigned params = this->params;
 
-    while (count--)
+    while (params--)
     {
         void *const data = va_arg(ap, void *const);
 
@@ -57,12 +57,12 @@ int de_system_delete(de_system *const this, void *const data)
     if (index < 0)
         return -1;
 
-    unsigned count = this->params;
+    unsigned params = this->params;
     void **const items = (void **)list->items;
-    void **src = &items[list->size -= count];
+    void **src = &items[list->size -= params];
     void **dst = &items[index];
 
-    while (count--)
+    while (params--)
     {
         void *temp = *dst;
         *dst++ = *src;
