@@ -5,7 +5,6 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
     this->update_f = update;
     this->params = params;
-    // this->pause = 0;
 
     uclist_init(&this->list, 0);
 }
@@ -54,19 +53,19 @@ int de_system_delete(de_system *const this, void *const data)
     uclist *const list = &this->list;
     int index = uclist_find(list, data);
 
-    if (index < 0)
-        return -1;
-
-    unsigned params = this->params;
-    void **const items = (void **)list->items;
-    void **src = &items[list->size -= params];
-    void **dst = &items[index];
-
-    while (params--)
+    if (index >= 0)
     {
-        void *temp = *dst;
-        *dst++ = *src;
-        *src++ = temp;
+        unsigned params = this->params;
+        void **const items = (void **)list->items;
+        void **src = &items[list->size -= params];
+        void **dst = &items[index];
+
+        while (params--)
+        {
+            void *temp = *dst;
+            *dst++ = *src;
+            *src++ = temp;
+        }
     }
 
     return index;
@@ -83,9 +82,6 @@ int de_system_delete(de_system *const this, void *const data)
 
 void de_system_update(de_system *const this)
 {
-    // if (this->pause)
-    //     return;
-
     uclist *const list = &this->list;
     unsigned params = this->params;
     void **items = list->items;
@@ -114,9 +110,6 @@ void de_system_end(de_system *const this)
 
 // void de_system_update(de_system *const this)
 // {
-//     if (this->pause)
-//         return;
-
 //     uclist *const list = &this->list;
 //     unsigned params = this->params;
 //     void **items = list->items;

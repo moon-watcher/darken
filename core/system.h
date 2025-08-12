@@ -7,8 +7,6 @@ typedef struct
     uclist list;
     void (*update_f)();
     unsigned params;
-    // char *name;
-    // int pause;
 } de_system;
 
 void de_system_init(de_system *const, void (*)(), unsigned);
