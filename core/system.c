@@ -5,7 +5,7 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
     this->update_f = update;
     this->params = params;
-    this->pause = 0;
+    // this->pause = 0;
 
     uclist_init(&this->list, 0);
 }
@@ -19,8 +19,32 @@ unsigned de_system_add(de_system *const this, ...)
     unsigned count = this->params;
 
     while (count--)
-        if (0 == uclist_add(list, va_arg(ap, void *const)))
+    {
+        void *const data = va_arg(ap, void *const);
+
+        if (0 == uclist_add(list, data))
             return 0;
+    }
+
+    return 1;
+}
+
+unsigned de_system_addUnique(de_system *const this, ...)
+{
+    va_list ap;
+    va_start(ap, this);
+
+    uclist *const list = &this->list;
+    unsigned count = this->params;
+
+    while (count--)
+    {
+        void *const data = va_arg(ap, void *const);
+
+        if (uclist_find(list, data) < 0)
+            if (0 == uclist_add(list, data))
+                return 0;
+    }
 
     return 1;
 }
@@ -59,16 +83,16 @@ int de_system_delete(de_system *const this, void *const data)
 
 void de_system_update(de_system *const this)
 {
-    if (this->pause)
-        return;
+    // if (this->pause)
+    //     return;
 
     uclist *const list = &this->list;
-    unsigned count = this->params;
+    unsigned params = this->params;
     void **items = list->items;
-    unsigned size = list->size / count;
+    unsigned size = list->size / params;
     void (*update_f)() = this->update_f;
 
-    switch (count)
+    switch (params)
     {
         ITERATOR_CASE(1, items[0])
         ITERATOR_CASE(2, items[0], items[1])
@@ -94,13 +118,13 @@ void de_system_end(de_system *const this)
 //         return;
 
 //     uclist *const list = &this->list;
-//     unsigned count = this->params;
+//     unsigned params = this->params;
 //     void **items = list->items;
-//     unsigned size = list->size / count;
+//     unsigned size = list->size / params;
 
 //     while (size--)
 //     {
 //         this->update_f(items[0], items[1], items[2], items[3]);
-//         items += count;
+//         items += params;
 //     }
 // }
