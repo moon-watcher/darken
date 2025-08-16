@@ -20,6 +20,6 @@ void de_manager_end(de_manager *const);
 
 //
 
-unsigned *de_manager_getSize(de_manager *const);
-unsigned *de_manager_getCapacity(de_manager *const);
+unsigned de_manager_getSize(de_manager *const);
+unsigned de_manager_getCapacity(de_manager *const);
 de_entity **de_manager_getItems(de_manager *const);

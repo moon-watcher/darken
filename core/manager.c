@@ -52,14 +52,14 @@ void de_manager_end(de_manager *const this)
 
 //
 
-inline unsigned *de_manager_getSize(de_manager *const this)
+inline unsigned de_manager_getSize(de_manager *const this)
 {
-    return &this->list.size;
+    return this->list.size;
 }
 
-inline unsigned *de_manager_getCapacity(de_manager *const this)
+inline unsigned de_manager_getCapacity(de_manager *const this)
 {
-    return &this->list.capacity;
+    return this->list.capacity;
 }
 
 inline de_entity **de_manager_getItems(de_manager *const this)
