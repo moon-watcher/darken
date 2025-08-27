@@ -3,7 +3,7 @@
 
 inline de_entity *de_entity_set(de_entity *const this, de_state state)
 {
-    return this->state = state, this;
+    return this->state = state, this->counter = 0, this;
 }
 
 inline de_entity *de_entity_destructor(de_entity *const this, de_state state)
@@ -26,12 +26,20 @@ inline de_entity *de_entity_resume(de_entity *const this)
     return uclist_restore(this->manager, this), this;
 }
 
-inline void *de_entity_exec(de_entity *const this)
-{
-    return this->state(this->data, this);
-}
-
 inline void *de_entity_update(de_entity *const this)
 {
-    return this->state = de_entity_exec(this);
+    this->state = this->state(this->data, this);
+    ++this->counter;
+
+    return this->state;
 }
+
+// inline void *de_entity_exec(de_entity *const this)
+// {
+//     return this->state(this->data, this);
+// }
+
+// inline void *de_entity_update(de_entity *const this)
+// {
+//     return this->state = de_entity_exec(this);
+// }
