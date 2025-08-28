@@ -1,6 +1,5 @@
 #pragma once
 
-#include "state.h"
 #include "entity.h"
 
 #include "../uclist/uclist.h"
