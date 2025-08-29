@@ -10,9 +10,6 @@ typedef struct de_entity
     de_state destructor;
     de_manager *manager;
 
-    // testing
-    unsigned counter;
-
     unsigned char data[]; // Bytes for data
 } de_entity;
 
