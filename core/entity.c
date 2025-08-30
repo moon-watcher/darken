@@ -1,5 +1,6 @@
 #include "entity.h"
 #include "../uclist/uclist.h"
+#include "../config.h"
 
 inline de_entity *de_entity_set(de_entity *const this, de_state state)
 {
@@ -28,12 +29,9 @@ inline de_entity *de_entity_resume(de_entity *const this)
 
 inline void *de_entity_update(de_entity *const this)
 {
+#if DARKEN_ENTITY_FULL_UPDATE
     return this->state = this->state(this->data, this);
+#else
+    return this->state = this->state(this->data);
+#endif
 }
-
-//
-
-// inline void *de_entity_exec(de_entity *const this)
-// {
-//     return this->state(this->data, this);
-// }
