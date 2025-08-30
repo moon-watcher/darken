@@ -29,9 +29,9 @@ inline de_entity *de_entity_resume(de_entity *const this)
 
 inline void *de_entity_update(de_entity *const this)
 {
+    return this->state = this->state(this->data
 #if DARKEN_ENTITY_FULL_UPDATE
-    return this->state = this->state(this->data, this);
-#else
-    return this->state = this->state(this->data);
+        , this
 #endif
+    );
 }
