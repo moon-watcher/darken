@@ -19,12 +19,7 @@ inline de_entity *de_entity_delete(de_entity *const this)
 
 inline de_entity *de_entity_pause(de_entity *const this)
 {
-    return uclist_remove(this->manager, this), this;
-}
-
-inline de_entity *de_entity_resume(de_entity *const this)
-{
-    return uclist_restore(this->manager, this), this;
+    return this->state = de_state_empty, this;
 }
 
 inline void *de_entity_update(de_entity *const this)

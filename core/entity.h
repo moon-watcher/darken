@@ -17,9 +17,4 @@ de_entity *de_entity_set(de_entity *const, de_state);
 de_entity *de_entity_destructor(de_entity *const, de_state);
 de_entity *de_entity_delete(de_entity *const);
 de_entity *de_entity_pause(de_entity *const);
-de_entity *de_entity_resume(de_entity *const);
 void *de_entity_update(de_entity *const);
-
-//
-
-// void *de_entity_exec(de_entity *const);
