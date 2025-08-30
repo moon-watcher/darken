@@ -20,7 +20,7 @@ inline de_entity *de_entity_pause(de_entity *const this)
     return this->state = de_state_empty, this;
 }
 
-inline void *de_entity_update(de_entity *const this)
+inline de_entity *de_entity_update(de_entity *const this)
 {
-    return this->state = this->state(this->data);
+    return this->state = this->state(this->data), this;
 }
