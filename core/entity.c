@@ -12,15 +12,15 @@ inline de_entity *de_entity_destructor(de_entity *const this, de_state state)
 
 inline de_entity *de_entity_delete(de_entity *const this)
 {
-    return this->state = 0, this;
+    return de_entity_set(this, 0);
 }
 
 inline de_entity *de_entity_pause(de_entity *const this)
 {
-    return this->state = de_state_empty, this;
+    return de_entity_set(this, de_state_empty);
 }
 
 inline de_entity *de_entity_update(de_entity *const this)
 {
-    return this->state = this->state(this->data), this;
+    return de_entity_set(this, this->state(this->data));
 }

@@ -3,22 +3,15 @@
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uclist_init(&this->list, sizeof(de_entity) + bytes);
-    this->pause = 0;
 }
 
 de_entity *de_manager_new(de_manager *const this, de_state state, de_state destructor)
 {
-    de_entity *const entity = uclist_alloc(&this->list);
-    entity->manager = this;
-
-    return de_entity_destructor(de_entity_set(entity, state), destructor);
+    return de_entity_destructor(de_entity_set(uclist_alloc(&this->list), state), destructor);
 }
 
 void de_manager_update(de_manager *const this)
 {
-    if (this->pause)
-        return;
-
     uclist *const list = &this->list;
     de_entity **const items = (de_entity **)list->items;
     unsigned *const size = &list->size;

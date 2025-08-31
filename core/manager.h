@@ -7,8 +7,6 @@
 typedef struct de_manager
 {
     uclist list;
-    char *name;
-    int pause;
 } de_manager;
 
 void de_manager_init(de_manager *const, unsigned);

@@ -2,13 +2,10 @@
 
 #include "state.h"
 
-typedef struct de_manager de_manager;
-
 typedef struct de_entity
 {
     de_state state;
     de_state destructor;
-    de_manager *manager;
 
     unsigned char data[]; // Bytes for data
 } de_entity;
