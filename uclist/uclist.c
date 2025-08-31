@@ -40,7 +40,7 @@ void *uclist_add(uclist *const this, void *const add)
 
     this->items[this->size] = add;
     ++this->size;
-    
+
     return add;
 }
 
