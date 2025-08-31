@@ -16,3 +16,9 @@ int de_system_delete(de_system *const, void *const);
 void de_system_update(de_system *const);
 void de_system_reset(de_system *const);
 void de_system_end(de_system *const);
+
+//
+
+unsigned de_system_getSize(de_system *const);
+unsigned de_system_getCapacity(de_system *const);
+void **de_system_getItems(de_system *const);
