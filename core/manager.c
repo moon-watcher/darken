@@ -3,6 +3,7 @@
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
     uclist_init(&this->list, sizeof(de_entity) + bytes);
+    this->pauseSize = 0;
 }
 
 de_entity *de_manager_new(de_manager *const this, de_state state, de_state destructor)
@@ -13,15 +14,15 @@ de_entity *de_manager_new(de_manager *const this, de_state state, de_state destr
 void de_manager_update(de_manager *const this)
 {
     de_entity **const items = de_manager_getItems(this);
-    unsigned i = 0, size = de_manager_getSize(this);
+    unsigned i = this->pauseSize, size = de_manager_getSize(this);
+
+    // if (this->debug)
+    //     kprintf("%d %d ", i, size);
 
     while (i < size)
     {
         de_entity *const entity = items[i++];
         de_state const state = entity->state;
-
-        if (state == de_state_empty)
-            continue;
 
         if (!state)
         {
@@ -31,6 +32,38 @@ void de_manager_update(de_manager *const this)
         }
 
         de_entity_update(entity);
+
+        if (entity->state == de_state_empty)
+        {
+            void *const swap = items[i - 1];
+            items[i - 1] = items[this->pauseSize];
+            items[this->pauseSize] = swap;
+
+            ++this->pauseSize;
+        }
+    }
+}
+
+void *de_manager_resumeEntity(de_manager *const this, de_entity *const pausedEntity)
+{
+    de_entity **const items = de_manager_getItems(this);
+    unsigned i = 0, pauseSize = this->pauseSize, size = de_manager_getSize(this);
+
+    while (i < pauseSize)
+    {
+        de_entity *const entity = items[i];
+
+        if (pausedEntity == entity)
+        {            
+            --this->pauseSize;
+            items[i] = items[this->pauseSize];
+            return items[this->pauseSize] = entity;
+            // void *const swap = items[--this->pauseSize];
+            // items[i - 1] = items[--this->pauseSize] = entity;
+            // items[this->pauseSize] = swap;
+
+        }
+        ++i;
     }
 }
 
