@@ -10,8 +10,9 @@ typedef struct de_entity
     unsigned char data[]; // Bytes for data
 } de_entity;
 
-de_entity *de_entity_set(de_entity *const, de_state);
-de_entity *de_entity_destructor(de_entity *const, de_state);
-de_entity *de_entity_delete(de_entity *const);
-de_entity *de_entity_pause(de_entity *const);
-de_entity *de_entity_update(de_entity *const);
+#define de_entity_set(ENTITY, STATE) ({ ENTITY->state = STATE; })
+#define de_entity_destructor(ENTITY, STATE) ({ ENTITY->destructor = STATE; })
+#define de_entity_delete(ENTITY) ({ ENTITY->state = 0; })
+#define de_entity_pause(ENTITY) ({ ENTITY->state = de_state_empty; })
+#define de_entity_exec(ENTITY) ({ ENTITY->state(ENTITY->data); })
+#define de_entity_update(ENTITY) ({ ENTITY->state = ENTITY->state(ENTITY->data); })

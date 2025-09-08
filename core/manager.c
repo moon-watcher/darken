@@ -7,7 +7,12 @@ void de_manager_init(de_manager *const this, unsigned bytes)
 
 de_entity *de_manager_new(de_manager *const this, de_state state, de_state destructor)
 {
-    return de_entity_destructor(de_entity_set(uclist_alloc(&this->list), state), destructor);
+    de_entity *const entity = uclist_alloc(&this->list);
+
+    de_entity_set(entity, state);
+    de_entity_destructor(entity, destructor);
+
+    return entity;
 }
 
 void de_manager_update(de_manager *const this)
@@ -36,7 +41,8 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, (void *)de_entity_delete);
+    void delete(de_entity * e) { de_entity_delete(e); };
+    uclist_iterator(&this->list, delete);
     de_manager_update(this);
 }
 
