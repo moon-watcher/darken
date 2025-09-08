@@ -9,8 +9,8 @@ de_entity *de_manager_new(de_manager *const this, de_state state, de_state destr
 {
     de_entity *const entity = uclist_alloc(&this->list);
 
-    de_entity_set(entity, state);
-    de_entity_destructor(entity, destructor);
+    entity->state = state;
+    entity->destructor = destructor;
 
     return entity;
 }
@@ -24,20 +24,20 @@ void de_manager_update(de_manager *const this)
     {
         de_entity *const entity = items[i++];
 
-        if (entity->state)
-            de_entity_update(entity);
-        else
+        if (!entity->state)
         {
             --size;
             uclist_removeByIndex(&this->list, --i);
-            entity->destructor && entity->destructor(entity->data);
+            entity->state = entity->destructor ?: ({ void *d(){ return 0; }; d; });
         }
+
+        entity->state = entity->state(entity->data);
     }
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, ({ void d(de_entity *e) { de_entity_delete(e); }; d; }));
+    uclist_iterator(&this->list, ({ void d(de_entity *e) { e->state = 0; }; d; }));
     de_manager_update(this);
 }
 
