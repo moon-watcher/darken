@@ -23,26 +23,21 @@ void de_manager_update(de_manager *const this)
     while (i < size)
     {
         de_entity *const entity = items[i++];
-        de_state const state = entity->state;
 
-        if (state == de_state_empty)
-            continue;
-
-        if (!state)
+        if (entity->state)
+            de_entity_update(entity);
+        else
         {
             --size;
             uclist_removeByIndex(&this->list, --i);
-            de_entity_set(entity, entity->destructor ?: de_state_empty);
+            entity->destructor && entity->destructor(entity->data);
         }
-
-        de_entity_update(entity);
     }
 }
 
 void de_manager_reset(de_manager *const this)
 {
-    void delete(de_entity * e) { de_entity_delete(e); };
-    uclist_iterator(&this->list, delete);
+    uclist_iterator(&this->list, ({ void d(de_entity *e) { de_entity_delete(e); }; d; }));
     de_manager_update(this);
 }
 
