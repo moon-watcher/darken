@@ -23,15 +23,19 @@ void de_manager_update(de_manager *const this)
     while (i < size)
     {
         de_entity *const entity = items[i++];
+        de_state state = entity->state;
 
-        if (!entity->state)
+        if (state == de_state_empty)
+            continue;
+
+        if (!state)
         {
             --size;
             uclist_removeByIndex(&this->list, --i);
-            entity->state = entity->destructor ?: ({ void *d(){ return 0; }; d; });
+            state = entity->destructor ?: de_state_empty;
         }
 
-        entity->state = entity->state(entity->data);
+        entity->state = state(entity->data);
     }
 }
 
