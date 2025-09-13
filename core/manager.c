@@ -1,14 +1,43 @@
 #include "manager.h"
+#include <genesis.h>
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
-    uclist_init(&this->list, sizeof(de_entity) + bytes);
+    this->itemSize = sizeof(de_entity) + bytes;
+    this->pack = 1;
+    this->items = 0;
+    this->size = 0;
+    this->capacity = 0;
 }
 
 de_entity *de_manager_new(de_manager *const this, de_state state, de_state destructor)
 {
-    de_entity *const entity = uclist_alloc(&this->list);
+    de_entity *entity = this->items[this->size];
 
+    if (this->size < this->capacity)
+        ++this->size;
+    else if ((entity = malloc(this->itemSize)) != 0)
+    {
+        // resize //
+        void **ptr = malloc((this->capacity + 1) * sizeof(void *));
+
+        if (ptr == 0)
+            return 0;
+
+        memcpy(ptr, this->items, this->capacity * sizeof(void *));
+        free(this->items);
+
+        this->items = ptr;
+        ++this->capacity;
+        ////
+
+        this->items[this->size++] = entity;
+    }
+    else
+        return 0;
+
+    memset(entity, 0, this->itemSize);
+    
     entity->state = state;
     entity->destructor = destructor;
 
@@ -18,9 +47,9 @@ de_entity *de_manager_new(de_manager *const this, de_state state, de_state destr
 void de_manager_update(de_manager *const this)
 {
     de_entity **const items = de_manager_getItems(this);
-    unsigned i = 0, size = de_manager_getSize(this);
+    unsigned i = 0;
 
-    while (i < size)
+    while (i < this->size)
     {
         de_entity *const entity = items[i++];
         de_state state = entity->state;
@@ -30,8 +59,13 @@ void de_manager_update(de_manager *const this)
 
         if (!state)
         {
-            --size;
-            uclist_removeByIndex(&this->list, --i);
+            --this->size;
+            --i;
+
+            void *const swap = this->items[i];
+            this->items[i] = this->items[this->size];
+            this->items[this->size] = swap;
+
             state = entity->destructor ?: de_state_empty;
         }
 
@@ -41,29 +75,37 @@ void de_manager_update(de_manager *const this)
 
 void de_manager_reset(de_manager *const this)
 {
-    uclist_iterator(&this->list, ({ void d(de_entity *e) { e->state = 0; }; d; }));
+    for (unsigned i = 0; i < this->size; ++i)
+    {
+        de_entity *const entity = this->items[i];
+        entity->state = 0;
+    }
+    
     de_manager_update(this);
 }
 
 void de_manager_end(de_manager *const this)
 {
     de_manager_reset(this);
-    uclist_end(&this->list);
+    while (this->itemSize && this->capacity--)
+        free(this->items[this->capacity]);
+
+    free(this->items);
 }
 
 //
 
 inline unsigned de_manager_getSize(de_manager *const this)
 {
-    return this->list.size;
+    return this->size;
 }
 
 inline unsigned de_manager_getCapacity(de_manager *const this)
 {
-    return this->list.capacity;
+    return this->capacity;
 }
 
 inline de_entity **de_manager_getItems(de_manager *const this)
 {
-    return (de_entity **)this->list.items;
+    return (de_entity **)this->items;
 }

@@ -2,11 +2,13 @@
 
 #include "entity.h"
 
-#include "../uclist/uclist.h"
-
 typedef struct de_manager
 {
-    uclist list;
+    void **items;
+    unsigned size;
+    unsigned capacity;
+    unsigned itemSize;
+    unsigned pack;
 } de_manager;
 
 void de_manager_init(de_manager *const, unsigned);
