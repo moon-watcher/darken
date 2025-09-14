@@ -5,7 +5,9 @@
 
 void uclist_init_alloc(uclist *const this, unsigned itemSize)
 {
-    memset(this, 0, sizeof(uclist));
+    this->items = 0;
+    this->size = 0;
+    this->capacity = 0;
     this->itemSize = itemSize;
 }
 
