@@ -1,5 +1,4 @@
 #include "system.h"
-#include "../config.h"
 
 void de_system_init(de_system *const this, void (*update)(), unsigned params)
 {
@@ -9,25 +8,18 @@ void de_system_init(de_system *const this, void (*update)(), unsigned params)
     uclist_init_add(&this->list);
 }
 
-unsigned de_system_add(de_system *const this, ...)
+unsigned de_system_add(de_system *const this, void *const data[])
 {
-    va_list ap;
-    va_start(ap, this);
-
     uclist *const list = &this->list;
     unsigned params = this->params;
 
-    while (params)
-    {
-        void *const data = va_arg(ap, void *const);
+    while (params--)
+        if (uclist_find(list, *data) < 0 && !uclist_add(list, *data))
+            return params + 1;
+        else
+            data++;
 
-        if (uclist_find(list, data) < 0 && 0 == uclist_add(list, data))
-            return params;
-
-        --params;
-    }
-
-    return params;
+    return 0;
 }
 
 int de_system_delete(de_system *const this, void *const data)
