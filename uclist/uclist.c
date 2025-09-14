@@ -19,28 +19,31 @@ void uclist_init_add(uclist *const this)
 void *uclist_alloc(uclist *const this)
 {
     void *ptr = this->items[this->size];
+    unsigned const itemSize = this->itemSize;
 
     if (this->size < this->capacity)
         ++this->size;
-    else if ((ptr = malloc(this->itemSize)) != 0)
-        ptr = uclist_add(this, ptr);
-    else
-        return 0;
 
-    memset(ptr, 0, this->itemSize);
+    else if ((ptr = malloc(itemSize)) != 0)
+        ptr = uclist_add(this, ptr);
+
+    memset(ptr, 0, itemSize);
+
     return ptr;
 }
 
 void *uclist_add(uclist *const this, void *const add)
 {
-    if (this->size >= this->capacity)
-    {
-        void **ptr = malloc((this->capacity + 1) * sizeof(void *));
+    unsigned const capacity = this->capacity;
 
-        if (ptr == 0)
+    if (this->size >= capacity)
+    {
+        void **ptr = malloc((capacity + 1) * sizeof(void *));
+
+        if (!ptr)
             return 0;
 
-        memcpy(ptr, this->items, this->capacity * sizeof(void *));
+        memcpy(ptr, this->items, capacity * sizeof(void *));
         free(this->items);
 
         this->items = ptr;
@@ -52,8 +55,11 @@ void *uclist_add(uclist *const this, void *const add)
 
 void uclist_iterator(uclist *const this, void (*iterator)())
 {
-    for (unsigned i = 0; i < this->size; ++i)
-        iterator(this->items[i]);
+    void **const items = this->items;
+    unsigned i = this->size;
+
+    while (i--)
+        iterator(items[i]);
 }
 
 int uclist_remove(uclist *const this, void *const data)
@@ -68,20 +74,30 @@ int uclist_remove(uclist *const this, void *const data)
 
 void uclist_restore(uclist *const this, void *const data)
 {
-    for (unsigned i = this->size; i < this->capacity; i++)
-        if (this->items[i] == data)
-        {
-            this->items[i] = this->items[this->size];
-            this->items[this->size++] = data;
+    void **const items = this->items;
+    unsigned i = this->capacity;
 
-            break;
+    while (i--)
+        if (items[i] == data)
+        {
+            unsigned const size = this->size;
+
+            items[i] = items[size];
+            items[size] = data;
+
+            ++this->size;
+
+            return;
         }
 }
 
 int uclist_find(uclist *const this, void *const data)
 {
-    for (unsigned i = 0; i < this->size; i++)
-        if (this->items[i] == data)
+    void **const items = this->items;
+    unsigned i = this->size;
+
+    while (i--)
+        if (items[i] == data)
             return i;
 
     return -1;
@@ -89,14 +105,18 @@ int uclist_find(uclist *const this, void *const data)
 
 unsigned uclist_removeByIndex(uclist *const this, unsigned index)
 {
-    if (this->size == 0 || index >= this->size)
+    unsigned size = this->size;
+
+    if (size == 0 || index >= size)
         return 0;
 
-    --this->size;
+    size = --this->size;
 
-    void *const swap = this->items[index];
-    this->items[index] = this->items[this->size];
-    this->items[this->size] = swap;
+    void **const items = this->items;
+    void *const swap = items[index];
+
+    items[index] = items[size];
+    items[size] = swap;
 
     return 1;
 }
@@ -105,17 +125,22 @@ unsigned uclist_reset(uclist *const this)
 {
     this->size = 0;
 
-    if (this->capacity == 0 || this->itemSize == 0)
+    unsigned capacity = this->capacity;
+    unsigned const itemSize = this->itemSize;
+
+    if (capacity == 0 || itemSize == 0)
         return 2;
 
-    void *block = malloc(this->capacity * this->itemSize);
+    void *block = malloc(capacity * itemSize);
     if (!block)
         return 0;
 
-    for (unsigned i = 0; i < this->capacity; i++)
+    void **const items = this->items;
+
+    while (capacity--)
     {
-        free(this->items[i]);
-        this->items[i] = (unsigned char *)block + i * this->itemSize;
+        free(items[capacity]);
+        items[capacity] = (unsigned char *)block + capacity * itemSize;
     }
 
     return 1;
@@ -123,11 +148,19 @@ unsigned uclist_reset(uclist *const this)
 
 void uclist_end(uclist *const this)
 {
-    while (this->itemSize && this->capacity--)
-        free(this->items[this->capacity]);
+    void **const items = this->items;
+    unsigned const itemSize = this->itemSize;
 
-    free(this->items);
-    uclist_init_alloc(this, this->itemSize);
+    if (itemSize)
+    {
+        unsigned i = this->capacity;
+
+        while (i--)
+            free(items[i]);
+    }
+
+    free(items);
+    uclist_init_alloc(this, itemSize);
 }
 
 //
