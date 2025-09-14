@@ -7,7 +7,6 @@ void uclist_init(uclist *const this, unsigned itemSize)
 {
     memset(this, 0, sizeof(uclist));
     this->itemSize = itemSize;
-    this->pack = 1;
 }
 
 void *uclist_alloc(uclist *const this)
@@ -99,21 +98,18 @@ unsigned uclist_reset(uclist *const this)
 {
     this->size = 0;
 
-    if (!this->pack)
-        return 3;
-
     if (this->capacity == 0 || this->itemSize == 0)
         return 2;
-
-    for (unsigned i = 0; i < this->capacity; i++)
-        free(this->items[i]);
 
     void *block = malloc(this->capacity * this->itemSize);
     if (!block)
         return 0;
 
     for (unsigned i = 0; i < this->capacity; i++)
+    {
+        free(this->items[i]);
         this->items[i] = (unsigned char *)block + i * this->itemSize;
+    }
 
     return 1;
 }

@@ -6,7 +6,6 @@ typedef struct uclist
     unsigned size;
     unsigned capacity;
     unsigned itemSize;
-    unsigned pack;
 } uclist;
 
 void uclist_init(uclist *const, unsigned);
