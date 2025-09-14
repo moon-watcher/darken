@@ -21,30 +21,8 @@ unsigned de_system_add(de_system *const this, ...)
     {
         void *const data = va_arg(ap, void *const);
 
-        if (0 == uclist_add(list, data))
-            break;
-
-        --params;
-    }
-
-    return params;
-}
-
-unsigned de_system_addUnique(de_system *const this, ...)
-{
-    va_list ap;
-    va_start(ap, this);
-
-    uclist *const list = &this->list;
-    unsigned params = this->params;
-
-    while (params)
-    {
-        void *const data = va_arg(ap, void *const);
-
-        if (uclist_find(list, data) < 0)
-            if (0 == uclist_add(list, data))
-                break;
+        if (uclist_find(list, data) < 0 && 0 == uclist_add(list, data))
+            return params;
 
         --params;
     }
@@ -57,19 +35,19 @@ int de_system_delete(de_system *const this, void *const data)
     uclist *const list = &this->list;
     int index = uclist_find(list, data);
 
-    if (index >= 0)
-    {
-        unsigned params = this->params;
-        void **const items = de_system_getItems(list);
-        void **src = &items[list->size -= params];
-        void **dst = &items[index];
+    if (index < 0)
+        return index;
 
-        while (params--)
-        {
-            void *temp = *dst;
-            *dst++ = *src;
-            *src++ = temp;
-        }
+    unsigned params = this->params;
+    void **const items = de_system_getItems(list);
+    void **src = &items[list->size -= params];
+    void **dst = &items[index];
+
+    while (params--)
+    {
+        void *temp = *dst;
+        *dst++ = *src;
+        *src++ = temp;
     }
 
     return index;
@@ -83,26 +61,11 @@ void de_system_update(de_system *const this)
     unsigned size = de_system_getSize(list) / params;
     void (*update_f)() = this->update_f;
 
-#define ITERATOR_CASE(N, ...)                  \
-    case N:                                    \
-        while (size--)                         \
-            update_f(__VA_ARGS__), items += N; \
-        return;
-
-    switch (params)
+    while (size--)
     {
-        ITERATOR_CASE(1, items[0])
-        ITERATOR_CASE(2, items[0], items[1])
-        ITERATOR_CASE(3, items[0], items[1], items[2])
-        ITERATOR_CASE(4, items[0], items[1], items[2], items[3])
-        ITERATOR_CASE(5, items[0], items[1], items[2], items[3], items[4])
+        update_f(items[0], items[1], items[2], items[3]);
+        items += params;
     }
-
-    // while (size--)
-    // {
-    //     this->update_f(items[0], items[1], items[2], items[3]);
-    //     items += params;
-    // }
 }
 
 void de_system_reset(de_system *const this)
