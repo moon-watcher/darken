@@ -3,10 +3,15 @@
 #include "uclist.h"
 #include "config.h"
 
-void uclist_init(uclist *const this, unsigned itemSize)
+void uclist_init_alloc(uclist *const this, unsigned itemSize)
 {
     memset(this, 0, sizeof(uclist));
     this->itemSize = itemSize;
+}
+
+void uclist_init_add(uclist *const this)
+{
+    uclist_init_alloc(this, 0);
 }
 
 void *uclist_alloc(uclist *const this)
@@ -120,7 +125,7 @@ void uclist_end(uclist *const this)
         free(this->items[this->capacity]);
 
     free(this->items);
-    uclist_init(this, this->itemSize);
+    uclist_init_alloc(this, this->itemSize);
 }
 
 //

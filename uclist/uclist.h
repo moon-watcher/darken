@@ -8,7 +8,8 @@ typedef struct uclist
     unsigned itemSize;
 } uclist;
 
-void uclist_init(uclist *const, unsigned);
+void uclist_init_alloc(uclist *const, unsigned);
+void uclist_init_add(uclist *const);
 void *uclist_alloc(uclist *const);
 void *uclist_add(uclist *const, void *const);
 void uclist_iterator(uclist *const, void (*)());
