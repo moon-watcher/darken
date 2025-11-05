@@ -1,4 +1,15 @@
-#include "manager.h"
+#include "darken.h"
+
+
+// State
+
+void *de_state_empty()
+{
+    return de_state_empty;
+}
+
+
+// Manager
 
 void de_manager_init(de_manager *const this, unsigned bytes)
 {
