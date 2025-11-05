@@ -5,12 +5,11 @@ void darken_init(de_manager *const this, unsigned bytes)
     uclist_init_alloc(this, sizeof(de_entity) + bytes);
 }
 
-de_entity *darken_new(de_manager *const this, de_state state, de_state destructor)
+de_entity *darken_new(de_manager *const this, de_state state)
 {
     de_entity *const entity = uclist_alloc(this);
 
     entity->state = state;
-    entity->destructor = destructor;
 
     return entity;
 }
