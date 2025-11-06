@@ -1,6 +1,6 @@
 #include "darken.h"
 
-void darken_init(de_manager *const this, unsigned bytes)
+void darken_init(de_manager *const this, unsigned short bytes)
 {
     uclist_init_alloc(this, sizeof(de_entity) + bytes);
 }
@@ -17,15 +17,21 @@ de_entity *darken_new(de_manager *const this, de_state state)
 void darken_update(de_manager *const this)
 {
     de_entity **const items = (de_entity **)this->items;
+    unsigned short i = 0, size = this->size;
 
-    for (unsigned i = 0; i < this->size;)
+    while (i < size)
     {
         de_entity *const entity = items[i++];
+        de_state state = entity->state;
 
-        if (entity->state)
-            entity->state = entity->state(entity->data);
+        if (state == (de_state)1)
+            continue;
+
+        if (state)
+            entity->state = state(entity->data);
         else
         {
+            --size;
             uclist_removeByIndex(this, --i);
             entity->destructor && entity->destructor(entity->data);
         }
