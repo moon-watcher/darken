@@ -24,12 +24,10 @@ void darken_update(de_manager *const this)
         de_entity *const entity = items[i++];
         de_state state = entity->state;
 
-        if (state == (de_state)1)
-            continue;
-
-        if (state)
+        if (state > (de_state)1)
             entity->state = state(entity->data);
-        else
+
+        else if (!state)
         {
             --size;
             uclist_removeByIndex(this, --i);
