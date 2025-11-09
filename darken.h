@@ -11,7 +11,13 @@ typedef struct
     unsigned char data[];
 } de_entity;
 
-typedef uclist de_manager;
+typedef struct
+{
+    de_entity **items;
+    unsigned short size;
+    unsigned short capacity;
+    unsigned short itemSize;
+} de_manager;
 
 void darken_init(de_manager *const, unsigned short);
 de_entity *darken_new(de_manager *const, de_state);

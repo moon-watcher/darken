@@ -16,12 +16,12 @@ de_entity *darken_new(de_manager *const this, de_state state)
 
 void darken_update(de_manager *const this)
 {
-    de_entity **const items = (de_entity **)this->items;
-    unsigned short i = 0, size = this->size;
+    de_entity **const items = this->items;
+    unsigned short i = this->size;
 
-    while (i < size)
+    while (i--)
     {
-        de_entity *const entity = items[i++];
+        de_entity *const entity = items[i];
         de_state state = entity->state;
 
         if (state > (de_state)1)
@@ -29,8 +29,7 @@ void darken_update(de_manager *const this)
 
         else if (!state)
         {
-            --size;
-            uclist_removeByIndex(this, --i);
+            uclist_removeByIndex(this, i);
             entity->destructor && entity->destructor(entity->data);
         }
     }
