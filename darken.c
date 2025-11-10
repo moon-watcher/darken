@@ -1,48 +1,48 @@
 #include "darken.h"
 
-void darken_init(de_manager *const this, unsigned short bytes)
+void darken_init(de_manager *$, uint16_t bytes)
 {
-    uclist_init_alloc(this, sizeof(de_entity) + bytes);
+    uclist_init($, sizeof(de_entity) + bytes);
 }
 
-de_entity *darken_new(de_manager *const this, de_state state)
+de_entity *darken_new(de_manager *$, de_state state)
 {
-    de_entity *const entity = uclist_alloc(this);
+    de_entity *entity = uclist_alloc($);
 
-    entity->state = state;
-
-    return entity;
+    return entity->state = state, entity;
 }
 
-void darken_update(de_manager *const this)
+void darken_update(de_manager *$)
 {
-    de_entity **const items = this->items;
-    unsigned short i = this->size;
+    de_entity **items = $->items;
+    uint16_t i = $->size;
 
     while (i--)
     {
-        de_entity *const entity = items[i];
+        de_entity *entity = items[i];
         de_state state = entity->state;
+
+        // state == (de_state)1: Pause
 
         if (state > (de_state)1)
             entity->state = state(entity->data);
 
         else if (!state)
         {
-            uclist_removeByIndex(this, i);
+            uclist_removeByIndex($, i);
             entity->destructor && entity->destructor(entity->data);
         }
     }
 }
 
-void darken_reset(de_manager *const this)
+void darken_reset(de_manager *$)
 {
-    uclist_iterator(this, ({ void d(de_entity *e) { e->state = 0; }; d; }));
-    darken_update(this);
+    uclist_iterator($, ({ void d(de_entity *e) { e->state = 0; }; d; }));
+    darken_update($);
 }
 
-void darken_end(de_manager *const this)
+void darken_end(de_manager *$)
 {
-    darken_reset(this);
-    uclist_end(this);
+    darken_reset($);
+    uclist_end($);
 }

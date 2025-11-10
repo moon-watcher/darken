@@ -2,25 +2,25 @@
 
 #include "config.h"
 
-typedef void *(*de_state)(void *const);
+typedef void *(*de_state)(void *);
 
 typedef struct
 {
     de_state state;
     de_state destructor;
-    unsigned char data[];
+    uint8_t data[];
 } de_entity;
 
 typedef struct
 {
     de_entity **items;
-    unsigned short size;
-    unsigned short capacity;
-    unsigned short itemSize;
+    uint16_t size;
+    uint16_t capacity;
+    uint16_t itemSize;
 } de_manager;
 
-void darken_init(de_manager *const, unsigned short);
-de_entity *darken_new(de_manager *const, de_state);
-void darken_update(de_manager *const);
-void darken_reset(de_manager *const);
-void darken_end(de_manager *const);
+void darken_init(de_manager *, uint16_t);
+de_entity *darken_new(de_manager *, de_state);
+void darken_update(de_manager *);
+void darken_reset(de_manager *);
+void darken_end(de_manager *);
