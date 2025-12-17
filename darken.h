@@ -1,7 +1,5 @@
 #pragma once
 
-#include "config.h"
-
 typedef void *(*de_state)(void *);
 
 typedef struct
@@ -11,6 +9,7 @@ typedef struct
     unsigned char data[];
 } de_entity;
 
+#include "config.h"
 typedef uclist de_manager;
 
 void darken_init(de_manager *, unsigned short);
