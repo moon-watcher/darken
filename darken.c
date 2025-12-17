@@ -1,6 +1,6 @@
 #include "darken.h"
 
-void darken_init(de_manager *$, uint16_t bytes)
+void darken_init(de_manager *$, unsigned short bytes)
 {
     uclist_init($, sizeof(de_entity) + bytes);
 }
@@ -15,7 +15,7 @@ de_entity *darken_new(de_manager *$, de_state state)
 void darken_update(de_manager *$)
 {
     de_entity **items = $->items;
-    uint16_t i = $->size;
+    unsigned short i = $->size;
 
     while (i--)
     {
