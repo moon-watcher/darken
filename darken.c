@@ -27,7 +27,7 @@ void darken_update(de_manager *$)
             de_state aux = state(entity->data);
 
             if (aux != DE_LOOP)
-                de_entity_setState(entity, aux);
+                entity->state = aux;
 
             continue;
         }
@@ -45,7 +45,7 @@ void darken_update(de_manager *$)
 
 void darken_reset(de_manager *$)
 {
-    uclist_iterator($, ({ void d(de_entity *e) { de_entity_delete(e); }; d; }));
+    uclist_iterator($, ({ void d(de_entity *e) { e->state = DE_DELETE; }; d; }));
     darken_update($);
 }
 
@@ -53,26 +53,4 @@ void darken_end(de_manager *$)
 {
     darken_reset($);
     uclist_end($);
-}
-
-//
-
-inline void de_entity_setState(de_entity *$, de_state state)
-{
-    $->state = state;
-}
-
-inline de_state de_entity_getState(de_entity *$)
-{
-    return $->state;
-}
-
-inline void de_entity_pause(de_entity *$)
-{
-    de_entity_setState($, 1);
-}
-
-inline void de_entity_delete(de_entity *$)
-{
-    de_entity_setState($, 0);
 }

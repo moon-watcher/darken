@@ -20,14 +20,6 @@ void darken_update(de_manager *);
 void darken_reset(de_manager *);
 void darken_end(de_manager *);
 
-//
-
-void de_entity_setState(de_entity *, de_state);
-de_state de_entity_getState(de_entity *);
-void de_entity_pause(de_entity *);
-void de_entity_delete(de_entity *);
-
-// State control 
 #define DE_DELETE 0
-#define DE_LOOP   1
-#define DE_PAUSE  2
+#define DE_LOOP 1
+#define DE_PAUSE 2
