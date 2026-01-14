@@ -5,11 +5,9 @@ void darken_init(de_manager *$, uint16_t bytes)
     uclist_init($, sizeof(de_entity) + bytes);
 }
 
-de_entity *darken_new(de_manager *$, de_state state)
+de_entity *darken_new(de_manager *$)
 {
-    de_entity *entity = uclist_alloc($);
-
-    return entity->state = state, entity;
+    return uclist_alloc($);
 }
 
 void darken_update(de_manager *$)

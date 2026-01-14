@@ -15,7 +15,7 @@ typedef struct
 typedef uclist de_manager;
 
 void darken_init(de_manager *, uint16_t);
-de_entity *darken_new(de_manager *, de_state);
+de_entity *darken_new(de_manager *);
 void darken_update(de_manager *);
 void darken_reset(de_manager *);
 void darken_end(de_manager *);
