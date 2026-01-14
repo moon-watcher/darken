@@ -26,15 +26,12 @@ void darken_update(de_manager *$)
         {
             de_state aux = state(entity->data);
             DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
-            continue;
         }
-
-        if (DE_STATE_IS_PAUSED(state))
-            continue;
-
-        // DE_STATE_IS_DELETED
-        uclist_removeByIndex($, i);
-        entity->destructor && entity->destructor(entity->data);
+        else if (DE_STATE_IS_DELETED(state))
+        {
+            uclist_removeByIndex($, i);
+            entity->destructor && entity->destructor(entity->data);
+        }
     }
 }
 
