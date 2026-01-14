@@ -22,22 +22,17 @@ void darken_update(de_manager *$)
         de_entity *entity = items[i];
         de_state state = entity->state;
 
-        if (state > (de_state)DE_PAUSE)
+        if (DE_STATE_IS_ACTIVE(state))
         {
             de_state aux = state(entity->data);
-
-            if (aux != DE_LOOP)
-                entity->state = aux;
-
+            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
             continue;
         }
 
-        if (state == (de_state)DE_PAUSE)
-        {
+        if (DE_STATE_IS_PAUSED(state))
             continue;
-        }
 
-        // DE_DELETE
+        // DE_STATE_IS_DELETED
         uclist_removeByIndex($, i);
         entity->destructor && entity->destructor(entity->data);
     }
@@ -45,7 +40,7 @@ void darken_update(de_manager *$)
 
 void darken_reset(de_manager *$)
 {
-    uclist_iterator($, ({ void d(de_entity *e) { e->state = DE_DELETE; }; d; }));
+    uclist_iterator($, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
     darken_update($);
 }
 
