@@ -3,22 +3,23 @@
 void darken_init(de_manager *$, uint16_t bytes)
 {
     uclist_init(&$->manager, sizeof(de_entity) + bytes);
-    // $->pause_index = 0;
+    $->pause_index = 0;
 }
 
 de_entity *darken_new(de_manager *$)
 {
-    return uclist_alloc(&$->manager);
+    de_entity *entity = uclist_alloc(&$->manager);
+    entity->manager = $;
+
+    return entity;
 }
 
-static count;
 void darken_update(de_manager *$)
 {
-    // uint16_t pause = $->pause_index;
-    de_entity *const *restrict *items = (de_entity *const *)$->manager.items;
+    de_entity **items = $->manager.items;
     uint16_t size = $->manager.size;
+    uint16_t actives = 0, paused = 0, deleted = 0;
 
-    // while (i-- >)
     for (uint16_t i = $->pause_index; i < size; i++)
     {
         de_entity *entity = items[i];
@@ -28,21 +29,24 @@ void darken_update(de_manager *$)
         {
             de_state aux = state(entity->data);
             DARKEN_NEED_UPDATE(aux) && (entity->state = aux);
+            actives++;
         }
         else if (DARKEN_IS_PAUSED(state))
         {
-            de_entity *temp = items[i];
-            items[i] = items[$->pause_index];
-            items[$->pause_index] = temp;
-
-            ++$->pause_index;
+            darken_entity_pause(entity);
+            paused++;
         }
         else if (DARKEN_IS_DELETED(state))
         {
             uclist_removeByIndex($, i);
             entity->destructor && entity->destructor(entity->data);
+            deleted++;
         }
     }
+
+#include "debug.h"
+if (paused)
+    PRINT("actives: %d  paused: %d  deleted: %d", actives, paused, deleted);
 }
 
 void darken_reset(de_manager *$)
@@ -55,4 +59,27 @@ void darken_end(de_manager *$)
 {
     darken_reset(&$->manager);
     uclist_end(&$->manager);
+}
+
+void darken_entity_resume(de_entity *entity)
+{
+    de_entity *temp = entity;
+    de_manager *manager = entity->manager;
+    de_entity **items = manager->manager.items;
+
+    --manager->pause_index;
+    entity = items[manager->pause_index];
+    items[manager->pause_index] = temp;
+}
+
+void darken_entity_pause(de_entity *entity)
+{
+    de_entity *temp = entity;
+    de_manager *manager = entity->manager;
+    de_entity **items = manager->manager.items;
+
+    entity = items[manager->pause_index];
+    items[manager->pause_index] = temp;
+
+    ++manager->pause_index;
 }

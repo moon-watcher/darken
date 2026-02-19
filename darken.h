@@ -4,13 +4,6 @@
 
 typedef void *(*de_state)(void *);
 
-typedef struct
-{
-    de_state state;
-    de_state destructor;
-    uint8_t data[];
-} de_entity;
-
 #include "config.h"
 typedef struct
 {
@@ -18,11 +11,23 @@ typedef struct
     uint16_t pause_index;
 } de_manager;
 
+typedef struct
+{
+    de_state state;
+    de_state destructor;
+    de_manager *manager;
+    uint8_t data[];
+
+} de_entity;
+
 void darken_init(de_manager *, uint16_t);
 de_entity *darken_new(de_manager *);
 void darken_update(de_manager *);
 void darken_reset(de_manager *);
 void darken_end(de_manager *);
+
+void darken_entity_resume(de_entity *);
+void darken_entity_pause(de_entity *);
 
 #define DARKEN_DELETE ((void *)0)
 #define DARKEN_LOOP ((void *)1)
