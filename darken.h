@@ -12,7 +12,11 @@ typedef struct
 } de_entity;
 
 #include "config.h"
-typedef uclist de_manager;
+typedef struct
+{
+    uclist manager;
+    // uint16_t pause_index;
+} de_manager;
 
 void darken_init(de_manager *, uint16_t);
 de_entity *darken_new(de_manager *);

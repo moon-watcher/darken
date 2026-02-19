@@ -2,18 +2,20 @@
 
 void darken_init(de_manager *$, uint16_t bytes)
 {
-    uclist_init($, sizeof(de_entity) + bytes);
+    uclist_init(&$->manager, sizeof(de_entity) + bytes);
+    // $->pause_index = 0;
 }
 
 de_entity *darken_new(de_manager *$)
 {
-    return uclist_alloc($);
+    return uclist_alloc(&$->manager);
 }
 
 void darken_update(de_manager *$)
 {
-    de_entity **items = $->items;
-    uint16_t i = $->size;
+    de_entity *const *restrict items = (de_entity *const *)$->manager.items;
+    // uint16_t pause = $->pause_index;
+    uint16_t i = $->manager.size;
 
     while (i--)
     {
@@ -25,6 +27,10 @@ void darken_update(de_manager *$)
             de_state aux = state(entity->data);
             DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
         }
+        // else if (DE_STATE_IS_PAUSED(state))
+        // {
+        //     move to first position and increase $->pause_index
+        // }
         else if (DE_STATE_IS_DELETED(state))
         {
             uclist_removeByIndex($, i);
@@ -35,12 +41,12 @@ void darken_update(de_manager *$)
 
 void darken_reset(de_manager *$)
 {
-    uclist_iterator($, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
-    darken_update($);
+    uclist_iterator(&$->manager, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
+    darken_update(&$->manager);
 }
 
 void darken_end(de_manager *$)
 {
-    darken_reset($);
-    uclist_end($);
+    darken_reset(&$->manager);
+    uclist_end(&$->manager);
 }
