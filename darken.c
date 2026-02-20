@@ -14,8 +14,8 @@ de_entity *darken_new(de_manager *$)
 void darken_update(de_manager *$)
 {
     de_entity *const *restrict items = (de_entity *const *)$->manager.items;
-    // uint16_t pause = $->pause_index;
     uint16_t i = $->manager.size;
+    // uint16_t pause = $->pause_index;
 
     while (i--)
     {
