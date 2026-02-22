@@ -39,6 +39,6 @@ void darken_end(de_manager *);
 #define DE_ENTITY_SET_STATE(ENTITY, STATE) ((ENTITY)->state = (STATE))
 #define DE_ENTITY_SET_DELETE(ENTITY) DE_ENTITY_SET_STATE((ENTITY), DE_STATE_DELETE)
 
-#define DE_ENTITY_FORCE_DELETE(ENTITY)                 \
+#define DE_ENTITY_DELETE_NOW(ENTITY)                   \
     uclist_remove(&(ENTITY)->manager->list, (ENTITY)); \
     (ENTITY)->destructor && (ENTITY)->destructor((ENTITY)->data);
