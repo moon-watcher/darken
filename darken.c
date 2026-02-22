@@ -2,13 +2,13 @@
 
 void darken_init(de_manager *$, uint16_t bytes)
 {
-    uclist_init(&$->manager, sizeof(de_entity) + bytes);
+    uclist_init(&$->list, sizeof(de_entity) + bytes);
     $->pause_index = 0;
 }
 
 de_entity *darken_new(de_manager *$)
 {
-    de_entity *entity = uclist_alloc(&$->manager);
+    de_entity *entity = uclist_alloc(&$->list);
     entity->manager = $;
 
     return entity;
@@ -16,70 +16,40 @@ de_entity *darken_new(de_manager *$)
 
 void darken_update(de_manager *$)
 {
-    de_entity **items = $->manager.items;
-    uint16_t size = $->manager.size;
-    uint16_t actives = 0, paused = 0, deleted = 0;
-
-    for (uint16_t i = $->pause_index; i < size; i++)
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
+    
+    while (i-- > $->pause_index)
     {
         de_entity *entity = items[i];
         de_state state = entity->state;
 
-        if (DARKEN_IS_ACTIVE(state))
+        if (DE_STATE_IS_ACTIVE(state))
         {
             de_state aux = state(entity->data);
-            DARKEN_NEED_UPDATE(aux) && (entity->state = aux);
-            actives++;
+            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
         }
-        else if (DARKEN_IS_PAUSED(state))
+        else if (DE_STATE_IS_PAUSED(state))
         {
-            darken_entity_pause(entity);
-            paused++;
+            items[i] = items[$->pause_index];
+            items[$->pause_index++] = entity;
         }
-        else if (DARKEN_IS_DELETED(state))
+        else if (DE_STATE_IS_DELETED(state))
         {
-            uclist_removeByIndex($, i);
+            uclist_removeByIndex(&$->list, i);
             entity->destructor && entity->destructor(entity->data);
-            deleted++;
         }
     }
-
-#include "debug.h"
-if (paused)
-    PRINT("actives: %d  paused: %d  deleted: %d", actives, paused, deleted);
 }
 
 void darken_reset(de_manager *$)
 {
-    uclist_iterator(&$->manager, ({ void d(de_entity *e) { e->state = DARKEN_DELETE; }; d; }));
-    darken_update(&$->manager);
+    uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
+    darken_update(&$->list);
 }
 
 void darken_end(de_manager *$)
 {
-    darken_reset(&$->manager);
-    uclist_end(&$->manager);
-}
-
-void darken_entity_resume(de_entity *entity)
-{
-    de_entity *temp = entity;
-    de_manager *manager = entity->manager;
-    de_entity **items = manager->manager.items;
-
-    --manager->pause_index;
-    entity = items[manager->pause_index];
-    items[manager->pause_index] = temp;
-}
-
-void darken_entity_pause(de_entity *entity)
-{
-    de_entity *temp = entity;
-    de_manager *manager = entity->manager;
-    de_entity **items = manager->manager.items;
-
-    entity = items[manager->pause_index];
-    items[manager->pause_index] = temp;
-
-    ++manager->pause_index;
+    darken_reset(&$->list);
+    uclist_end(&$->list);
 }
