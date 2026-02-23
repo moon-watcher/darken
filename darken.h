@@ -42,3 +42,9 @@ void darken_end(de_manager *);
 #define DE_ENTITY_DELETE_NOW(ENTITY)                   \
     uclist_remove(&(ENTITY)->manager->list, (ENTITY)); \
     (ENTITY)->destructor && (ENTITY)->destructor((ENTITY)->data);
+
+#define DE_MANAGER_RESUME_ALL(MANAGER)            \
+    _Generic((MANAGER),                           \
+        de_manager* : (MANAGER)->pause_index = 0, \
+        de_manager  : (MANAGER).pause_index  = 0  \
+    );
