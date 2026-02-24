@@ -18,7 +18,7 @@ void darken_update(de_manager *$)
 {
     de_entity **items = $->list.items;
     uint16_t i = $->list.size;
-    
+
     while (i-- > $->pause_index)
     {
         de_entity *entity = items[i];
@@ -52,4 +52,45 @@ void darken_end(de_manager *$)
 {
     darken_reset(&$->list);
     uclist_end(&$->list);
+}
+
+
+
+
+
+
+//
+
+void darken_pause(de_manager *$)
+{
+    $->pause_index = $->list.size;
+}
+
+void darken_resume(de_manager *$)
+{
+    $->pause_index = 0;
+}
+
+void darken_iterate(de_manager *$, void (*iterator)())
+{
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
+    uint16_t first = $->pause_index;
+
+    while (i-- > first)
+        iterator(items[i]->data);
+}
+
+void darken_iterateAll(de_manager *$, void (*iterator)())
+{
+    uint16_t aux = $->pause_index;
+    $->pause_index = 0;
+    darken_iterate($, iterator);
+    $->pause_index = aux;
+}
+
+void darken_entity_delete(de_entity *$)
+{
+    uclist_remove(&$->manager->list, $);
+    $->destructor && $->destructor($->data);
 }

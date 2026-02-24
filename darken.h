@@ -39,12 +39,21 @@ void darken_end(de_manager *);
 #define DE_ENTITY_SET_STATE(ENTITY, STATE) ((ENTITY)->state = (STATE))
 #define DE_ENTITY_SET_DELETE(ENTITY) DE_ENTITY_SET_STATE((ENTITY), DE_STATE_DELETE)
 
+/*
 #define DE_ENTITY_DELETE_NOW(ENTITY)                   \
     uclist_remove(&(ENTITY)->manager->list, (ENTITY)); \
     (ENTITY)->destructor && (ENTITY)->destructor((ENTITY)->data);
 
-#define DE_MANAGER_RESUME_ALL(MANAGER)            \
-    _Generic((MANAGER),                           \
-        de_manager* : (MANAGER)->pause_index = 0, \
-        de_manager  : (MANAGER).pause_index  = 0  \
-    );
+#define DE_MANAGER_PAUSE(MANAGER) \
+    (MANAGER).pause_index = (MANAGER).list.size
+
+#define DE_MANAGER_RESUME(MANAGER) \
+    (MANAGER).pause_index = 0
+
+#define DE_MANAGER_ITERATE_ALL(MANAGER, ITERATOR) \
+    uclist_iterator(&(MANAGER).list, ITERATOR)
+
+#define DE_MANAGER_ITERATE(MANAGER, ITERATOR)                            \
+    for (uint16_t i = (MANAGER).list.size; i-- > (MANAGER).pause_index;) \
+        (ITERATOR)((MANAGER).list.items[i]);
+*/
