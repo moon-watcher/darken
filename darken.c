@@ -83,10 +83,13 @@ void darken_iterate(de_manager *$, void (*iterator)())
 
 void darken_iterateAll(de_manager *$, void (*iterator)())
 {
-    uint16_t aux = $->pause_index;
-    $->pause_index = 0;
-    darken_iterate($, iterator);
-    $->pause_index = aux;
+    //uclist_iterator(&$->list, iterator);
+
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
+
+    while (i--)
+        iterator(items[i]->data);
 }
 
 void darken_entity_delete(de_entity *$)
