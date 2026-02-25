@@ -15,7 +15,6 @@ typedef struct
 typedef struct
 {
     uclist manager;
-    // uint16_t pause_index;
 } de_manager;
 
 void darken_init(de_manager *, uint16_t);
