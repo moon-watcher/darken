@@ -54,11 +54,6 @@ void darken_end(de_manager *$)
     uclist_end(&$->list);
 }
 
-
-
-
-
-
 //
 
 void darken_pause(de_manager *$)

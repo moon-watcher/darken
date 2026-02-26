@@ -27,6 +27,16 @@ void darken_update(de_manager *);
 void darken_reset(de_manager *);
 void darken_end(de_manager *);
 
+
+void darken_pause(de_manager *);
+void darken_resume(de_manager *);
+void darken_iterate(de_manager *, void (*)());
+void darken_iterateAll(de_manager *, void (*)());
+
+void darken_entity_delete(de_entity *);
+
+
+
 #define DE_STATE_DELETE ((void *)0)
 #define DE_STATE_LOOP ((void *)1)
 #define DE_STATE_PAUSE ((void *)2)
