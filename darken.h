@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "config.h"
 
+#include "system.h"
+
 typedef struct
 {
     uclist list;
