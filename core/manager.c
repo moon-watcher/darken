@@ -1,12 +1,12 @@
-#include "darken.h"
+#include "manager.h"
 
-void darken_init(de_manager *$, uint16_t bytes)
+void de_manager_init(de_manager *$, uint16_t bytes)
 {
     uclist_init(&$->list, sizeof(de_entity) + bytes);
     $->pause_index = 0;
 }
 
-de_entity *darken_new(de_manager *$)
+de_entity *de_manager_new(de_manager *$)
 {
     de_entity *entity = uclist_alloc(&$->list);
     entity->manager = $;
@@ -14,7 +14,7 @@ de_entity *darken_new(de_manager *$)
     return entity;
 }
 
-void darken_update(de_manager *$)
+void de_manager_update(de_manager *$)
 {
     de_entity **items = $->list.items;
     uint16_t i = $->list.size;
@@ -42,31 +42,17 @@ void darken_update(de_manager *$)
     }
 }
 
-void darken_reset(de_manager *$)
-{
-    uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
-    darken_update(&$->list);
-}
-
-void darken_end(de_manager *$)
-{
-    darken_reset(&$->list);
-    uclist_end(&$->list);
-}
-
-//
-
-void darken_pause(de_manager *$)
+void de_manager_pause(de_manager *$)
 {
     $->pause_index = $->list.size;
 }
 
-void darken_resume(de_manager *$)
+void de_manager_resume(de_manager *$)
 {
     $->pause_index = 0;
 }
 
-void darken_iterate(de_manager *$, void (*iterator)())
+void de_manager_iterate(de_manager *$, void (*iterator)())
 {
     de_entity **items = $->list.items;
     uint16_t i = $->list.size;
@@ -76,19 +62,19 @@ void darken_iterate(de_manager *$, void (*iterator)())
         iterator(items[i]->data);
 }
 
-void darken_iterateAll(de_manager *$, void (*iterator)())
+void de_manager_iterateAll(de_manager *$, void (*iterator)())
 {
-    //uclist_iterator(&$->list, iterator);
-
-    de_entity **items = $->list.items;
-    uint16_t i = $->list.size;
-
-    while (i--)
-        iterator(items[i]->data);
+    uclist_iterator(&$->list, iterator);
 }
 
-void darken_entity_delete(de_entity *$)
+void de_manager_reset(de_manager *$)
 {
-    uclist_remove(&$->manager->list, $);
-    $->destructor && $->destructor($->data);
+    uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
+    de_manager_update(&$->list);
+}
+
+void de_manager_end(de_manager *$)
+{
+    de_manager_reset(&$->list);
+    uclist_end(&$->list);
 }
