@@ -64,7 +64,11 @@ void de_manager_iterate(de_manager *$, void (*iterator)())
 
 void de_manager_iterateAll(de_manager *$, void (*iterator)())
 {
-    uclist_iterator(&$->list, iterator);
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
+
+    while (i--)
+        iterator(items[i]->data);
 }
 
 void de_manager_reset(de_manager *$)
