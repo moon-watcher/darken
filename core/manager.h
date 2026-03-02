@@ -1,21 +1,23 @@
 #pragma once
 
-#include "../libs/uplist.h"
+#include <stdint.h>
+#include "list.h"
+#include "entity.h"
 
 typedef struct de_manager
 {
-    uplist list;
-    void *data;
+    de_list list;
+    uint16_t pause_index;
+    //
+    // char *name;
 } de_manager;
 
-#include "state.h"
-typedef struct de_entity de_entity;
-
-void de_manager_loop(unsigned *const, de_state *const, unsigned);
-void de_manager_init(de_manager *const, unsigned, unsigned);
-de_entity *de_manager_new(de_manager *const, void (*)());
-void de_manager_update(de_manager *const);
-void de_manager_reset(de_manager *const);
-unsigned de_manager_count(de_manager *const);
-unsigned de_manager_capacity(de_manager *const);
-void de_manager_end(de_manager *const);
+void de_manager_init(de_manager *, uint16_t);
+de_entity *de_manager_new(de_manager *);
+void de_manager_update(de_manager *);
+void de_manager_pause(de_manager *);
+void de_manager_resume(de_manager *);
+void de_manager_iterate(de_manager *, void (*)());
+void de_manager_iterateAll(de_manager *, void (*)());
+void de_manager_reset(de_manager *);
+void de_manager_end(de_manager *);

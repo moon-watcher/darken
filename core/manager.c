@@ -1,145 +1,84 @@
 #include "manager.h"
-#include "entity.h"
-#include "../config.h"
 
-static void _destroy(de_entity *const this)
+void de_manager_init(de_manager *$, uint16_t bytes)
 {
-    if (this->leave != 0)
-        this->leave(this, this->data);
-
-    if (this->destructor != 0)
-        this->destructor(this, this->data);
+    uclist_init(&$->list, sizeof(de_entity) + bytes);
+    $->pause_index = 0;
 }
 
-static void _update(de_entity *const this)
+de_entity *de_manager_new(de_manager *$)
 {
-    this->update(this, this->data);
-}
-
-static void _delay(de_entity *const this)
-{
-    // dalay
-}
-
-static void _delete(de_entity *const this)
-{
-    if (uplist_remove(&this->manager->list, this, _destroy) == 0)
-        LOG("WARNING: Not found or count is 0");
-}
-
-static void _set(de_entity *const this)
-{
-    this->leave(this, this->data);
-
-    de_state *const state = this->state;
-
-    if (state->enter != 0)
-        state->enter(this, this->data);
-
-    this->update = state->update ?: de_state_nullf;
-    this->leave = state->leave ?: de_state_nullf;
-    this->ctrl = 0;
-}
-
-static const void (*const _array[])(de_entity *const) = {_update, _delay, _delete, _set};
-
-//
-
-void de_manager_loop(unsigned *const loop, de_state *const loop_state, unsigned size)
-{
-    size += sizeof(de_entity);
-    de_entity *entity = malloc(size);
-    memset(entity, 0, size);
-
-    de_state *state = loop_state ?: &de_state_empty;
-    entity->update = state->update ?: de_state_nullf;
-    entity->leave = state->leave ?: de_state_nullf;
-
-    if (state->enter != 0)
-        state->enter(entity, entity->data);
-
-    while (*loop == 1)
-        _array[entity->ctrl](entity);
-
-    entity->leave(entity, entity->data);
-
-    free(entity);
-}
-
-void de_manager_init(de_manager *const this, unsigned bytes, unsigned datasize)
-{
-    uplist_initAlloc(&this->list, sizeof(de_entity) + bytes);
-    this->data = 0;
-
-    if (datasize == 0)
-    {
-        // LOG("NOTICE: datasize is 0");
-    }
-    else if ((this->data = malloc(datasize)) == 0)
-    {
-        LOG("ERROR: malloc() returns null");
-    }
-}
-
-de_entity *de_manager_new(de_manager *const this, void (*desctructor)())
-{
-    de_entity *entity = uplist_alloc(&this->list);
-
-    if (entity == 0)
-    {
-        LOG("ERROR: uplist_alloc() returns null entity");
-    }
-    else
-    {
-        entity->update = de_state_nullf;
-        entity->leave = de_state_nullf;
-        entity->destructor = desctructor ?: de_state_nullf;
-        entity->manager = this;
-    }
+    de_entity *entity = uclist_alloc(&$->list);
+    entity->manager = $;
 
     return entity;
 }
 
-void de_manager_update(de_manager *const this)
+void de_manager_update(de_manager *$)
 {
-    uplist *const list = &this->list;
-    unsigned const count = list->count;
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
 
-    for (unsigned i = 0; i < count; i++)
+    while (i-- > $->pause_index)
     {
-        de_entity *const entity = list->items[i];
-        _array[entity->ctrl](entity);
+        de_entity *entity = items[i];
+        de_state state = entity->state;
+
+        if (DE_STATE_IS_ACTIVE(state))
+        {
+            de_state aux = state(entity->data);
+            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
+        }
+        else if (DE_STATE_IS_PAUSED(state))
+        {
+            items[i] = items[$->pause_index];
+            items[$->pause_index++] = entity;
+        }
+        else if (DE_STATE_IS_DELETED(state))
+        {
+            uclist_removeByIndex(&$->list, i);
+            entity->destructor && entity->destructor(entity->data);
+        }
     }
 }
 
-void de_manager_reset(de_manager *const this)
+void de_manager_pause(de_manager *$)
 {
-    uplist *const list = &this->list;
-    unsigned const count = list->count;
-
-    for (unsigned i = 0; i < count; i++)
-        _destroy(list->items[i]);
-
-    uplist_reset(list);
+    $->pause_index = $->list.size;
 }
 
-unsigned de_manager_count(de_manager *const this)
+void de_manager_resume(de_manager *$)
 {
-    return this->list.count;
+    $->pause_index = 0;
 }
 
-unsigned de_manager_capacity(de_manager *const this)
+void de_manager_iterate(de_manager *$, void (*iterator)())
 {
-    return this->list.capacity;
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
+    uint16_t first = $->pause_index;
+
+    while (i-- > first)
+        iterator(items[i]->data);
 }
 
-void de_manager_end(de_manager *const this)
+void de_manager_iterateAll(de_manager *$, void (*iterator)())
 {
-    de_manager_reset(this);
-    uplist_end(&this->list);
+    de_entity **items = $->list.items;
+    uint16_t i = $->list.size;
 
-    if (this->data != 0)
-        free(this->data);
+    while (i--)
+        iterator(items[i]->data);
+}
 
-    memset(this, 0, sizeof(de_manager));
+void de_manager_reset(de_manager *$)
+{
+    uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
+    de_manager_update(&$->list);
+}
+
+void de_manager_end(de_manager *$)
+{
+    de_manager_reset(&$->list);
+    uclist_end(&$->list);
 }

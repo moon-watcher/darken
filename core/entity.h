@@ -1,19 +1,23 @@
 #pragma once
 
+#include <stdint.h>
 #include "state.h"
-#include "manager.h"
+
+typedef struct de_manager de_manager;
 
 typedef struct de_entity
 {
-    void (*update)();
-    void (*leave)();
-    void (*destructor)();
-    de_state *state;
+    de_state state;
+    de_state destructor;
     de_manager *manager;
-    int ctrl;
-    unsigned char data[]; // Bytes for casting data & components
+    uint8_t data[];
 } de_entity;
 
-void de_entity_set(de_entity *const, de_state *const);
-void de_entity_delay(de_entity *const);
-void de_entity_delete(de_entity *const);
+void de_entity_delete(de_entity *);
+
+#define DE_ENTITY_STATE(ENTITY, STATE) ((ENTITY)->state = (STATE))
+#define DE_ENTITY_DELETE(ENTITY) DE_ENTITY_STATE((ENTITY), DE_STATE_DELETE)
+
+#define DE_ENTITY_DELETENOW(ENTITY)                    \
+    uclist_remove(&(ENTITY)->manager->list, (ENTITY)); \
+    (ENTITY)->destructor && (ENTITY)->destructor((ENTITY)->data);

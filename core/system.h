@@ -1,20 +1,37 @@
 #pragma once
 
-#include "../libs/uplist.h"
+#include <stdint.h>
+#include "list.h"
 
-typedef struct
+typedef struct de_system
 {
+    de_list list;
     void (*update)();
-    unsigned params;
-    void *data;
-    uplist list;
+    uint16_t params;
+    //
+    // char *name;
 } de_system;
 
-void de_system_init(de_system *const, void (*)(), unsigned, unsigned);
-void de_system_add(de_system *const, ...);
-void de_system_delete(de_system *const, ...);
-void de_system_update(de_system *const);
-void de_system_reset(de_system *const);
-unsigned de_system_count(de_system *const);
-unsigned de_system_capacity(de_system *const);
-void de_system_end(de_system *const);
+void de_system_init(de_system *, void (*)(), uint16_t);
+uint16_t de_system_add(de_system *, void *[]);
+uint16_t de_system_addUnsafe(de_system *, void *[]);
+uint16_t de_system_delete(de_system *, void *);
+void de_system_update(de_system *);
+void de_system_reset(de_system *);
+void de_system_end(de_system *);
+
+//
+
+#define DE_SYSTEM_DECLARE(NAME) void NAME(de_list *, uint16_t)
+
+#define DE_SYSTEM_ITERATE(NAME, ITERABLE)           \
+    void NAME(de_list *list, uint16_t params)       \
+    {                                               \
+        void **items = list->items;                 \
+        uint16_t size = list->size;                 \
+                                                    \
+        for (uint16_t i = 0; i < size; i += params) \
+            ITERABLE                                \
+    }
+
+#define DE_SYSTEM_PARAM(PARAM) items[i + PARAM]
