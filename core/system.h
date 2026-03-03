@@ -25,20 +25,21 @@ void de_system_end(de_system *);
 
 //
 
-#define DE_SYSTEM_FOREACH(ITERABLE)             \
-    void **items = system->list.items;          \
-    uint16_t size = system->list.size;          \
-    uint16_t params = system->params;           \
+#define DE_SYSTEM_FOREACH(SYSTEM)               \
+    void **items = SYSTEM->list.items;          \
+    uint16_t size = SYSTEM->list.size;          \
+    uint16_t params = SYSTEM->params;           \
                                                 \
     for (uint16_t i = 0; i < size; i += params) \
-    {                                           \
-        ITERABLE                                \
-    }
+
 
 #define DE_SYSTEM_ITERATE(NAME, ITERABLE) \
     void NAME(de_system *system)          \
     {                                     \
-        DE_SYSTEM_FOREACH(ITERABLE)       \
+        DE_SYSTEM_FOREACH(system)         \
+        {                                 \
+            ITERABLE                      \
+        }                                 \
     }
 
 #define DE_SYSTEM_PARAM(PARAM) items[i + PARAM]
