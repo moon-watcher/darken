@@ -9,10 +9,9 @@ typedef struct de_system
     de_list list;
     void *(*update)(de_system *);
     uint16_t params;
-    void *response;
+
     void *extraData;
-    //
-    // char *name;
+    char *name;
 } de_system;
 
 void de_system_init(de_system *, void *(*)(), uint16_t);

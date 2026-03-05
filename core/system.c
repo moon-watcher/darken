@@ -4,7 +4,6 @@ void de_system_init(de_system *$, void *(*update)(), uint16_t params)
 {
     $->update = update;
     $->params = params;
-    $->response = 0;
     $->extraData = 0;
 
     uclist_init(&$->list, 0);
@@ -56,7 +55,7 @@ uint16_t de_system_delete(de_system *$, void *data)
 
 void de_system_update(de_system *$)
 {
-    $->list.size && $->update && ($->response = $->update($));
+    $->list.size && $->update && $->update($);
 }
 
 void de_system_reset(de_system *$)
