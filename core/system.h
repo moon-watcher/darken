@@ -28,11 +28,9 @@ void de_system_end(de_system *);
 
 //
 
-#define _SYS_FOREACH(SYSTEM, IT)       \
-    void **items = SYSTEM->list.items; \
-    uint16_t size = SYSTEM->list.size; \
-    uint16_t i = 0;                    \
-    while (i < size)                   \
+#define _SYS_FOREACH(SYSTEM, IT)                              \
+    void **items = SYSTEM->list.items;                        \
+    for (uint16_t i = 0, size = SYSTEM->list.size; i < size;) \
         IT;
 
 #define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, NAME, ...) NAME
