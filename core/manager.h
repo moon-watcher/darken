@@ -8,8 +8,6 @@ typedef struct de_manager
 {
     de_list list;
     uint16_t pause_index;
-    //
-    // char *name;
 } de_manager;
 
 void de_manager_init(de_manager *, uint16_t);
