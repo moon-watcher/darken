@@ -24,58 +24,88 @@ void de_system_end(de_system *);
 
 //
 
+#define DE_SYSTEM_FOREACH(...) _SYS_GET_MACRO(__VA_ARGS__, _SYS_FOREACH_5, _SYS_FOREACH_4, _SYS_FOREACH_3, _SYS_FOREACH_2, _SYS_FOREACH_1, _SYS_FOREACH_0)(__VA_ARGS__)
+#define DE_SYSTEM_ITERATOR(...) _SYS_GET_MACRO(__VA_ARGS__, _SYS_ITERATOR_5, _SYS_ITERATOR_4, _SYS_ITERATOR_3, _SYS_ITERATOR_2, _SYS_ITERATOR_1, _SYS_ITERATOR_0)(__VA_ARGS__)
+
+//
+
 #define _SYS_FOREACH(SYSTEM)           \
     void **items = SYSTEM->list.items; \
     uint16_t size = SYSTEM->list.size; \
-    uint16_t params = SYSTEM->params;  \
-    for (uint16_t i = 0; i < size; i += params)
+    uint16_t i = 0;                    \
+    while (i < size)
 
-#define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, NAME, ...) NAME
+#define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, NAME, ...) NAME
 
-#define DE_SYSTEM_FOREACH(...)     \
-    _SYS_GET_MACRO(__VA_ARGS__,    \
-                   _SYS_ITERATE_4, \
-                   _SYS_ITERATE_3, \
-                   _SYS_ITERATE_2, \
-                   _SYS_ITERATE_1, \
-                   _SYS_ITERATE_0)(__VA_ARGS__)
+//
 
-#define _SYS_ITERATE_0(SYSTEM, IT) \
+#define _SYS_FOREACH_0(SYSTEM, IT) \
     _SYS_FOREACH(SYSTEM)           \
     {                              \
         IT;                        \
     }
 
-#define _SYS_ITERATE_1(SYSTEM, A, IT) \
+#define _SYS_FOREACH_1(SYSTEM, A, IT) \
     _SYS_FOREACH(SYSTEM)              \
     {                                 \
-        A = items[i];                 \
+        A = items[i++];               \
         IT;                           \
     }
 
-#define _SYS_ITERATE_2(SYSTEM, A, B, IT) \
+#define _SYS_FOREACH_2(SYSTEM, A, B, IT) \
     _SYS_FOREACH(SYSTEM)                 \
     {                                    \
-        A = items[i];                    \
-        B = items[i + 1];                \
+        A = items[i++];                  \
+        B = items[i++];                  \
         IT;                              \
     }
 
-#define _SYS_ITERATE_3(SYSTEM, A, B, C, IT) \
+#define _SYS_FOREACH_3(SYSTEM, A, B, C, IT) \
     _SYS_FOREACH(SYSTEM)                    \
     {                                       \
-        A = items[i];                       \
-        B = items[i + 1];                   \
-        C = items[i + 2];                   \
+        A = items[i++];                     \
+        B = items[i++];                     \
+        C = items[i++];                     \
         IT;                                 \
     }
 
-#define _SYS_ITERATE_4(SYSTEM, A, B, C, D, IT) \
+#define _SYS_FOREACH_4(SYSTEM, A, B, C, D, IT) \
     _SYS_FOREACH(SYSTEM)                       \
     {                                          \
-        A = items[i];                          \
-        B = items[i + 1];                      \
-        C = items[i + 2];                      \
-        D = items[i + 3];                      \
+        A = items[i++];                        \
+        B = items[i++];                        \
+        C = items[i++];                        \
+        D = items[i++];                        \
         IT;                                    \
     }
+
+#define _SYS_FOREACH_5(SYSTEM, A, B, C, D, E, IT) \
+    _SYS_FOREACH(SYSTEM)                          \
+    {                                             \
+        A = items[i++];                           \
+        B = items[i++];                           \
+        C = items[i++];                           \
+        D = items[i++];                           \
+        E = items[i++];                           \
+        IT;                                       \
+    }
+
+//
+
+#define _SYS_ITERATOR_0(NAME, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_0(system, IT); }
+
+#define _SYS_ITERATOR_1(NAME, A, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_1(system, A, IT); }
+
+#define _SYS_ITERATOR_2(NAME, A, B, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_2(system, A, B, IT); }
+
+#define _SYS_ITERATOR_3(NAME, A, B, C, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_3(system, A, B, C, IT); }
+
+#define _SYS_ITERATOR_4(NAME, A, B, C, D, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_4(system, A, B, C, D, IT); }
+
+#define _SYS_ITERATOR_5(NAME, A, B, C, D, E, IT) \
+    void NAME(de_system *system) { _SYS_FOREACH_5(system, A, B, C, D, E, IT); }

@@ -13,11 +13,7 @@ typedef struct de_entity
     uint8_t data[];
 } de_entity;
 
+void de_entity_state(de_entity *, de_state);
+void de_entity_pause(de_entity *);
+void de_entity_resume(de_entity *);
 void de_entity_delete(de_entity *);
-
-#define DE_ENTITY_STATE(ENTITY, STATE) ((ENTITY)->state = (STATE))
-#define DE_ENTITY_DELETE(ENTITY) DE_ENTITY_STATE((ENTITY), DE_STATE_DELETE)
-
-#define DE_ENTITY_DELETENOW(ENTITY)                    \
-    uclist_remove(&(ENTITY)->manager->list, (ENTITY)); \
-    (ENTITY)->destructor && (ENTITY)->destructor((ENTITY)->data);
