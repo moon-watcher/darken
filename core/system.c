@@ -5,6 +5,7 @@ void de_system_init(de_system *$, void *(*update)(), uint16_t params)
     $->update = update;
     $->params = params;
     $->extraData = 0;
+    $->pause = 0;
 
     uclist_init(&$->list, 0);
 }
@@ -14,7 +15,7 @@ uint16_t de_system_add(de_system *$, void *data[])
     uint16_t i = $->params;
 
     while (i--)
-        if (!uclist_addSafe(&$->list, *data++))
+        if (!uclist_add(&$->list, *data++))
             return i + 1;
 
     return 0;
@@ -25,7 +26,7 @@ uint16_t de_system_addUnsafe(de_system *$, void *data[])
     uint16_t i = $->params;
 
     while (i--)
-        if (!uclist_add(&$->list, *data++))
+        if (!uclist_addUnsafe(&$->list, *data++))
             return i + 1;
 
     return 0;
@@ -55,7 +56,7 @@ uint16_t de_system_delete(de_system *$, void *data)
 
 void de_system_update(de_system *$)
 {
-    $->list.size && $->update && $->update($);
+    !$->pause && $->list.size && $->update && $->update($);
 }
 
 void de_system_reset(de_system *$)

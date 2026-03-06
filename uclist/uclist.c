@@ -28,6 +28,11 @@ void *uclist_alloc(uclist *$)
 
 void *uclist_add(uclist *$, void *add)
 {
+    return (uclist_getIndex($, add) < 0) ? uclist_addUnsafe($, add) : 0;
+}
+
+void *uclist_addUnsafe(uclist *$, void *add)
+{
     if ($->size >= $->capacity)
     {
         void **ptr = malloc(($->capacity + 1) * sizeof(void *));
@@ -49,6 +54,32 @@ void uclist_iterator(uclist *$, void (*iterator)())
 
     while (i--)
         iterator($->items[i]);
+}
+
+int16_t uclist_getIndex(uclist *$, void *data)
+{
+    uint16_t i = $->size;
+
+    while (i--)
+        if ($->items[i] == data)
+            return i;
+
+    return -1;
+}
+
+uint16_t uclist_removeByIndex(uclist *$, uint16_t index)
+{
+    if (index >= $->size) return 0;
+
+    --$->size;
+
+    void **items = $->items;
+    void *swap = items[index];
+
+    items[index] = items[$->size];
+    items[$->size] = swap;
+
+    return 1;
 }
 
 uint16_t uclist_remove(uclist *$, void *data)
@@ -103,37 +134,6 @@ void uclist_end(uclist *$)
 }
 
 //
-
-void *uclist_addSafe(uclist *$, void *add)
-{
-    return (uclist_getIndex($, add) < 0) ? uclist_add($, add) : 0;
-}
-
-int16_t uclist_getIndex(uclist *$, void *data)
-{
-    uint16_t i = $->size;
-
-    while (i--)
-        if ($->items[i] == data)
-            return i;
-
-    return -1;
-}
-
-uint16_t uclist_removeByIndex(uclist *$, uint16_t index)
-{
-    if (index >= $->size) return 0;
-
-    --$->size;
-
-    void **items = $->items;
-    void *swap = items[index];
-
-    items[index] = items[$->size];
-    items[$->size] = swap;
-
-    return 1;
-}
 
 #define FUNC(NAME, ...)                                                           \
     static void NAME(void *list[], void (*it)(), uint16_t size, uint16_t nbItems) \
