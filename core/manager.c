@@ -24,25 +24,33 @@ void de_manager_update(de_manager *$)
     {
         de_entity *entity = items[i];
         de_state state = entity->state;
-
-        // TODO correct implementation
         entity->index = i;
 
         if (DE_STATE_IS_ACTIVE(state))
         {
             de_state aux = state(entity->data);
-            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
+
+            if (DE_STATE_NEED_UPDATE(aux))
+                entity->state = aux;
         }
         else if (DE_STATE_IS_PAUSED(state))
         {
             items[i] = items[$->pause_index];
-            items[$->pause_index++] = entity;
+            items[i]->index = i;
+            items[$->pause_index] = entity;
+            entity->index = $->pause_index++;
         }
         else if (DE_STATE_IS_DELETED(state))
         {
-            // TODO: use ->index to remove entity from manager instead of searching it
-            uclist_removeByIndex(&$->list, i);
-            entity->destructor && entity->destructor(entity->data);
+            uint16_t size = --$->list.size;
+
+            items[i] = items[size];
+
+            if (i < size)
+                items[i]->index = i;
+
+            if (entity->destructor)
+                entity->destructor(entity->data);
         }
     }
 }

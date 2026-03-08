@@ -6,42 +6,71 @@ void de_entity_state(de_entity *$, de_state state)
     $->state = state;
 }
 
-void de_entity_pause(de_entity *$)
+uint16_t de_entity_pause(de_entity *$)
 {
-    // TODO: pause entity in manager
-    // Use ->manager & ->index
+    if (de_entity_isPaused($))
+        return 0;
+
+    de_manager *manager = $->manager;
+    de_entity **items = manager->list.items;
+    uint16_t pause_index = manager->pause_index++;
+
+    items[$->index] = items[pause_index];
+    items[$->index]->index = $->index;
+    items[pause_index] = $;
+    $->index = pause_index;
+
+    return 1;
 }
 
-void de_entity_resume(de_entity *$)
+uint16_t de_entity_resume(de_entity *$)
 {
-    // TODO: resume entity in manager
-    // Use ->manager & ->index
+    if (!de_entity_isPaused($))
+        return 0;
+
+    de_manager *manager = $->manager;
+    de_entity **items = manager->list.items;
+    uint16_t pause_index = --manager->pause_index;
+
+    items[$->index] = items[pause_index];
+    items[$->index]->index = $->index;
+    items[pause_index] = $;
+    $->index = pause_index;
+
+    return 1;
 }
 
-void de_entity_delete(de_entity *$)
+uint16_t de_entity_delete(de_entity *$)
 {
-    // TODO. use ->index to remove entity from manager
-    uclist_remove(&$->manager->list, $);
-    $->destructor && $->destructor($->data);
+    if (de_entity_isDeleted($))
+        return 0;
+
+    de_manager *manager = $->manager;
+    de_entity **items = manager->list.items;
+    uint16_t size = --manager->list.size;
+
+    items[$->index] = items[size];
+
+    if ($->index < size)
+        items[$->index]->index = $->index;
+
+    if ($->destructor)
+        $->destructor($->data);
+
+    return 1;
 }
 
 uint16_t de_entity_isPaused(de_entity *$)
 {
-    // TODO: check if entity is paused 
-    // ->index < ->manager->pause_index
-    return 0;
+    return $->index < $->manager->pause_index;
 }
 
 uint16_t de_entity_isActive(de_entity *$)
 {
-    // TODO: check if entity is active
-    // ->index >= ->manager->pause_index && !de_entity_isDeleted($)
-    return 0;
+    return $->index >= $->manager->pause_index && $->index < $->manager->list.size;
 }
 
 uint16_t de_entity_isDeleted(de_entity *$)
 {
-    // TODO: check if entity is deleted
-    // ->index >= ->manager->list.size
-    return 0;
+    return $->index >= $->manager->list.size;
 }
