@@ -10,6 +10,7 @@ de_entity *de_manager_new(de_manager *$)
 {
     de_entity *entity = uclist_alloc(&$->list);
     entity->manager = $;
+    entity->index = -1;
 
     return entity;
 }
@@ -24,6 +25,9 @@ void de_manager_update(de_manager *$)
         de_entity *entity = items[i];
         de_state state = entity->state;
 
+        // TODO correct implementation
+        entity->index = i;
+
         if (DE_STATE_IS_ACTIVE(state))
         {
             de_state aux = state(entity->data);
@@ -36,6 +40,7 @@ void de_manager_update(de_manager *$)
         }
         else if (DE_STATE_IS_DELETED(state))
         {
+            // TODO: use ->index to remove entity from manager instead of searching it
             uclist_removeByIndex(&$->list, i);
             entity->destructor && entity->destructor(entity->data);
         }
@@ -66,8 +71,9 @@ void de_manager_iterateAll(de_manager *$, void (*iterator)())
 {
     de_entity **items = $->list.items;
     uint16_t i = $->list.size;
+    uint16_t first = 0;
 
-    while (i--)
+    while (i-- > first)
         iterator(items[i]->data);
 }
 
