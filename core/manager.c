@@ -35,18 +35,20 @@ void de_manager_update(de_manager *$)
         }
         else if (DE_STATE_IS_PAUSED(state))
         {
-            items[i] = items[$->pause_index];
+            uint16_t aux = $->pause_index++;
+
+            items[i] = items[aux];
             items[i]->index = i;
-            items[$->pause_index] = entity;
-            entity->index = $->pause_index++;
+            items[aux] = entity;
+            entity->index = aux;
         }
         else if (DE_STATE_IS_DELETED(state))
         {
-            uint16_t size = --$->list.size;
+            uint16_t aux = --$->list.size;
 
-            items[i] = items[size];
+            items[i] = items[aux];
 
-            if (i < size)
+            if (i < aux)
                 items[i]->index = i;
 
             if (entity->destructor)
