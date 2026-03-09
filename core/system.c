@@ -55,7 +55,6 @@ uint16_t de_system_delete(de_system *$, void *data)
 void de_system_update(de_system *$)
 {
     $->list.size && $->update && $->update($);
-    // $->list.size && $->update && $->update(&$->list, $->size);
 }
 
 void de_system_reset(de_system *$)
