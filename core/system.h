@@ -24,19 +24,34 @@ void de_system_end(de_system *);
 
 //
 
+#define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, NAME, ...) NAME
+
 #define _SYS_FOREACH(SYSTEM, IT)                              \
     void **items = SYSTEM->list.items;                        \
     for (uint16_t i = 0, size = SYSTEM->list.size; i < size;) \
         IT;
 
-#define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, NAME, ...) NAME
+//
 
-#define _SYS_FOREACH_0(SYSTEM, IT) _SYS_FOREACH(SYSTEM, { IT; })
-#define _SYS_FOREACH_1(SYSTEM, A, IT) _SYS_FOREACH(SYSTEM, { A = items[i++]; IT; })
-#define _SYS_FOREACH_2(SYSTEM, A, B, IT) _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; IT; })
-#define _SYS_FOREACH_3(SYSTEM, A, B, C, IT) _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; IT; })
-#define _SYS_FOREACH_4(SYSTEM, A, B, C, D, IT) _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; D = items[i++]; IT; })
-#define _SYS_FOREACH_5(SYSTEM, A, B, C, D, E, IT) _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; D = items[i++]; E = items[i++]; IT; })
+#define _SYS_FOREACH_0(SYSTEM, IT) \
+    _SYS_FOREACH(SYSTEM, { IT; })
+
+#define _SYS_FOREACH_1(SYSTEM, A, IT) \
+    _SYS_FOREACH(SYSTEM, { A = items[i++]; IT; })
+
+#define _SYS_FOREACH_2(SYSTEM, A, B, IT) \
+    _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; IT; })
+
+#define _SYS_FOREACH_3(SYSTEM, A, B, C, IT) \
+    _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; IT; })
+
+#define _SYS_FOREACH_4(SYSTEM, A, B, C, D, IT) \
+    _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; D = items[i++]; IT; })
+
+#define _SYS_FOREACH_5(SYSTEM, A, B, C, D, E, IT) \
+    _SYS_FOREACH(SYSTEM, { A = items[i++]; B = items[i++]; C = items[i++]; D = items[i++]; E = items[i++]; IT; })
+
+//
 
 #define _SYS_ITERATOR_0(NAME, IT) \
     void NAME(de_system *system) { _SYS_FOREACH_0(system, IT); }
