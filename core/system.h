@@ -3,12 +3,19 @@
 #include <stdint.h>
 #include "list.h"
 
-typedef de_list de_system;
+typedef struct de_system de_system;
 
-void de_system_init(de_system *);
-uint16_t de_system_add(de_system *, uint16_t, void *[]);
-uint16_t de_system_addFast(de_system *, uint16_t, void *[]);
-uint16_t de_system_delete(de_system *, uint16_t, void *);
+typedef struct de_system
+{
+    de_list list;
+    void *(*update)(de_system *);
+    uint16_t params;
+} de_system;
+
+void de_system_init(de_system *, void *(*)(), uint16_t);
+uint16_t de_system_add(de_system *, void *[]);
+uint16_t de_system_addFast(de_system *, void *[]);
+uint16_t de_system_delete(de_system *, void *);
 void de_system_reset(de_system *);
 void de_system_end(de_system *);
 
@@ -17,9 +24,9 @@ void de_system_end(de_system *);
 
 //
 
-#define _SYS_FOREACH(SYSTEM, IT)                         \
-    void **items = SYSTEM->items;                        \
-    for (uint16_t i = 0, size = SYSTEM->size; i < size;) \
+#define _SYS_FOREACH(SYSTEM, IT)                              \
+    void **items = SYSTEM->list.items;                        \
+    for (uint16_t i = 0, size = SYSTEM->list.size; i < size;) \
         IT;
 
 #define _SYS_GET_MACRO(_1, _2, _3, _4, _5, _6, _7, NAME, ...) NAME
