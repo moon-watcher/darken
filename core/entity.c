@@ -13,12 +13,12 @@ uint16_t de_entity_pause(de_entity *$)
 
     de_manager *manager = $->manager;
     de_entity **items = manager->list.items;
-    uint16_t pause_index = manager->pause_index++;
+    uint16_t aux = manager->pause_index++;
 
-    items[$->index] = items[pause_index];
+    items[$->index] = items[aux];
     items[$->index]->index = $->index;
-    items[pause_index] = $;
-    $->index = pause_index;
+    items[aux] = $;
+    $->index = aux;
 
     return 1;
 }
@@ -30,12 +30,12 @@ uint16_t de_entity_resume(de_entity *$)
 
     de_manager *manager = $->manager;
     de_entity **items = manager->list.items;
-    uint16_t pause_index = --manager->pause_index;
+    uint16_t aux = --manager->pause_index;
 
-    items[$->index] = items[pause_index];
+    items[$->index] = items[aux];
     items[$->index]->index = $->index;
-    items[pause_index] = $;
-    $->index = pause_index;
+    items[aux] = $;
+    $->index = aux;
 
     return 1;
 }
@@ -47,15 +47,14 @@ uint16_t de_entity_delete(de_entity *$)
 
     de_manager *manager = $->manager;
     de_entity **items = manager->list.items;
-    uint16_t size = --manager->list.size;
+    uint16_t aux = --manager->list.size;
 
-    items[$->index] = items[size];
+    items[$->index] = items[aux];
 
-    if ($->index < size)
+    if ($->index < aux)
         items[$->index]->index = $->index;
 
-    if ($->destructor)
-        $->destructor($->data);
+    $->destructor && $->destructor($->data);
 
     return 1;
 }

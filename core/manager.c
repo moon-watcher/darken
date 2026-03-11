@@ -30,8 +30,7 @@ void de_manager_update(de_manager *$)
         {
             de_state aux = state(entity->data);
 
-            if (DE_STATE_NEED_UPDATE(aux))
-                entity->state = aux;
+            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
         }
         else if (DE_STATE_IS_PAUSED(state))
         {
@@ -47,12 +46,11 @@ void de_manager_update(de_manager *$)
             uint16_t aux = --$->list.size;
 
             items[i] = items[aux];
+            if (i < aux) items[i]->index = i;
+            items[aux] = entity;
+            entity->index = aux;
 
-            if (i < aux)
-                items[i]->index = i;
-
-            if (entity->destructor)
-                entity->destructor(entity->data);
+            entity->destructor && entity->destructor(entity->data);
         }
     }
 }
