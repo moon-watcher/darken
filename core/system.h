@@ -8,7 +8,7 @@ typedef struct de_system de_system;
 typedef struct de_system
 {
     de_list list;
-    void *(*update)(de_system *);
+    void (*update)(de_system *);
     uint16_t params;
 } de_system;
 
