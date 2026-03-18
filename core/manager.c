@@ -85,6 +85,31 @@ void de_manager_iterateAll(de_manager *$, void (*iterator)())
         iterator(items[i]->data);
 }
 
+de_entity **de_manager_getList(de_manager *$)
+{
+    return $->list.items;
+}
+
+uint16_t de_manager_getCapacity(de_manager *$)
+{
+    return $->list.capacity;
+}
+
+uint16_t de_manager_getSize(de_manager *$)
+{
+    return $->list.size;
+}
+
+uint16_t de_manager_getPaused(de_manager *$)
+{
+    return $->pause_index;
+}
+
+uint16_t de_manager_countActives(de_manager *$)
+{
+    return $->list.size - $->pause_index;
+}
+
 void de_manager_reset(de_manager *$)
 {
     uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
