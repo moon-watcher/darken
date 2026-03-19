@@ -8,37 +8,40 @@ void de_entity_state(de_entity *$, de_state state)
 
 void de_entity_pause(de_entity *$)
 {
-    if (de_entity_isPaused($)) return;
+    if (de_entity_isActive($))
+    {
+        de_manager *manager = $->manager;
+        de_entity **items = manager->list.items;
+        uint16_t aux = manager->pause_index++;
 
-    de_manager *manager = $->manager;
-    de_entity **items = manager->list.items;
-    uint16_t aux = manager->pause_index++;
-
-    items[$->index] = items[aux];
-    items[$->index]->index = $->index;
-    items[aux] = $;
-    $->index = aux;
+        items[$->index] = items[aux];
+        items[$->index]->index = $->index;
+        items[aux] = $;
+        $->index = aux;
+    }
 }
 
 void de_entity_resume(de_entity *$)
 {
-    if (!de_entity_isPaused($))
-        return;
+    if (de_entity_isPaused($))
+    {
+        de_manager *manager = $->manager;
+        de_entity **items = manager->list.items;
+        uint16_t aux = --manager->pause_index;
 
-    de_manager *manager = $->manager;
-    de_entity **items = manager->list.items;
-    uint16_t aux = --manager->pause_index;
-
-    items[$->index] = items[aux];
-    items[$->index]->index = $->index;
-    items[aux] = $;
-    $->index = aux;
+        items[$->index] = items[aux];
+        items[$->index]->index = $->index;
+        items[aux] = $;
+        $->index = aux;
+    }
 }
 
 void de_entity_delete(de_entity *$)
 {
     if (de_entity_isDeleted($))
         return;
+
+    de_entity_resume($);
 
     de_manager *manager = $->manager;
     de_entity **items = manager->list.items;

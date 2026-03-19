@@ -112,6 +112,7 @@ uint16_t de_manager_countActives(de_manager *$)
 
 void de_manager_reset(de_manager *$)
 {
+    $->pause_index = 0;
     uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
     de_manager_update(&$->list);
 }
