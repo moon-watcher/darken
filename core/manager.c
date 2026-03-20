@@ -1,9 +1,18 @@
 #include "manager.h"
 
+#define LOOPITEMS(LIMIT, CODE)                 \
+    de_entity **items = de_manager_getList($); \
+    uint16_t i = de_manager_getSize($);        \
+                                               \
+    while (i-- > LIMIT)                        \
+        CODE;
+
+//
+
 void de_manager_init(de_manager *$, uint16_t bytes)
 {
     uclist_init(&$->list, sizeof(de_entity) + bytes);
-    $->pause_index = 0;
+    de_manager_resume($);
 }
 
 de_entity *de_manager_new(de_manager *$)
@@ -17,47 +26,28 @@ de_entity *de_manager_new(de_manager *$)
 
 void de_manager_update(de_manager *$)
 {
-    de_entity **items = $->list.items;
-    uint16_t i = $->list.size;
-
-    while (i-- > $->pause_index)
-    {
+    LOOPITEMS($->pause_index, {
         de_entity *entity = items[i];
         de_state state = entity->state;
         entity->index = i;
 
         if (DE_STATE_IS_ACTIVE(state))
         {
-            de_state aux = state(entity->data);
-
-            DE_STATE_NEED_UPDATE(aux) && (entity->state = aux);
+            state = state(entity->data);
+            DE_STATE_NEED_UPDATE(state) && (entity->state = state);
         }
+
         else if (DE_STATE_IS_PAUSED(state))
-        {
-            uint16_t aux = $->pause_index++;
+            de_entity_pause(entity);
 
-            items[i] = items[aux];
-            items[i]->index = i;
-            items[aux] = entity;
-            entity->index = aux;
-        }
         else if (DE_STATE_IS_DELETED(state))
-        {
-            uint16_t aux = --$->list.size;
-
-            items[i] = items[aux];
-            if (i < aux) items[i]->index = i;
-            items[aux] = entity;
-            entity->index = aux;
-
-            entity->destructor && entity->destructor(entity->data);
-        }
-    }
+            de_entity_delete(entity);
+    });
 }
 
 void de_manager_pause(de_manager *$)
 {
-    $->pause_index = $->list.size;
+    $->pause_index = de_manager_getSize($);
 }
 
 void de_manager_resume(de_manager *$)
@@ -67,22 +57,12 @@ void de_manager_resume(de_manager *$)
 
 void de_manager_iterate(de_manager *$, void (*iterator)())
 {
-    de_entity **items = $->list.items;
-    uint16_t i = $->list.size;
-    uint16_t first = $->pause_index;
-
-    while (i-- > first)
-        iterator(items[i]->data);
+    LOOPITEMS($->pause_index, iterator(items[i]->data));
 }
 
 void de_manager_iterateAll(de_manager *$, void (*iterator)())
 {
-    de_entity **items = $->list.items;
-    uint16_t i = $->list.size;
-    uint16_t first = 0;
-
-    while (i-- > first)
-        iterator(items[i]->data);
+    LOOPITEMS(0, iterator(items[i]->data));
 }
 
 de_entity **de_manager_getList(de_manager *$)
@@ -112,13 +92,13 @@ uint16_t de_manager_countActives(de_manager *$)
 
 void de_manager_reset(de_manager *$)
 {
-    $->pause_index = 0;
+    de_manager_resume($);
     uclist_iterator(&$->list, ({ void d(de_entity *e) { e->state = DE_STATE_DELETE; }; d; }));
-    de_manager_update(&$->list);
+    de_manager_update($);
 }
 
 void de_manager_end(de_manager *$)
 {
-    de_manager_reset(&$->list);
+    de_manager_reset($);
     uclist_end(&$->list);
 }
