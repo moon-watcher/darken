@@ -1,12 +1,12 @@
 #pragma once
 
 #include <stdint.h>
-#include "list.h"
 #include "entity.h"
+#include "../uclist/uclist.h"
 
 typedef struct de_manager
 {
-    de_list list;
+    uclist list;
     uint16_t pause_index;
 } de_manager;
 
