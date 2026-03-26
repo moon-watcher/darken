@@ -1,6 +1,16 @@
 #include "entity.h"
 #include "manager.h"
 
+static void swapIndex(de_entity *$, uint16_t swap)
+{
+    de_entity **items = de_manager_getList($->manager);
+
+    items[$->index] = items[swap];
+    items[$->index]->index = $->index;
+    items[swap] = $;
+    $->index = swap;
+}
+
 void de_entity_state(de_entity *$, de_state state)
 {
     $->state = state;
@@ -9,13 +19,13 @@ void de_entity_state(de_entity *$, de_state state)
 void de_entity_pause(de_entity *$)
 {
     if (de_entity_isActive($))
-        de_entity_swapIndex($, $->manager->pause_index++);
+        swapIndex($, $->manager->pause_index++);
 }
 
 void de_entity_resume(de_entity *$)
 {
     if (de_entity_isPaused($))
-        de_entity_swapIndex($, --$->manager->pause_index);
+        swapIndex($, --$->manager->pause_index);
 }
 
 void de_entity_delete(de_entity *$)
@@ -24,7 +34,7 @@ void de_entity_delete(de_entity *$)
         return;
 
     de_entity_resume($);
-    de_entity_swapIndex($, --$->manager->list.size);
+    swapIndex($, --$->manager->list.size);
 
     $->destructor && $->destructor($->data);
 }
@@ -42,14 +52,4 @@ uint16_t de_entity_isActive(de_entity *$)
 uint16_t de_entity_isDeleted(de_entity *$)
 {
     return $->index >= $->manager->list.size;
-}
-
-void de_entity_swapIndex(de_entity *$, uint16_t swap)
-{
-    de_entity **items = de_manager_getList($->manager);
-
-    items[$->index] = items[swap];
-    items[$->index]->index = $->index;
-    items[swap] = $;
-    $->index = swap;
 }
