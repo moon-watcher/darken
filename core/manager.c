@@ -2,7 +2,7 @@
 
 #define LOOPITEMS(LIMIT, CODE)                 \
     de_entity **items = de_manager_getList($); \
-    uint16_t i = de_manager_getSize($);        \
+    uint16_t i = de_manager_countAll($);       \
                                                \
     while (i-- > LIMIT)                        \
         CODE;
@@ -19,7 +19,7 @@ de_entity *de_manager_new(de_manager *$)
 {
     de_entity *entity = uclist_alloc(&$->list);
     entity->manager = $;
-    entity->index = -1;
+    entity->index = $->list.size - 1;
 
     return entity;
 }
@@ -47,7 +47,7 @@ void de_manager_update(de_manager *$)
 
 void de_manager_pause(de_manager *$)
 {
-    $->pause_index = de_manager_getSize($);
+    $->pause_index = de_manager_countAll($);
 }
 
 void de_manager_resume(de_manager *$)
@@ -75,17 +75,12 @@ uint16_t de_manager_getCapacity(de_manager *$)
     return $->list.capacity;
 }
 
-uint16_t de_manager_getSize(de_manager *$)
+uint16_t de_manager_countAll(de_manager *$)
 {
     return $->list.size;
 }
 
-uint16_t de_manager_getPaused(de_manager *$)
-{
-    return $->pause_index;
-}
-
-uint16_t de_manager_countActives(de_manager *$)
+uint16_t de_manager_count(de_manager *$)
 {
     return $->list.size - $->pause_index;
 }
