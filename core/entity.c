@@ -3,11 +3,11 @@
 
 static void swapIndex(de_entity *$, uint16_t swap)
 {
-    de_entity **items = de_manager_getList($->manager);
+    de_entity **entities = de_manager_getEntities($->manager);
 
-    items[$->index] = items[swap];
-    items[$->index]->index = $->index;
-    items[swap] = $;
+    entities[$->index] = entities[swap];
+    entities[$->index]->index = $->index;
+    entities[swap] = $;
     $->index = swap;
 }
 
