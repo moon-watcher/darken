@@ -18,10 +18,14 @@ de_entity *de_manager_new(de_manager *$)
 void de_manager_update(de_manager *$)
 {
     DE_MANAGER_ITERATE($, {
+        ENTITY->index = INDEX;
+
         if (DE_STATE_IS_ACTIVE(STATE))
         {
             STATE = STATE(DATA);
-            DE_STATE_NEED_UPDATE(STATE) && (ENTITY->state = STATE);
+
+            if (DE_STATE_NEED_UPDATE(STATE))
+                ENTITY->state = STATE;
         }
 
         else if (DE_STATE_IS_PAUSED(STATE))
