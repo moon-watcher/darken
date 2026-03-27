@@ -30,15 +30,17 @@ void de_manager_end(de_manager *);
 #define DE_MANAGER_ITERATEALL(MANAGER, CODE) \
     _DE_MANAGER_ITERATE(MANAGER, 0, CODE)
 
-#define _DE_MANAGER_ITERATE(MANAGER, LIMIT, CODE)           \
-    de_entity **ENTITIES = de_manager_getEntities(MANAGER); \
-    uint16_t INDEX = de_manager_countAll(MANAGER);          \
-                                                            \
-    while (INDEX-- > LIMIT)                                 \
-    {                                                       \
-        de_entity *ENTITY = ENTITIES[INDEX];                \
-        void *DATA = ENTITY->data;                          \
-        de_state STATE = ENTITY->state;                     \
-                                                            \
-        CODE;                                               \
+#define _DE_MANAGER_ITERATE(MANAGER, LIMIT, CODE)               \
+    {                                                           \
+        de_entity **ENTITIES = de_manager_getEntities(MANAGER); \
+        uint16_t INDEX = de_manager_countAll(MANAGER);          \
+                                                                \
+        while (INDEX-- > LIMIT)                                 \
+        {                                                       \
+            de_entity *ENTITY = ENTITIES[INDEX];                \
+            void *DATA = ENTITY->data;                          \
+            de_state STATE = ENTITY->state;                     \
+                                                                \
+            CODE;                                               \
+        }                                                       \
     }
