@@ -21,4 +21,3 @@ void de_entity_delete(de_entity *);
 uint16_t de_entity_isPaused(de_entity *);
 uint16_t de_entity_isActive(de_entity *);
 uint16_t de_entity_isDeleted(de_entity *);
-void de_entity_swapIndex(de_entity *, uint16_t);
