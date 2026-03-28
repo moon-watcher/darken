@@ -17,8 +17,6 @@ void de_manager_resume(de_manager *);
 void de_manager_reset(de_manager *);
 void de_manager_end(de_manager *);
 
-//
-
 #define DE_MANAGER_ITERATE(MANAGER, CODE) \
     _DE_MANAGER_ITERATE(MANAGER, (MANAGER)->pause_index, CODE)
 
@@ -26,6 +24,7 @@ void de_manager_end(de_manager *);
     _DE_MANAGER_ITERATE(MANAGER, 0, CODE)
 
 #define _DE_MANAGER_ITERATE(MANAGER, LIMIT, CODE)     \
+    do                                                \
     {                                                 \
         de_entity **ENTITIES = (MANAGER)->list.items; \
         uint16_t INDEX = (MANAGER)->list.size;        \
@@ -38,4 +37,4 @@ void de_manager_end(de_manager *);
                                                       \
             CODE;                                     \
         }                                             \
-    }
+    } while (0)
