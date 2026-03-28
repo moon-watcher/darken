@@ -19,14 +19,15 @@ void de_manager_update(de_manager *$)
 {
     DE_MANAGER_ITERATE($, {
         ENTITY->index = INDEX;
+        de_state state = ENTITY->state;
 
-        if (DE_STATE_IS_ACTIVE(STATE))
-            DE_STATE_NEED_UPDATE(STATE = STATE(DATA)) && (ENTITY->state = STATE);
+        if (DE_STATE_IS_ACTIVE(state))
+            DE_STATE_NEED_UPDATE(state = state(ENTITY->data)) && (ENTITY->state = state);
 
-        else if (DE_STATE_IS_PAUSED(STATE))
+        else if (DE_STATE_IS_PAUSED(state))
             de_entity_pause(ENTITY);
 
-        else if (DE_STATE_IS_DELETED(STATE))
+        else if (DE_STATE_IS_DELETED(state))
             de_entity_delete(ENTITY);
     });
 }
