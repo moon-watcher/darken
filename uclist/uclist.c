@@ -103,25 +103,9 @@ uint16_t uclist_restore(uclist *$, void *data)
     return 0;
 }
 
-uint16_t uclist_reset(uclist *$)
+void uclist_reset(uclist *$)
 {
     $->size = 0;
-
-    if ($->capacity == 0) return 3;
-    if ($->itemSize == 0) return 2;
-
-    void *ptr = malloc($->capacity * $->itemSize);
-    if (!ptr) return 0;
-
-    uint16_t i = $->capacity;
-
-    while (i--)
-    {
-        free($->items[i]);
-        $->items[i] = (uint8_t *)ptr + i * $->itemSize;
-    }
-
-    return 1;
 }
 
 void uclist_end(uclist *$)

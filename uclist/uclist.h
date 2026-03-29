@@ -19,7 +19,7 @@ int16_t uclist_getIndex(uclist *, void *);
 uint16_t uclist_removeByIndex(uclist *, uint16_t);
 uint16_t uclist_remove(uclist *, void *);
 uint16_t uclist_restore(uclist *, void *);
-uint16_t uclist_reset(uclist *);
+void uclist_reset(uclist *);
 void uclist_end(uclist *);
 
 //
