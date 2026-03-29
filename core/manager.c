@@ -22,7 +22,7 @@ void de_manager_update(de_manager *$)
         de_state state = ENTITY->state;
 
         if (DE_STATE_IS_ACTIVE(state))
-            DE_STATE_NEED_UPDATE(state = state(ENTITY->data)) && (ENTITY->state = state);
+            DE_ENTITY_UPDATE(ENTITY, state);
 
         else if (DE_STATE_IS_PAUSED(state))
             de_entity_pause(ENTITY);

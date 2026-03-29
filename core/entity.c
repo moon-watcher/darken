@@ -16,11 +16,6 @@ static void swapIndex(de_entity *$, uint16_t swap)
     $->index = swap;
 }
 
-void de_entity_setState(de_entity *$, de_state state)
-{
-    $->state = state;
-}
-
 void de_entity_pause(de_entity *$)
 {
     if (DE_ENTITY_IS_ACTIVE($))
