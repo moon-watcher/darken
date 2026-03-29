@@ -2,11 +2,11 @@
 
 typedef void *(*de_state)(void *);
 
-#define DE_STATE_DELETE ((de_state)0)
-#define DE_STATE_LOOP ((de_state)1)
-#define DE_STATE_PAUSE ((de_state)2)
+#define de_state_delete ((de_state)0)
+#define de_state_loop ((de_state)1)
+#define de_state_pause ((de_state)2)
 
-#define DE_STATE_IS_ACTIVE(STATE) ((STATE) > DE_STATE_PAUSE)
-#define DE_STATE_IS_DELETED(STATE) ((STATE) == DE_STATE_DELETE)
-#define DE_STATE_IS_PAUSED(STATE) ((STATE) == DE_STATE_PAUSE)
-#define DE_STATE_IS_LOOP(STATE) ((STATE) == DE_STATE_LOOP)
+#define de_state_is_active(STATE) ((STATE) > de_state_pause)
+#define de_state_is_deleted(STATE) ((STATE) == de_state_delete)
+#define de_state_is_paused(STATE) ((STATE) == de_state_pause)
+#define de_state_is_loop(STATE) ((STATE) == de_state_loop)

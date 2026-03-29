@@ -18,7 +18,7 @@ void de_manager_reset(de_manager *);
 void de_manager_end(de_manager *);
 
 /**
- * @brief DE_MANAGER_ITERATE[ALL] Iterates over the entities of a manager in reverse order.
+ * @brief de_manager_iterate[all] Iterates over the entities of a manager in reverse order.
  *
  * Variables available inside CODE:
  *
@@ -27,24 +27,23 @@ void de_manager_end(de_manager *);
  * @var ENTITY   de_entity*    Pointer to the current entity.
  *
  * @note Do not modify ENTITIES or INDEX inside CODE — undefined behavior.
- * @note Do not use _DE_MANAGER_ITERATE directly.
+ * @note Do not use _de_manager_iterate directly.
  */
-#define DE_MANAGER_ITERATE(MANAGER, CODE) _DE_MANAGER_ITERATE(MANAGER, (MANAGER)->pause_index, CODE)
-#define DE_MANAGER_ITERATEALL(MANAGER, CODE) _DE_MANAGER_ITERATE(MANAGER, 0, CODE)
+#define de_manager_iterate(MANAGER, CODE) _de_manager_iterate(MANAGER, (MANAGER)->pause_index, CODE)
+#define de_manager_iterateall(MANAGER, CODE) _de_manager_iterate(MANAGER, 0, CODE)
 
-#define _DE_MANAGER_ITERATE(MANAGER, LIMIT, CODE)         \
-    do                                                    \
-    {                                                     \
-        uint16_t INDEX = (MANAGER)->list.size;            \
-                                                          \
-        if (INDEX > LIMIT)                                \
-        {                                                 \
-            de_entity **ENTITIES = (MANAGER)->list.items; \
-                                                          \
-            while (INDEX-- > LIMIT)                       \
-            {                                             \
-                de_entity *ENTITY = ENTITIES[INDEX];      \
-                CODE;                                     \
-            }                                             \
-        }                                                 \
+#define _de_manager_iterate(MANAGER, LIMIT, CODE)     \
+    do                                                \
+    {                                                 \
+        uint16_t INDEX = (MANAGER)->list.size;        \
+                                                      \
+        if (INDEX <= LIMIT)                           \
+            break;                                    \
+                                                      \
+        de_entity **ENTITIES = (MANAGER)->list.items; \
+        while (INDEX-- > LIMIT)                       \
+        {                                             \
+            de_entity *ENTITY = ENTITIES[INDEX];      \
+            CODE;                                     \
+        }                                             \
     } while (0)

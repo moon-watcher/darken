@@ -18,19 +18,19 @@ static void swapIndex(de_entity *$, uint16_t swap)
 
 void de_entity_pause(de_entity *$)
 {
-    if (DE_ENTITY_IS_ACTIVE($))
+    if (de_entity_is_active($))
         swapIndex($, $->manager->pause_index++);
 }
 
 void de_entity_resume(de_entity *$)
 {
-    if (DE_ENTITY_IS_PAUSED($))
+    if (de_entity_is_paused($))
         swapIndex($, --$->manager->pause_index);
 }
 
 void de_entity_delete(de_entity *$)
 {
-    if (DE_ENTITY_IS_DELETED($))
+    if (de_entity_is_deleted($))
         return;
 
     de_entity_resume($);

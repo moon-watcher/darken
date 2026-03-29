@@ -17,17 +17,17 @@ de_entity *de_manager_new(de_manager *$)
 
 void de_manager_update(de_manager *$)
 {
-    DE_MANAGER_ITERATE($, {
+    de_manager_iterate($, {
         ENTITY->index = INDEX;
         de_state state = ENTITY->state;
 
-        if (DE_STATE_IS_ACTIVE(state))
-            DE_ENTITY_UPDATE(ENTITY, state);
+        if (de_state_is_active(state))
+            de_entity_update(ENTITY, state);
 
-        else if (DE_STATE_IS_PAUSED(state))
+        else if (de_state_is_paused(state))
             de_entity_pause(ENTITY);
 
-        else if (DE_STATE_IS_DELETED(state))
+        else if (de_state_is_deleted(state))
             de_entity_delete(ENTITY);
     });
 }
@@ -45,7 +45,7 @@ void de_manager_resume(de_manager *$)
 void de_manager_reset(de_manager *$)
 {
     $->pause_index = 0;
-    DE_MANAGER_ITERATEALL($, de_entity_delete(ENTITY));
+    de_manager_iterateall($, de_entity_delete(ENTITY));
 }
 
 void de_manager_end(de_manager *$)
