@@ -45,7 +45,7 @@ void de_manager_resume(de_manager *$)
 void de_manager_reset(de_manager *$)
 {
     $->pause_index = 0;
-    de_manager_iterateall($, de_entity_delete(ENTITY));
+    de_manager_iterateAll($, de_entity_delete(ENTITY));
 }
 
 void de_manager_end(de_manager *$)

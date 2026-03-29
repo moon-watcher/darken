@@ -30,13 +30,12 @@ void de_manager_end(de_manager *);
  * @note Do not use _de_manager_iterate directly.
  */
 #define de_manager_iterate(MANAGER, CODE) _de_manager_iterate(MANAGER, (MANAGER)->pause_index, CODE)
-#define de_manager_iterateall(MANAGER, CODE) _de_manager_iterate(MANAGER, 0, CODE)
+#define de_manager_iterateAll(MANAGER, CODE) _de_manager_iterate(MANAGER, 0, CODE)
 
 #define _de_manager_iterate(MANAGER, LIMIT, CODE)     \
     do                                                \
     {                                                 \
         uint16_t INDEX = (MANAGER)->list.size;        \
-                                                      \
         if (INDEX <= LIMIT)                           \
             break;                                    \
                                                       \
