@@ -1,14 +1,23 @@
 #include "manager.h"
+#include "debug.h"
 
-void de_manager_init(de_manager *$, uint16_t bytes)
+void de_manager_init(de_manager *$, uint16_t bytes, uint16_t items)
 {
-    uclist_init(&$->list, sizeof(de_entity) + bytes);
+    uclist_init_fixedAlloc(&$->list, sizeof(de_entity) + bytes, items);
     $->pause_index = 0;
 }
 
 de_entity *de_manager_new(de_manager *$)
 {
     de_entity *entity = uclist_alloc(&$->list);
+
+    if (!entity)
+    {
+        TRACE
+        ERROR("Error creando entidad")
+        return 0;
+    }
+
     entity->manager = $;
     entity->index = $->list.size - 1;
 

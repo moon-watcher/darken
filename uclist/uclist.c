@@ -3,25 +3,61 @@
 #include "uclist.h"
 #include "config.h"
 
-void uclist_init(uclist *$, uint16_t itemSize)
+enum { ADD, ALLOC, FIXED };
+
+void uclist_init_add(uclist *$)
 {
-    $->items = 0;
-    $->size = 0;
-    $->capacity = 0;
-    $->itemSize = itemSize;
+    *$ = (uclist){.mode = ADD};
+}
+
+void uclist_init_alloc(uclist *$, uint16_t itemSize)
+{
+    *$ = (uclist){.itemSize = itemSize, .mode = ALLOC};
+}
+
+uint16_t uclist_init_fixedAlloc(uclist *$, uint16_t itemSize, uint16_t capacity)
+{
+    *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, FIXED};
+
+    if (!$->items)
+        return 0;
+
+    void *block = malloc($->capacity * itemSize);
+    if (!block)
+    {
+        free($->items);
+        $->items = 0;
+        return 0;
+    }
+
+    for (uint16_t i = 0; i < $->capacity; i++)
+        $->items[i] = (uint8_t *)block + i * itemSize;
+
+    return 1;
 }
 
 void *uclist_alloc(uclist *$)
 {
-    void *ptr = $->items[$->size];
-
     if ($->size < $->capacity)
-        $->size++;
+    {
+        void *ptr = $->items[$->size++];
+        memset(ptr, 0, $->itemSize);
+        return ptr;
+    }
 
-    else if (!((ptr = malloc($->itemSize)) && uclist_add($, ptr)))
-        free(ptr);
+    if ($->mode == FIXED)
+        return 0;
+
+    void *ptr = malloc($->itemSize);
+    if (!ptr)
+        return 0;
 
     memset(ptr, 0, $->itemSize);
+    if (!uclist_addUnsafe($, ptr))
+    {
+        free(ptr);
+        return 0;
+    }
 
     return ptr;
 }
@@ -110,11 +146,18 @@ void uclist_reset(uclist *$)
 
 void uclist_end(uclist *$)
 {
-    while ($->itemSize && $->capacity--)
-        free($->items[$->capacity]);
+    if ($->items)
+    {
+        if ($->mode == FIXED)
+            free($->items[0]);
+        else if ($->mode == ALLOC)
+            while ($->capacity--)
+                free($->items[$->capacity]);
 
-    free($->items);
-    uclist_init($, $->itemSize);
+        free($->items);
+    }
+
+    *$ = (uclist){0};
 }
 
 //
