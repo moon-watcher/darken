@@ -11,16 +11,12 @@ de_entity *de_manager_new(de_manager *$)
 {
     de_entity *entity = uclist_alloc(&$->list);
 
-    if (!entity)
+    if (entity)
     {
-        TRACE
-        ERROR("Error creando entidad")
-        return 0;
+        entity->manager = $;
+        entity->index = $->list.size - 1;
     }
-
-    entity->manager = $;
-    entity->index = $->list.size - 1;
-
+    
     return entity;
 }
 
