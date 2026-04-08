@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "manager.h"
 
-de_entity *getEntity(de_manager *mgr, uint16_t index)
+inline de_entity *getEntity(de_manager *mgr, uint16_t index)
 {
     return (de_entity *)((uint8_t *)mgr->list + index * mgr->itemSize);
 }
@@ -9,7 +9,8 @@ de_entity *getEntity(de_manager *mgr, uint16_t index)
 static void swapIndex(de_entity *$, uint16_t swap)
 {
     uint16_t index = $->index;
-    if (index == swap) return;
+    if (index == swap)
+        return;
 
     de_manager *mgr = $->manager;
     uint8_t *a = (uint8_t *)getEntity(mgr, index);

@@ -5,28 +5,26 @@
 
 #include <genesis.h>
 
-#define ALIGN2(x) (((x)+1)&~1)
+#define ALIGN2(x) (((x) + 1) & ~1)
 #define DE_ENTITY_SIZE(BYTES) ALIGN2(sizeof(de_entity) + (BYTES))
 
 typedef struct
 {
     uint16_t itemSize;
     uint16_t capacity;
-    void *list;
 } de_manager_def;
 
-#define DEFIN(SIZE, CAP) \
-    { .itemSize = DE_ENTITY_SIZE(SIZE), .capacity = CAP, .list = malloc(DE_ENTITY_SIZE(SIZE)*CAP) }
+#define DE_MANAGER_SIZE(def) (DE_ENTITY_SIZE((def).itemSize) * (def).capacity)
 
 typedef struct de_manager
 {
-    de_manager_def;  // itemSize, capacity, list
+    de_manager_def; // itemSize, capacity
+    void *list;
     uint16_t size;
     uint16_t pause_index;
 } de_manager;
 
-//void de_manager_init(de_manager *, uint16_t);
-void de_manager_init(de_manager *, de_manager_def *);
+void de_manager_init(de_manager *, de_manager_def *, void *);
 de_entity *de_manager_new(de_manager *);
 void de_manager_update(de_manager *);
 void de_manager_pause(de_manager *);
@@ -49,12 +47,16 @@ void de_manager_end(de_manager *);
 #define de_manager_iterate(MANAGER, CODE) _de_manager_iterate(MANAGER, (MANAGER)->pause_index, CODE)
 #define de_manager_iterateAll(MANAGER, CODE) _de_manager_iterate(MANAGER, 0, CODE)
 
-#define _de_manager_iterate(MANAGER, LIMIT, CODE)           \
-    do {                                                   \
-        uint16_t INDEX = (MANAGER)->size;                 \
-        if (INDEX <= LIMIT) break;                         \
-        while (INDEX-- > LIMIT) {                          \
+#define _de_manager_iterate(MANAGER, LIMIT, CODE)          \
+    do                                                     \
+    {                                                      \
+        uint16_t INDEX = (MANAGER)->size;                  \
+        if (INDEX <= LIMIT)                                \
+            break;                                         \
+                                                           \
+        while (INDEX-- > LIMIT)                            \
+        {                                                  \
             de_entity *ENTITY = getEntity(MANAGER, INDEX); \
-            CODE;                                         \
+            CODE;                                          \
         }                                                  \
     } while (0)
