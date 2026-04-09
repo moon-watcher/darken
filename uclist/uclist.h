@@ -13,7 +13,7 @@ typedef struct
 
 void uclist_init_add(uclist *);
 void uclist_init_alloc(uclist *, uint16_t);
-uint16_t uclist_init_fixedAlloc(uclist *, uint16_t, uint16_t);
+void *uclist_init_fixedAlloc(uclist *, uint16_t, uint16_t);
 void *uclist_alloc(uclist *);
 void *uclist_add(uclist *, void *);
 void *uclist_addUnsafe(uclist *, void *);
