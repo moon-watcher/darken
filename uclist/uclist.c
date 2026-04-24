@@ -10,7 +10,7 @@ void uclist_init_add(uclist *$)
 
 void uclist_init_alloc(uclist *$, uint16_t itemSize)
 {
-    *$ = (uclist){.itemSize = itemSize, 1};
+    *$ = (uclist){.itemSize = itemSize, .mode = 1};
 }
 
 void *uclist_init_fixedAlloc(uclist *$, uint16_t itemSize, uint16_t capacity)
@@ -35,6 +35,8 @@ void *uclist_init_fixedAlloc(uclist *$, uint16_t itemSize, uint16_t capacity)
 
 void *uclist_alloc(uclist *$)
 {
+    if ($->mode == 0) return 0; // Use uclist_add()
+
     if ($->size < $->capacity)
     {
         void *ptr = $->items[$->size++];
@@ -64,6 +66,8 @@ void *uclist_add(uclist *$, void *add)
 
 void *uclist_addUnsafe(uclist *$, void *add)
 {
+    if ($->mode == 2) return 0;
+
     if ($->size >= $->capacity)
     {
         void **ptr = malloc(($->capacity + 1) * sizeof(void *));
@@ -173,6 +177,8 @@ static void (*_iteratorEx[])() = {0, 0, f2, f3, f4, f5};
 
 uint16_t uclist_iteratorEx(uclist *$, void (*iterator)(), uint16_t nbItems)
 {
+    if (nbItems < 2 || nbItems > 5) return 0;
+
     _iteratorEx[nbItems]($->items, iterator, $->size, nbItems);
 
     return $->size / nbItems;
