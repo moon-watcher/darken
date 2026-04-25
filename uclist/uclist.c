@@ -1,7 +1,7 @@
 // Unordered Cacheable List
 
 #include "uclist.h"
-#include "config.h"
+#include <stdlib.h>
 
 void uclist_init_add(uclist *$)
 {
