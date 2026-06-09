@@ -3,23 +3,25 @@
 #include "uclist.h"
 #include <stdlib.h>
 
-void uclist_init_add(uclist *$)
+void uclist_init_add(uclist *$, uint16_t capacity)
 {
     *$ = (uclist){0};
+    
+    if (!capacity) return;
+    
+    $->items = malloc(capacity * sizeof(void *));
+    $->capacity = $->items ? capacity : 0;
 }
 
-void uclist_init_alloc(uclist *$, uint16_t itemSize)
+void *uclist_init_alloc(uclist *$, uint16_t itemSize, uint16_t capacity)
 {
     *$ = (uclist){.itemSize = itemSize, .mode = 1};
-}
+    if (!capacity) return $;
 
-void *uclist_init_fixedAlloc(uclist *$, uint16_t itemSize, uint16_t capacity)
-{
     *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, 2};
-
     if (!$->items) return 0;
 
-    void *block = malloc($->capacity * itemSize);
+    void *block = malloc(capacity * itemSize);
     if (!block)
     {
         free($->items);
@@ -27,7 +29,7 @@ void *uclist_init_fixedAlloc(uclist *$, uint16_t itemSize, uint16_t capacity)
         return 0;
     }
 
-    for (uint16_t i = 0; i < $->capacity; i++)
+    for (uint16_t i = 0; i < capacity; i++)
         $->items[i] = (uint8_t *)block + i * itemSize;
 
     return $->items[0];
@@ -182,4 +184,16 @@ uint16_t uclist_iteratorEx(uclist *$, void (*iterator)(), uint16_t nbItems)
     _iteratorEx[nbItems]($->items, iterator, $->size, nbItems);
 
     return $->size / nbItems;
+}
+
+//
+
+uclist_meminfo uclist_meminfo_get(uclist *$)
+{
+    return (uclist_meminfo){
+        $->capacity * sizeof(void *),
+        $->size     * $->itemSize,
+        ($->capacity - $->size) * $->itemSize,
+        $->capacity  * $->itemSize,
+    };
 }

@@ -1,14 +1,8 @@
 #include "manager.h"
 
-void de_manager_init(de_manager *$, uint16_t bytes)
+void de_manager_init(de_manager *$, uint16_t bytes, uint16_t items)
 {
-    uclist_init_alloc(&$->list, sizeof(de_entity) + bytes);
-    $->pause_index = 0;
-}
-
-void de_manager_initFixed(de_manager *$, uint16_t bytes, uint16_t items)
-{
-    uclist_init_fixedAlloc(&$->list, sizeof(de_entity) + bytes, items);
+    uclist_init_alloc(&$->list, sizeof(de_entity) + bytes, items);
     $->pause_index = 0;
 }
 

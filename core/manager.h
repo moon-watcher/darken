@@ -11,8 +11,7 @@ typedef struct de_manager
     char *name;
 } de_manager;
 
-void de_manager_init(de_manager *, uint16_t);
-void de_manager_initFixed(de_manager *, uint16_t, uint16_t);
+void de_manager_init(de_manager *, uint16_t, uint16_t);
 de_entity *de_manager_new(de_manager *);
 void de_manager_update(de_manager *);
 void de_manager_pause(de_manager *);

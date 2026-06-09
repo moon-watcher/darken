@@ -11,9 +11,8 @@ typedef struct
     uint8_t mode;
 } uclist;
 
-void uclist_init_add(uclist *);
-void uclist_init_alloc(uclist *, uint16_t);
-void *uclist_init_fixedAlloc(uclist *, uint16_t, uint16_t);
+void uclist_init_add(uclist *, uint16_t);
+void *uclist_init_alloc(uclist *, uint16_t, uint16_t);
 void *uclist_alloc(uclist *);
 void *uclist_add(uclist *, void *);
 void *uclist_addUnsafe(uclist *, void *);
@@ -28,3 +27,15 @@ void uclist_end(uclist *);
 //
 
 uint16_t uclist_iteratorEx(uclist *, void (*)(), uint16_t);
+
+//
+
+typedef struct
+{
+    uint32_t ptrs;
+    uint32_t data_used;
+    uint32_t data_free;
+    uint32_t data_total;
+} uclist_meminfo;
+
+uclist_meminfo uclist_meminfo_get(uclist *);
