@@ -30,12 +30,7 @@ uint16_t uclist_iteratorEx(uclist *, void (*)(), uint16_t);
 
 //
 
-typedef struct
-{
-    uint32_t ptrs;
-    uint32_t data_used;
-    uint32_t data_free;
-    uint32_t data_total;
-} uclist_meminfo;
-
-uclist_meminfo uclist_meminfo_get(uclist *);
+#define UCLIST_MEM_PTRS(U)  ((U)->capacity * sizeof(void *))
+#define UCLIST_MEM_USED(U)  ((U)->itemSize * (U)->size)
+#define UCLIST_MEM_FREE(U)  ((U)->itemSize * ((U)->size <= (U)->capacity ? (U)->capacity - (U)->size : 0))
+#define UCLIST_MEM_TOTAL(U) ((U)->itemSize * (U)->capacity)

@@ -185,15 +185,3 @@ uint16_t uclist_iteratorEx(uclist *$, void (*iterator)(), uint16_t nbItems)
 
     return $->size / nbItems;
 }
-
-//
-
-uclist_meminfo uclist_meminfo_get(uclist *$)
-{
-    return (uclist_meminfo){
-        $->capacity * sizeof(void *),
-        $->size     * $->itemSize,
-        ($->capacity - $->size) * $->itemSize,
-        $->capacity  * $->itemSize,
-    };
-}
