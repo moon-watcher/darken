@@ -3,23 +3,33 @@
 #include "uclist.h"
 #include <stdlib.h>
 
+enum
+{
+    UCLIST_ADD,
+    UCLIST_ALLOC,
+    UCLIST_FIXED
+};
+
 void uclist_init_add(uclist *$, uint16_t capacity)
 {
     *$ = (uclist){0};
-    
-    if (!capacity) return;
-    
+
+    if (!capacity)
+        return;
+
     $->items = malloc(capacity * sizeof(void *));
     $->capacity = $->items ? capacity : 0;
 }
 
 void *uclist_init_alloc(uclist *$, uint16_t itemSize, uint16_t capacity)
 {
-    *$ = (uclist){.itemSize = itemSize, .mode = 1};
-    if (!capacity) return $;
+    *$ = (uclist){.itemSize = itemSize, .mode = UCLIST_ALLOC};
+    if (!capacity)
+        return (void *)1;
 
-    *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, 2};
-    if (!$->items) return 0;
+    *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, UCLIST_FIXED};
+    if (!$->items)
+        return 0;
 
     void *block = malloc(capacity * itemSize);
     if (!block)
@@ -37,7 +47,8 @@ void *uclist_init_alloc(uclist *$, uint16_t itemSize, uint16_t capacity)
 
 void *uclist_alloc(uclist *$)
 {
-    if ($->mode == 0) return 0; // Use uclist_add()
+    if ($->mode == UCLIST_ADD)
+        return 0; // Use uclist_add()
 
     if ($->size < $->capacity)
     {
@@ -46,13 +57,15 @@ void *uclist_alloc(uclist *$)
         return ptr;
     }
 
-    if ($->mode == 2) return 0;
+    if ($->mode == UCLIST_FIXED)
+        return 0;
 
     void *ptr = malloc($->itemSize);
-    if (!ptr) return 0;
+    if (!ptr)
+        return 0;
 
     memset(ptr, 0, $->itemSize);
-    if (!uclist_addUnsafe($, ptr))
+    if (!uclist_add($, ptr))
     {
         free(ptr);
         return 0;
@@ -63,17 +76,23 @@ void *uclist_alloc(uclist *$)
 
 void *uclist_add(uclist *$, void *add)
 {
-    return (uclist_getIndex($, add) < 0) ? uclist_addUnsafe($, add) : 0;
-}
+    if ($->mode == UCLIST_FIXED)
+        return 0;
 
-void *uclist_addUnsafe(uclist *$, void *add)
-{
-    if ($->mode == 2) return 0;
+#include "debug.h"
+#ifdef DK_DEBUG
+    if (uclist_getIndex($, add) >= 0)
+    {
+        print("uclist_add: duplicate detected");
+        return 0;
+    }
+#endif
 
     if ($->size >= $->capacity)
     {
         void **ptr = malloc(($->capacity + 1) * sizeof(void *));
-        if (!ptr) return 0;
+        if (!ptr)
+            return 0;
 
         memcpy(ptr, $->items, $->capacity * sizeof(void *));
         free($->items);
@@ -106,7 +125,8 @@ int16_t uclist_getIndex(uclist *$, void *data)
 
 uint16_t uclist_removeByIndex(uclist *$, uint16_t index)
 {
-    if (index >= $->size) return 0;
+    if (index >= $->size)
+        return 0;
 
     --$->size;
 
@@ -149,9 +169,10 @@ void uclist_end(uclist *$)
 {
     if ($->items)
     {
-        if ($->mode == 2)
+        if ($->mode == UCLIST_FIXED)
             free($->items[0]);
-        else if ($->mode == 1)
+
+        else if ($->mode == UCLIST_ALLOC)
             while ($->capacity--)
                 free($->items[$->capacity]);
 
@@ -179,7 +200,10 @@ static void (*_iteratorEx[])() = {0, 0, f2, f3, f4, f5};
 
 uint16_t uclist_iteratorEx(uclist *$, void (*iterator)(), uint16_t nbItems)
 {
-    if (nbItems < 2 || nbItems > 5) return 0;
+    if (nbItems < 2 || nbItems > 5)
+        return 0;
+    // if ($->size % nbItems != 0)
+    //     return 0;
 
     _iteratorEx[nbItems]($->items, iterator, $->size, nbItems);
 
