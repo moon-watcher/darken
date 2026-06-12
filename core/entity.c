@@ -33,10 +33,14 @@ void de_entity_delete(de_entity *$)
     if (de_entity_is_deleted($))
         return;
 
-    $->state = 0;
-    de_entity_resume($);
-    swapIndex($, --$->manager->list.size);
+    $->state = de_state_delete;
 
     if ($->destructor)
-        $->destructor($->data);
+        $->state = $->destructor($->data);
+
+    if (de_state_is_deleted($->state))
+    {
+        de_entity_resume($);
+        swapIndex($, --$->manager->list.size);
+    }
 }

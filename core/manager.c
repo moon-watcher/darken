@@ -15,7 +15,7 @@ de_entity *de_manager_new(de_manager *$)
         entity->manager = $;
         entity->index = $->list.size - 1;
     }
-    
+
     return entity;
 }
 
