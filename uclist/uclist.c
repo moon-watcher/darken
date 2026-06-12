@@ -7,7 +7,7 @@ enum
 {
     UCLIST_ADD,
     UCLIST_ALLOC,
-    UCLIST_FIXED
+    UCLIST_FIXED_ALLOC
 };
 
 void uclist_init_add(uclist *$, uint16_t capacity)
@@ -27,7 +27,7 @@ void *uclist_init_alloc(uclist *$, uint16_t itemSize, uint16_t capacity)
     if (!capacity)
         return (void *)1;
 
-    *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, UCLIST_FIXED};
+    *$ = (uclist){malloc(capacity * sizeof(void *)), 0, capacity, itemSize, UCLIST_FIXED_ALLOC};
     if (!$->items)
         return 0;
 
@@ -48,7 +48,7 @@ void *uclist_init_alloc(uclist *$, uint16_t itemSize, uint16_t capacity)
 void *uclist_alloc(uclist *$)
 {
     if ($->mode == UCLIST_ADD)
-        return 0; // Use uclist_add()
+        return 0;
 
     if ($->size < $->capacity)
     {
@@ -57,7 +57,7 @@ void *uclist_alloc(uclist *$)
         return ptr;
     }
 
-    if ($->mode == UCLIST_FIXED)
+    if ($->mode == UCLIST_FIXED_ALLOC)
         return 0;
 
     void *ptr = malloc($->itemSize);
@@ -74,19 +74,10 @@ void *uclist_alloc(uclist *$)
     return ptr;
 }
 
-void *uclist_add(uclist *$, void *add)
+uint16_t uclist_add(uclist *$, void *add)
 {
-    if ($->mode == UCLIST_FIXED)
+    if ($->mode == UCLIST_FIXED_ALLOC)
         return 0;
-
-#include "debug.h"
-#ifdef DK_DEBUG
-    if (uclist_getIndex($, add) >= 0)
-    {
-        print("uclist_add: duplicate detected");
-        return 0;
-    }
-#endif
 
     if ($->size >= $->capacity)
     {
@@ -101,47 +92,30 @@ void *uclist_add(uclist *$, void *add)
         ++$->capacity;
     }
 
-    return $->items[$->size++] = add;
-}
-
-void uclist_iterator(uclist *$, void (*iterator)())
-{
-    uint16_t i = $->size;
-
-    while (i--)
-        iterator($->items[i]);
-}
-
-int16_t uclist_getIndex(uclist *$, void *data)
-{
-    uint16_t i = $->size;
-
-    while (i--)
-        if ($->items[i] == data)
-            return i;
-
-    return -1;
-}
-
-uint16_t uclist_removeByIndex(uclist *$, uint16_t index)
-{
-    if (index >= $->size)
-        return 0;
-
-    --$->size;
-
-    void **items = $->items;
-    void *swap = items[index];
-
-    items[index] = items[$->size];
-    items[$->size] = swap;
+    $->items[$->size++] = add;
 
     return 1;
 }
 
 uint16_t uclist_remove(uclist *$, void *data)
 {
-    return uclist_removeByIndex($, (uint16_t)uclist_getIndex($, data));
+    uint16_t i = $->size;
+
+    while (i--)
+        if ($->items[i] == data)
+        {
+            --$->size;
+
+            void **items = $->items;
+            void *swap = items[i];
+
+            items[i] = items[$->size];
+            items[$->size] = swap;
+
+            return 1;
+        }
+
+    return 0;
 }
 
 uint16_t uclist_restore(uclist *$, void *data)
@@ -169,7 +143,7 @@ void uclist_end(uclist *$)
 {
     if ($->items)
     {
-        if ($->mode == UCLIST_FIXED)
+        if ($->mode == UCLIST_FIXED_ALLOC)
             free($->items[0]);
 
         else if ($->mode == UCLIST_ALLOC)
@@ -183,6 +157,14 @@ void uclist_end(uclist *$)
 }
 
 //
+
+void uclist_iterator(uclist *$, void (*iterator)())
+{
+    uint16_t i = $->size;
+
+    while (i--)
+        iterator($->items[i]);
+}
 
 #define FUNC(NAME, ...)                                                           \
     static void NAME(void *list[], void (*it)(), uint16_t size, uint16_t nbItems) \
