@@ -80,18 +80,15 @@ void de_manager_end(de_manager *);
 #define de_manager_apply(MANAGER, FILTER, ACTION) _de_manager_apply(de_manager_iterate, MANAGER, FILTER, ACTION)
 #define de_manager_applyAll(MANAGER, FILTER, ACTION) _de_manager_apply(de_manager_iterateAll, MANAGER, FILTER, ACTION)
 
-#define _de_manager_apply(ITERATE, MANAGER, FILTER, ACTION) \
-    do                                                      \
-    {                                                       \
-        de_entity *_targets[32];                            \
-        uint16_t _count = 0;                                \
-                                                            \
-        ITERATE(MANAGER, {                                  \
-            if (FILTER)                                     \
-                _targets[_count++] = ENTITY;                \
-        });                                                 \
-                                                            \
-        while (_count--)                                    \
-            (ACTION)(_targets[_count]);                     \
-                                                            \
+#define _de_manager_apply(ITERATE, MANAGER, FILTER, ACTION)             \
+    do                                                                  \
+    {                                                                   \
+        uint16_t count = 0;                                             \
+        de_entity *targets[(MANAGER)->list.size];                       \
+                                                                        \
+        ITERATE(MANAGER, { (FILTER) && (targets[count++] = ENTITY); }); \
+                                                                        \
+        while (count--)                                                 \
+            (ACTION)(targets[count]);                                   \
+                                                                        \
     } while (0)
