@@ -1,7 +1,7 @@
 #pragma once
 
 #include "entity.h"
-#include "../uclist/uclist.h"
+#include "../glibs/uclist.h"
 
 typedef struct de_manager
 {
@@ -84,7 +84,7 @@ void de_manager_end(de_manager *);
     do                                                                  \
     {                                                                   \
         uint16_t count = 0;                                             \
-        de_entity *targets[(MANAGER)->list.size];                       \
+        de_entity *targets[(MANAGER)->list.size + 1];                   \
                                                                         \
         ITERATE(MANAGER, { (FILTER) && (targets[count++] = ENTITY); }); \
                                                                         \
