@@ -1,5 +1,21 @@
 #include "manager.h"
 
+static void _apply(de_manager *$, de_entity_filter filter, void (*action)(de_entity *), uint16_t limit)
+{
+    de_entity *targets[32];
+    uint16_t count = 0;
+
+    _de_manager_iterate($, limit, {
+        if (!filter || filter(ENTITY))
+            targets[count++] = ENTITY;
+    });
+
+    while (count--)
+        action(targets[count]);
+}
+
+//
+
 void de_manager_init(de_manager *$, uint16_t bytes, uint16_t capacity)
 {
     uclist_init_alloc(&$->list, sizeof(de_entity) + bytes, capacity);
@@ -55,4 +71,14 @@ void de_manager_reset(de_manager *$)
 void de_manager_end(de_manager *$)
 {
     uclist_end(&$->list);
+}
+
+void de_manager_apply(de_manager *$, de_entity_filter filter, void (*action)(de_entity *))
+{
+    _apply($, filter, action, $->pause_index);
+}
+
+void de_manager_applyAll(de_manager *$, de_entity_filter filter, void (*action)(de_entity *))
+{
+    _apply($, filter, action, 0);
 }

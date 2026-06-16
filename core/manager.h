@@ -18,6 +18,8 @@ void de_manager_pause(de_manager *);
 void de_manager_resume(de_manager *);
 void de_manager_reset(de_manager *);
 void de_manager_end(de_manager *);
+void de_manager_apply(de_manager *, de_entity_filter, void (*)(de_entity *));
+void de_manager_applyAll(de_manager *, de_entity_filter, void (*)(de_entity *));
 
 /**
  * @brief de_manager_iterate[all] Iterates over the entities of a manager in reverse order.
