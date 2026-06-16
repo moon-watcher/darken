@@ -14,8 +14,6 @@ typedef struct de_entity
     uint8_t data[];
 } de_entity;
 
-typedef uint16_t (*de_entity_filter)(de_entity *);
-
 void de_entity_pause(de_entity *);
 void de_entity_resume(de_entity *);
 void de_entity_delete(de_entity *);

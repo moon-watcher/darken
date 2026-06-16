@@ -18,11 +18,9 @@ void de_manager_pause(de_manager *);
 void de_manager_resume(de_manager *);
 void de_manager_reset(de_manager *);
 void de_manager_end(de_manager *);
-void de_manager_apply(de_manager *, de_entity_filter, void (*)(de_entity *));
-void de_manager_applyAll(de_manager *, de_entity_filter, void (*)(de_entity *));
 
 /**
- * @brief de_manager_iterate[all] Iterates over the entities of a manager in reverse order.
+ * @brief de_manager_iterate[All] Iterates over the entities of a manager in reverse order.
  *
  * Variables available inside CODE:
  *
@@ -30,6 +28,8 @@ void de_manager_applyAll(de_manager *, de_entity_filter, void (*)(de_entity *));
  * @var INDEX    uint16_t      Current index in the array. Can be used for direct access: ENTITIES[INDEX].
  * @var ENTITY   de_entity*    Pointer to the current entity.
  *
+ * @note de_manager_iterate    iterates only over active entities (above pause_index).
+ * @note de_manager_iterateAll iterates over all entities (active + paused).
  * @note Do not modify ENTITIES or INDEX inside CODE — undefined behavior.
  * @note Do not use _de_manager_iterate directly.
  */
@@ -49,4 +49,49 @@ void de_manager_applyAll(de_manager *, de_entity_filter, void (*)(de_entity *));
             de_entity *ENTITY = ENTITIES[INDEX];      \
             CODE;                                     \
         }                                             \
+    } while (0)
+
+/**
+ * @brief de_manager_apply[All] Collects matching entities then applies an action to each.
+ *
+ * Safe to use with de_entity_delete, de_entity_pause and de_entity_resume —
+ * entities are collected before any action is applied, avoiding index corruption.
+ *
+ * @param MANAGER  de_manager*   The manager to operate on.
+ * @param FILTER   expression    Boolean expression evaluated for each entity. Use 1 to match all entities.
+ * @param ACTION   function      Function applied to each matched entity: void f(de_entity *).
+ *
+ * Variables available inside FILTER:
+ *
+ * @var ENTITIES de_entity**   Pointer to the manager's entity array.
+ * @var INDEX    uint16_t      Current index in the array.
+ * @var ENTITY   de_entity*    Pointer to the current entity being evaluated.
+ *
+ * @note de_manager_apply    operates only on active entities (above pause_index).
+ * @note de_manager_applyAll operates on all entities (active + paused).
+ * @note Maximum of 32 entities can be collected per call.
+ * @note Do not modify ENTITIES or INDEX inside FILTER — undefined behavior.
+ * @note Do not use _de_manager_apply directly.
+ *
+ * @example
+ *   de_manager_applyAll(&g_manager, ENTITY->state == s_enemy_walk, de_entity_pause);
+ *   de_manager_apply   (&g_manager, 1,                             de_entity_delete);
+ */
+#define de_manager_apply(MANAGER, FILTER, ACTION) _de_manager_apply(de_manager_iterate, MANAGER, FILTER, ACTION)
+#define de_manager_applyAll(MANAGER, FILTER, ACTION) _de_manager_apply(de_manager_iterateAll, MANAGER, FILTER, ACTION)
+
+#define _de_manager_apply(ITERATE, MANAGER, FILTER, ACTION) \
+    do                                                      \
+    {                                                       \
+        de_entity *_targets[32];                            \
+        uint16_t _count = 0;                                \
+                                                            \
+        ITERATE(MANAGER, {                                  \
+            if (FILTER)                                     \
+                _targets[_count++] = ENTITY;                \
+        });                                                 \
+                                                            \
+        while (_count--)                                    \
+            (ACTION)(_targets[_count]);                     \
+                                                            \
     } while (0)
